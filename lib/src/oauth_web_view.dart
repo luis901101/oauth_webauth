@@ -7,7 +7,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class OAuthWebView extends StatefulWidget {
 
-  static const String firstLoadTag = 'firstLoadOAuthWebAuthTag';
+  static const String firstLoadHeroTag = 'firstLoadOAuthWebAuthHeroTag';
   static const String backButtonTooltipKey = 'backButtonTooltipKey';
   static const String forwardButtonTooltipKey = 'forwardButtonTooltipKey';
   static const String reloadButtonTooltipKey = 'reloadButtonTooltipKey';
@@ -228,7 +228,7 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
               ),
               Positioned.fill(
                 child: Hero(
-                  tag: OAuthWebView.firstLoadTag,
+                  tag: OAuthWebView.firstLoadHeroTag,
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
                     child: !ready && isLoading ? const CircularProgressIndicator() : const SizedBox(),
@@ -247,7 +247,7 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
           ),
           bottomNavigationBar: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            height: showToolbar ? 50 : 0,
+            height: showToolbar ? null : 0,
             child: BottomAppBar(
               elevation: 8,
               color: Theme.of(context).bottomAppBarColor,
