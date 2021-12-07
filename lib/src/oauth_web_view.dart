@@ -36,7 +36,7 @@ class OAuthWebView extends StatefulWidget {
   final VoidCallback onCancel;
 
   final ThemeData? themeData;
-  final Map<String, String>? tooltipLocales;
+  final Map<String, String>? textLocales;
 
   const OAuthWebView({
     Key? key,
@@ -52,7 +52,7 @@ class OAuthWebView extends StatefulWidget {
     required this.onError,
     required this.onCancel,
     this.themeData,
-    this.tooltipLocales,
+    this.textLocales,
   }) : super(key: key);
 
   @override
@@ -117,12 +117,12 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
 
   void initTooltips() {
     if(tooltipsAlreadyInitialized) return;
-    backButtonTooltip = widget.tooltipLocales?[OAuthWebView.backButtonTooltipKey] ?? 'Go back';
-    forwardButtonTooltip = widget.tooltipLocales?[OAuthWebView.forwardButtonTooltipKey]  ?? 'Go forward';
-    reloadButtonTooltip = widget.tooltipLocales?[OAuthWebView.reloadButtonTooltipKey]  ?? 'Reload';
-    clearCacheButtonTooltip = widget.tooltipLocales?[OAuthWebView.clearCacheButtonTooltipKey]  ?? 'Clear cache';
-    closeButtonTooltip = widget.tooltipLocales?[OAuthWebView.closeButtonTooltipKey]  ?? MaterialLocalizations.of(context).closeButtonTooltip;
-    clearCacheWarningMessage = widget.tooltipLocales?[OAuthWebView.clearCacheWarningMessageKey]  ?? 'Are you sure you want to clear cache?';
+    backButtonTooltip = widget.textLocales?[OAuthWebView.backButtonTooltipKey] ?? 'Go back';
+    forwardButtonTooltip = widget.textLocales?[OAuthWebView.forwardButtonTooltipKey]  ?? 'Go forward';
+    reloadButtonTooltip = widget.textLocales?[OAuthWebView.reloadButtonTooltipKey]  ?? 'Reload';
+    clearCacheButtonTooltip = widget.textLocales?[OAuthWebView.clearCacheButtonTooltipKey]  ?? 'Clear cache';
+    closeButtonTooltip = widget.textLocales?[OAuthWebView.closeButtonTooltipKey]  ?? MaterialLocalizations.of(context).closeButtonTooltip;
+    clearCacheWarningMessage = widget.textLocales?[OAuthWebView.clearCacheWarningMessageKey]  ?? 'Are you sure you want to clear cache?';
     tooltipsAlreadyInitialized = true;
   }
 

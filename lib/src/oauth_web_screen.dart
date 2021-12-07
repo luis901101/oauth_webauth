@@ -20,7 +20,7 @@ class OAuthWebScreen extends StatelessWidget {
     ValueChanged<dynamic>? onError,
     VoidCallback? onCancel,
     ThemeData? themeData,
-    Map<String, String>? tooltipLocales
+    Map<String, String>? textLocales
   }) => Navigator.push(context,
     MaterialPageRoute(builder: (context) =>
       OAuthWebScreen(
@@ -36,7 +36,7 @@ class OAuthWebScreen extends StatelessWidget {
         onError: onError,
         onCancel: onCancel,
         themeData: themeData,
-        tooltipLocales: tooltipLocales,
+        textLocales: textLocales,
       )
     ));
 
@@ -62,7 +62,7 @@ class OAuthWebScreen extends StatelessWidget {
   final VoidCallback? onCancel;
 
   final ThemeData? themeData;
-  final Map<String, String>? tooltipLocales;
+  final Map<String, String>? textLocales;
 
   late final BuildContext context;
   final paymentViewStateKey = GlobalKey<OAuthWebViewState>();
@@ -81,7 +81,7 @@ class OAuthWebScreen extends StatelessWidget {
     this.onError,
     this.onCancel,
     this.themeData,
-    this.tooltipLocales,
+    this.textLocales,
   }) : super(key: key);
 
   @override
@@ -106,7 +106,7 @@ class OAuthWebScreen extends StatelessWidget {
               onError: _onError,
               onCancel: _onCancel,
               themeData: themeData,
-              tooltipLocales: tooltipLocales,
+              textLocales: textLocales,
             ),
           ),
         );
