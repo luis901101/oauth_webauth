@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
       redirectUrl: redirectUrl,
       scopes: scopes,
       promptValues: const ['login'],
-      loginHint: 'johndoe@mail.com',
+      loginHint: 'luis901101@gmail.com',
       textLocales: { ///Optionally texts can be localized
         OAuthWebView.backButtonTooltipKey: 'Ir atrás',
         OAuthWebView.forwardButtonTooltipKey: 'Ir adelante',
@@ -118,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
       redirectUrl: redirectUrl,
       scopes: scopes,
       promptValues: const ['login'],
-      loginHint: 'johndoe@mail.com',
+      loginHint: 'luis901101@gmail.com',
       textLocales: { ///Optionally text can be localized
         OAuthWebView.backButtonTooltipKey: 'Ir atrás',
         OAuthWebView.forwardButtonTooltipKey: 'Ir adelante',

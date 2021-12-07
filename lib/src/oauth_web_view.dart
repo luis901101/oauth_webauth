@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webviewx/webviewx.dart';
 
 class OAuthWebView extends StatefulWidget {
 
@@ -67,7 +69,8 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
   bool allowGoBack = false;
   bool allowGoForward = false;
   bool tooltipsAlreadyInitialized = false;
-  WebViewController? webViewController;
+  WebViewXController? webViewXController;
+  InAppWebViewController? inAppWebViewControllerController;
   @override
   late BuildContext context;
   String? initialUrl;
@@ -126,25 +129,80 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
     tooltipsAlreadyInitialized = true;
   }
 
-
   Widget get webView {
-    return GestureDetector(
-      onLongPressDown: (details) {},/// To avoid long press for text selection or open link on new tab
-      child: WebView(
-        initialUrl: authorizationUri.toString(),
+
+    final Widget webView;
+
+    if(kIsWeb) {
+      // webView = WebView(
+      //   initialUrl: authorizationUri.toString(),
+      //   javascriptMode: JavascriptMode.unrestricted,
+      //   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
+      //   zoomEnabled: false,
+      //   gestureNavigationEnabled: false,
+      //   onWebViewCreated: (controller) {
+      //     webViewXController = controller;
+      //   },
+      //   navigationDelegate: (request) async =>
+      //   onNavigateTo(request.url) ?
+      //   NavigationDecision.navigate :
+      //   NavigationDecision.prevent,
+      //   onPageFinished: (url) => hideLoading(),
+      // );
+      
+      webView = WebViewX(
+        width: double.infinity,
+        height: double.infinity,
+        initialContent: authorizationUri.toString(),
+        initialSourceType: SourceType.url,
         javascriptMode: JavascriptMode.unrestricted,
-        userAgent: 'Mozilla/5.0', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
-        zoomEnabled: false,
-        gestureNavigationEnabled: false,
+        userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
         onWebViewCreated: (controller) {
-          webViewController = controller;
+          webViewXController = controller;
         },
         navigationDelegate: (request) async =>
-        onNavigateTo(request.url) ?
+        onNavigateTo(request.content.source) ?
         NavigationDecision.navigate :
         NavigationDecision.prevent,
         onPageFinished: (url) => hideLoading(),
-      ),
+      );
+    } else {
+      /// InAppWebView is a better choice for Android and iOS than official plugin for WebViews
+      /// (WebViewX uses official WebView plugin) due to the possibility to
+      /// manage ServerTrustAuthRequest, which is crucial in Android because Android
+      /// native WebView does not allow to access an URL with a certificate not authorized by
+      /// known certification authority.
+      webView = InAppWebView(
+        initialOptions: InAppWebViewGroupOptions(
+          crossPlatform: InAppWebViewOptions(
+            useShouldOverrideUrlLoading: true,
+            supportZoom: false,
+            userAgent: 'Mozilla/5.0'
+          ),
+        ),
+        initialUrlRequest: URLRequest(url: authorizationUri),
+        onReceivedServerTrustAuthRequest: (controller, challenge) async {
+          return ServerTrustAuthResponse(action: ServerTrustAuthResponseAction.PROCEED);
+        },
+        onWebViewCreated: (controller) {
+          inAppWebViewControllerController = controller;
+        },
+        shouldOverrideUrlLoading: (controller, navigationAction) async {
+          final url = navigationAction.request.url?.toString() ?? '';
+          return onNavigateTo(url) ?
+          NavigationActionPolicy.ALLOW :
+          NavigationActionPolicy.CANCEL;
+        },
+        onLoadStart: (controller, url) async => showLoading(),
+        onLoadStop: (controller, url) async => hideLoading(),
+        onLoadError: (controller, url, code, message) => hideLoading(),
+      );
+    }
+
+
+    return GestureDetector(
+      onLongPressDown: (details) {},/// To avoid long press for text selection or open link on new tab
+      child: webView,
     );
   }
 
@@ -319,28 +377,36 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
 
   Future<void> controllerGoBack() async {
     showLoading();
-    webViewController?.goBack();
+    webViewXController?.goBack();
+    inAppWebViewControllerController?.goBack();
   }
 
   Future<void> controllerGoForward() async {
     showLoading();
-    webViewController?.goForward();
+    webViewXController?.goForward();
+    inAppWebViewControllerController?.goForward();
   }
 
   Future<void> controllerReload() async {
     showLoading();
-    webViewController?.reload();
+    webViewXController?.reload();
+    inAppWebViewControllerController?.reload();
   }
 
   Future<void> controllerClearCache() async {
     showLoading();
-    await webViewController?.clearCache();
+    await webViewXController?.clearCache();
+    await inAppWebViewControllerController?.clearCache();
     hideLoading();
   }
 
-  Future<bool> controllerCanGoForward() async => await webViewController?.canGoForward() ?? false;
+  Future<bool> controllerCanGoForward() async {
+    return await webViewXController?.canGoForward() ?? await inAppWebViewControllerController?.canGoForward() ?? false;
+  }
 
-  Future<bool> controllerCanGoBack() async => await webViewController?.canGoBack() ?? false;
+  Future<bool> controllerCanGoBack() async {
+    return await webViewXController?.canGoBack() ?? await inAppWebViewControllerController?.canGoBack() ?? false;
+  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
