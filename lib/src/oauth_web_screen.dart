@@ -19,6 +19,7 @@ class OAuthWebScreen extends StatelessWidget {
     ValueChanged<Credentials>? onSuccess,
     ValueChanged<dynamic>? onError,
     VoidCallback? onCancel,
+    CertificateValidator? onCertificateValidate,
     ThemeData? themeData,
     Map<String, String>? textLocales
   }) => Navigator.push(context,
@@ -35,6 +36,7 @@ class OAuthWebScreen extends StatelessWidget {
         onSuccess: onSuccess,
         onError: onError,
         onCancel: onCancel,
+        onCertificateValidate: onCertificateValidate,
         themeData: themeData,
         textLocales: textLocales,
       )
@@ -61,6 +63,9 @@ class OAuthWebScreen extends StatelessWidget {
   /// This function will be called when user cancels authentication.
   final VoidCallback? onCancel;
 
+  /// This function will be called when [authorizationEndpointUrl] is first loaded.
+  final CertificateValidator? onCertificateValidate;
+
   final ThemeData? themeData;
   final Map<String, String>? textLocales;
 
@@ -80,6 +85,7 @@ class OAuthWebScreen extends StatelessWidget {
     this.onSuccess,
     this.onError,
     this.onCancel,
+    this.onCertificateValidate,
     this.themeData,
     this.textLocales,
   }) : super(key: key);
@@ -105,6 +111,7 @@ class OAuthWebScreen extends StatelessWidget {
               onSuccess: _onSuccess,
               onError: _onError,
               onCancel: _onCancel,
+              onCertificateValidate: onCertificateValidate,
               themeData: themeData,
               textLocales: textLocales,
             ),

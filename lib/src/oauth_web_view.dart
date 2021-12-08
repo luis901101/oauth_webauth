@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:flutter/material.dart';
 import 'package:webviewx/webviewx.dart';
+
+typedef CertificateValidator = bool Function(X509Certificate certificate);
 
 class OAuthWebView extends StatefulWidget {
 
@@ -37,6 +41,10 @@ class OAuthWebView extends StatefulWidget {
   /// This function will be called when user cancels authentication.
   final VoidCallback onCancel;
 
+  /// This function will be called when [authorizationEndpointUrl] is first loaded.
+  /// If false is returned then a CertificateException() will be thrown
+  final CertificateValidator? onCertificateValidate;
+
   final ThemeData? themeData;
   final Map<String, String>? textLocales;
 
@@ -53,6 +61,7 @@ class OAuthWebView extends StatefulWidget {
     required this.onSuccess,
     required this.onError,
     required this.onCancel,
+    this.onCertificateValidate,
     this.themeData,
     this.textLocales,
   }) : super(key: key);
@@ -86,6 +95,7 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
   late String clearCacheWarningMessage;
 
   late Timer toolbarTimerShow;
+  late Widget webView;
 
   @override
   void initState() {
@@ -116,6 +126,7 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
           if (widget.loginHint != null) 'login_hint': widget.loginHint!,
           if (widget.promptValues?.isNotEmpty ?? false) 'prompt': widget.promptValues!.join(' '),
         }));
+    webView = initWebView();
   }
 
   void initTooltips() {
@@ -129,12 +140,12 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
     tooltipsAlreadyInitialized = true;
   }
 
-  Widget get webView {
+  Widget initWebView() {
 
-    final Widget webView;
+    final Widget content;
 
     if(kIsWeb) {
-      // webView = WebView(
+      // content = WebView(
       //   initialUrl: authorizationUri.toString(),
       //   javascriptMode: JavascriptMode.unrestricted,
       //   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
@@ -149,14 +160,14 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
       //   NavigationDecision.prevent,
       //   onPageFinished: (url) => hideLoading(),
       // );
-      
-      webView = WebViewX(
-        width: double.infinity,
-        height: double.infinity,
+
+      content = WebViewX(
+        width: MediaQueryData.fromWindow(window).size.width,
+        height: MediaQueryData.fromWindow(window).size.height,
         initialContent: authorizationUri.toString(),
         initialSourceType: SourceType.url,
         javascriptMode: JavascriptMode.unrestricted,
-        userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
+        userAgent: 'Mozilla/5.0', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
         onWebViewCreated: (controller) {
           webViewXController = controller;
         },
@@ -172,12 +183,12 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
       /// manage ServerTrustAuthRequest, which is crucial in Android because Android
       /// native WebView does not allow to access an URL with a certificate not authorized by
       /// known certification authority.
-      webView = InAppWebView(
+      content = InAppWebView(
         initialOptions: InAppWebViewGroupOptions(
           crossPlatform: InAppWebViewOptions(
             useShouldOverrideUrlLoading: true,
             supportZoom: false,
-            userAgent: 'Mozilla/5.0'
+            userAgent: 'Mozilla/5.0', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
           ),
         ),
         initialUrlRequest: URLRequest(url: authorizationUri),
@@ -193,16 +204,25 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
           NavigationActionPolicy.ALLOW :
           NavigationActionPolicy.CANCEL;
         },
-        onLoadStart: (controller, url) async => showLoading(),
-        onLoadStop: (controller, url) async => hideLoading(),
+        onLoadStart: (controller, url) async {
+          if(url == authorizationUri) {
+            final certificate = (await controller.getCertificate())?.x509Certificate;
+            if(certificate != null && !onCertificateValidate(certificate)) {
+              onError(const CertificateException('Invalid certificate'));
+            }
+          }
+          showLoading();
+        },
+        onLoadStop: (controller, url) async {
+          hideLoading();
+        },
         onLoadError: (controller, url, code, message) => hideLoading(),
       );
     }
 
-
     return GestureDetector(
       onLongPressDown: (details) {},/// To avoid long press for text selection or open link on new tab
-      child: webView,
+      child: content,
     );
   }
 
@@ -227,7 +247,6 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
   }
 
   bool onNavigateTo(String url) {
-    // print('uuuuuuuu: $url');
     if(url != 'about:blank') showLoading();
     if (url.startsWith(redirectUrlEncoded)) {
       onSuccess(url);
@@ -256,6 +275,10 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
 
   void onCancell() {
     widget.onCancel();
+  }
+
+  bool onCertificateValidate(X509Certificate certificate) {
+    return widget.onCertificateValidate?.call(certificate) ?? true;
   }
 
   Widget iconButton({
@@ -359,7 +382,7 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
                     iconData: Icons.close,
                     tooltip: closeButtonTooltip,
                     respectLoading: false,
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => onCancell(),
                   ),
                 ],
               ),
@@ -425,5 +448,11 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
       return false;
     }
     return true;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    toolbarTimerShow.cancel();
   }
 }

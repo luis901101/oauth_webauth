@@ -87,6 +87,11 @@ class _MyHomePageState extends State<MyHomePage> {
       scopes: scopes,
       promptValues: const ['login'],
       loginHint: 'luis901101@gmail.com',
+      onCertificateValidate: (certificate) {///This is recommended
+        /// Do certificate validations here
+        /// If false is returned then a CertificateException() will be thrown
+        return true;
+      },
       textLocales: { ///Optionally texts can be localized
         OAuthWebView.backButtonTooltipKey: 'Ir atrás',
         OAuthWebView.forwardButtonTooltipKey: 'Ir adelante',
@@ -119,6 +124,11 @@ class _MyHomePageState extends State<MyHomePage> {
       scopes: scopes,
       promptValues: const ['login'],
       loginHint: 'luis901101@gmail.com',
+      onCertificateValidate: (certificate) { ///This is recommended
+        /// Do certificate validations here
+        /// If false is returned then a CertificateException() will be thrown
+        return true;
+      },
       textLocales: { ///Optionally text can be localized
         OAuthWebView.backButtonTooltipKey: 'Ir atrás',
         OAuthWebView.forwardButtonTooltipKey: 'Ir adelante',
