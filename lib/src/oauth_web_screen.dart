@@ -1,47 +1,44 @@
-
 import 'package:flutter/material.dart';
 import 'package:oauth2/oauth2.dart';
 import 'package:oauth_webauth/src/oauth_web_view.dart';
 
 class OAuthWebScreen extends StatelessWidget {
-
-  static Future? start({
-    Key? key,
-    required BuildContext context,
-    required String authorizationEndpointUrl,
-    required String tokenEndpointUrl,
-    required String redirectUrl,
-    required String clientId,
-    String? clientSecret,
-    List<String>? scopes,
-    String? loginHint,
-    List<String>? promptValues,
-    ValueChanged<Credentials>? onSuccess,
-    ValueChanged<dynamic>? onError,
-    VoidCallback? onCancel,
-    CertificateValidator? onCertificateValidate,
-    ThemeData? themeData,
-    Map<String, String>? textLocales
-  }) => Navigator.push(context,
-    MaterialPageRoute(builder: (context) =>
-      OAuthWebScreen(
-        authorizationEndpointUrl: authorizationEndpointUrl,
-        tokenEndpointUrl: tokenEndpointUrl,
-        redirectUrl: redirectUrl,
-        clientId: clientId,
-        clientSecret: clientSecret,
-        scopes: scopes,
-        loginHint: loginHint,
-        promptValues: promptValues,
-        onSuccess: onSuccess,
-        onError: onError,
-        onCancel: onCancel,
-        onCertificateValidate: onCertificateValidate,
-        themeData: themeData,
-        textLocales: textLocales,
-      )
-    ));
-
+  static Future? start(
+          {Key? key,
+          required BuildContext context,
+          required String authorizationEndpointUrl,
+          required String tokenEndpointUrl,
+          required String redirectUrl,
+          required String clientId,
+          String? clientSecret,
+          List<String>? scopes,
+          String? loginHint,
+          List<String>? promptValues,
+          ValueChanged<Credentials>? onSuccess,
+          ValueChanged<dynamic>? onError,
+          VoidCallback? onCancel,
+          CertificateValidator? onCertificateValidate,
+          ThemeData? themeData,
+          Map<String, String>? textLocales}) =>
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OAuthWebScreen(
+                    authorizationEndpointUrl: authorizationEndpointUrl,
+                    tokenEndpointUrl: tokenEndpointUrl,
+                    redirectUrl: redirectUrl,
+                    clientId: clientId,
+                    clientSecret: clientSecret,
+                    scopes: scopes,
+                    loginHint: loginHint,
+                    promptValues: promptValues,
+                    onSuccess: onSuccess,
+                    onError: onError,
+                    onCancel: onCancel,
+                    onCertificateValidate: onCertificateValidate,
+                    themeData: themeData,
+                    textLocales: textLocales,
+                  )));
 
   final String authorizationEndpointUrl;
   final String tokenEndpointUrl;
@@ -137,11 +134,10 @@ class OAuthWebScreen extends StatelessWidget {
   }
 
   Future<bool> onBackPressed() async {
-    if(!((await paymentViewStateKey.currentState?.onBackPressed()) ?? false)) {
+    if (!((await paymentViewStateKey.currentState?.onBackPressed()) ?? false)) {
       return false;
     }
     onCancel?.call();
     return true;
   }
-
 }

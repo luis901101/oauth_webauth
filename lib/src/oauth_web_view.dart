@@ -12,14 +12,14 @@ import 'package:webviewx/webviewx.dart';
 typedef CertificateValidator = bool Function(X509Certificate certificate);
 
 class OAuthWebView extends StatefulWidget {
-
   static const String firstLoadHeroTag = 'firstLoadOAuthWebAuthHeroTag';
   static const String backButtonTooltipKey = 'backButtonTooltipKey';
   static const String forwardButtonTooltipKey = 'forwardButtonTooltipKey';
   static const String reloadButtonTooltipKey = 'reloadButtonTooltipKey';
   static const String clearCacheButtonTooltipKey = 'clearCacheButtonTooltipKey';
   static const String closeButtonTooltipKey = 'closeButtonTooltipKey';
-  static const String clearCacheWarningMessageKey = 'clearCacheWarningMessageKey';
+  static const String clearCacheWarningMessageKey =
+      'clearCacheWarningMessageKey';
 
   final String authorizationEndpointUrl;
   final String tokenEndpointUrl;
@@ -70,8 +70,8 @@ class OAuthWebView extends StatefulWidget {
   OAuthWebViewState createState() => OAuthWebViewState();
 }
 
-class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver {
-
+class OAuthWebViewState extends State<OAuthWebView>
+    with WidgetsBindingObserver {
   bool ready = false;
   bool showToolbar = false;
   bool isLoading = true;
@@ -100,7 +100,7 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
   @override
   void initState() {
     super.initState();
-    toolbarTimerShow = Timer(const Duration(seconds: 5), (){
+    toolbarTimerShow = Timer(const Duration(seconds: 5), () {
       setState(() {
         showToolbar = true;
       });
@@ -119,32 +119,44 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
     );
 
     authorizationUri = authorizationUri.replace(
-      queryParameters: Map.from(authorizationUri.queryParameters)
-        ..addAll({
-          'state': const Base64Encoder.urlSafe().convert(DateTime.now().toIso8601String().codeUnits),
-          'nonce': const Base64Encoder.urlSafe().convert(DateTime.now().millisecondsSinceEpoch.toString().codeUnits),
-          if (widget.loginHint != null) 'login_hint': widget.loginHint!,
-          if (widget.promptValues?.isNotEmpty ?? false) 'prompt': widget.promptValues!.join(' '),
-        }));
+        queryParameters: Map.from(authorizationUri.queryParameters)
+          ..addAll({
+            'state': const Base64Encoder.urlSafe()
+                .convert(DateTime.now().toIso8601String().codeUnits),
+            'nonce': const Base64Encoder.urlSafe().convert(
+                DateTime.now().millisecondsSinceEpoch.toString().codeUnits),
+            if (widget.loginHint != null) 'login_hint': widget.loginHint!,
+            if (widget.promptValues?.isNotEmpty ?? false)
+              'prompt': widget.promptValues!.join(' '),
+          }));
     webView = initWebView();
   }
 
   void initTooltips() {
-    if(tooltipsAlreadyInitialized) return;
-    backButtonTooltip = widget.textLocales?[OAuthWebView.backButtonTooltipKey] ?? 'Go back';
-    forwardButtonTooltip = widget.textLocales?[OAuthWebView.forwardButtonTooltipKey]  ?? 'Go forward';
-    reloadButtonTooltip = widget.textLocales?[OAuthWebView.reloadButtonTooltipKey]  ?? 'Reload';
-    clearCacheButtonTooltip = widget.textLocales?[OAuthWebView.clearCacheButtonTooltipKey]  ?? 'Clear cache';
-    closeButtonTooltip = widget.textLocales?[OAuthWebView.closeButtonTooltipKey]  ?? MaterialLocalizations.of(context).closeButtonTooltip;
-    clearCacheWarningMessage = widget.textLocales?[OAuthWebView.clearCacheWarningMessageKey]  ?? 'Are you sure you want to clear cache?';
+    if (tooltipsAlreadyInitialized) return;
+    backButtonTooltip =
+        widget.textLocales?[OAuthWebView.backButtonTooltipKey] ?? 'Go back';
+    forwardButtonTooltip =
+        widget.textLocales?[OAuthWebView.forwardButtonTooltipKey] ??
+            'Go forward';
+    reloadButtonTooltip =
+        widget.textLocales?[OAuthWebView.reloadButtonTooltipKey] ?? 'Reload';
+    clearCacheButtonTooltip =
+        widget.textLocales?[OAuthWebView.clearCacheButtonTooltipKey] ??
+            'Clear cache';
+    closeButtonTooltip =
+        widget.textLocales?[OAuthWebView.closeButtonTooltipKey] ??
+            MaterialLocalizations.of(context).closeButtonTooltip;
+    clearCacheWarningMessage =
+        widget.textLocales?[OAuthWebView.clearCacheWarningMessageKey] ??
+            'Are you sure you want to clear cache?';
     tooltipsAlreadyInitialized = true;
   }
 
   Widget initWebView() {
-
     final Widget content;
 
-    if(kIsWeb) {
+    if (kIsWeb) {
       // content = WebView(
       //   initialUrl: authorizationUri.toString(),
       //   javascriptMode: JavascriptMode.unrestricted,
@@ -167,14 +179,16 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
         initialContent: authorizationUri.toString(),
         initialSourceType: SourceType.url,
         javascriptMode: JavascriptMode.unrestricted,
-        userAgent: 'Mozilla/5.0', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
+        userAgent: 'Mozilla/5.0',
+
+        /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
         onWebViewCreated: (controller) {
           webViewXController = controller;
         },
         navigationDelegate: (request) async =>
-        onNavigateTo(request.content.source) ?
-        NavigationDecision.navigate :
-        NavigationDecision.prevent,
+            onNavigateTo(request.content.source)
+                ? NavigationDecision.navigate
+                : NavigationDecision.prevent,
         onPageFinished: (url) => hideLoading(),
       );
     } else {
@@ -188,26 +202,30 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
           crossPlatform: InAppWebViewOptions(
             useShouldOverrideUrlLoading: true,
             supportZoom: false,
-            userAgent: 'Mozilla/5.0', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
+            userAgent: 'Mozilla/5.0',
+
+            /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
           ),
         ),
         initialUrlRequest: URLRequest(url: authorizationUri),
         onReceivedServerTrustAuthRequest: (controller, challenge) async {
-          return ServerTrustAuthResponse(action: ServerTrustAuthResponseAction.PROCEED);
+          return ServerTrustAuthResponse(
+              action: ServerTrustAuthResponseAction.PROCEED);
         },
         onWebViewCreated: (controller) {
           inAppWebViewControllerController = controller;
         },
         shouldOverrideUrlLoading: (controller, navigationAction) async {
           final url = navigationAction.request.url?.toString() ?? '';
-          return onNavigateTo(url) ?
-          NavigationActionPolicy.ALLOW :
-          NavigationActionPolicy.CANCEL;
+          return onNavigateTo(url)
+              ? NavigationActionPolicy.ALLOW
+              : NavigationActionPolicy.CANCEL;
         },
         onLoadStart: (controller, url) async {
-          if(url == authorizationUri) {
-            final certificate = (await controller.getCertificate())?.x509Certificate;
-            if(certificate != null && !onCertificateValidate(certificate)) {
+          if (url == authorizationUri) {
+            final certificate =
+                (await controller.getCertificate())?.x509Certificate;
+            if (certificate != null && !onCertificateValidate(certificate)) {
               onError(const CertificateException('Invalid certificate'));
             }
           }
@@ -221,13 +239,15 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
     }
 
     return GestureDetector(
-      onLongPressDown: (details) {},/// To avoid long press for text selection or open link on new tab
+      onLongPressDown: (details) {},
+
+      /// To avoid long press for text selection or open link on new tab
       child: content,
     );
   }
 
   void showLoading() {
-    if(!isLoading) {
+    if (!isLoading) {
       setState(() {
         isLoading = true;
       });
@@ -235,7 +255,7 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
   }
 
   Future<void> hideLoading() async {
-    if(isLoading) {
+    if (isLoading) {
       ready = true;
       showToolbar = true;
       toolbarTimerShow.cancel();
@@ -247,7 +267,7 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
   }
 
   bool onNavigateTo(String url) {
-    if(url != 'about:blank') showLoading();
+    if (url != 'about:blank') showLoading();
     if (url.startsWith(redirectUrlEncoded)) {
       onSuccess(url);
       return false;
@@ -260,10 +280,9 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
     final parameters = Uri.dataFromString(responseRedirect).queryParameters;
 
     try {
-      final client = await authorizationCodeGrant.handleAuthorizationResponse(parameters);
-      widget.onSuccess(
-          client.credentials
-      );
+      final client =
+          await authorizationCodeGrant.handleAuthorizationResponse(parameters);
+      widget.onSuccess(client.credentials);
     } catch (e) {
       onError(e);
     }
@@ -286,13 +305,14 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
     String? tooltip,
     VoidCallback? onPressed,
     bool respectLoading = true,
-  }) => IconButton(
-    iconSize: 30,
-    tooltip: tooltip,
-    icon: Icon(iconData),
-    color: Theme.of(context).colorScheme.secondary,
-    onPressed: respectLoading && isLoading ? null : onPressed,
-  );
+  }) =>
+      IconButton(
+        iconSize: 30,
+        tooltip: tooltip,
+        icon: Icon(iconData),
+        color: Theme.of(context).colorScheme.secondary,
+        onPressed: respectLoading && isLoading ? null : onPressed,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -312,7 +332,9 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
                   tag: OAuthWebView.firstLoadHeroTag,
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
-                    child: !ready && isLoading ? const CircularProgressIndicator() : const SizedBox(),
+                    child: !ready && isLoading
+                        ? const CircularProgressIndicator()
+                        : const SizedBox(),
                   ),
                 ),
               ),
@@ -344,7 +366,8 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
                   iconButton(
                     iconData: Icons.arrow_forward_ios_rounded,
                     tooltip: forwardButtonTooltip,
-                    onPressed: !allowGoForward ? null : () => controllerGoForward(),
+                    onPressed:
+                        !allowGoForward ? null : () => controllerGoForward(),
                   ),
                   iconButton(
                     iconData: Icons.refresh_rounded,
@@ -355,27 +378,31 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
                     iconData: Icons.cleaning_services_rounded,
                     tooltip: clearCacheButtonTooltip,
                     onPressed: () {
-                      showDialog(context: context, builder: (context) {
-                        return AlertDialog(
-                          title: Text(clearCacheButtonTooltip),
-                          content: Text(clearCacheWarningMessage),
-                          actions: [
-                            TextButton(
-                              child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            TextButton(
-                              child: Text(MaterialLocalizations.of(context).okButtonLabel),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                controllerClearCache();
-                              },
-                            ),
-                          ],
-                        );
-                      });
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text(clearCacheButtonTooltip),
+                              content: Text(clearCacheWarningMessage),
+                              actions: [
+                                TextButton(
+                                  child: Text(MaterialLocalizations.of(context)
+                                      .cancelButtonLabel),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text(MaterialLocalizations.of(context)
+                                      .okButtonLabel),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    controllerClearCache();
+                                  },
+                                ),
+                              ],
+                            );
+                          });
                     },
                   ),
                   iconButton(
@@ -391,12 +418,13 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
         );
       },
     );
-    return widget.themeData != null ? Theme(
-      data: widget.themeData!,
-      child: content,
-    ) : content;
+    return widget.themeData != null
+        ? Theme(
+            data: widget.themeData!,
+            child: content,
+          )
+        : content;
   }
-
 
   Future<void> controllerGoBack() async {
     showLoading();
@@ -424,11 +452,15 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
   }
 
   Future<bool> controllerCanGoForward() async {
-    return await webViewXController?.canGoForward() ?? await inAppWebViewControllerController?.canGoForward() ?? false;
+    return await webViewXController?.canGoForward() ??
+        await inAppWebViewControllerController?.canGoForward() ??
+        false;
   }
 
   Future<bool> controllerCanGoBack() async {
-    return await webViewXController?.canGoBack() ?? await inAppWebViewControllerController?.canGoBack() ?? false;
+    return await webViewXController?.canGoBack() ??
+        await inAppWebViewControllerController?.canGoBack() ??
+        false;
   }
 
   @override
@@ -443,7 +475,7 @@ class OAuthWebViewState extends State<OAuthWebView> with WidgetsBindingObserver 
   }
 
   Future<bool> onBackPressed() async {
-    if(await controllerCanGoBack()) {
+    if (await controllerCanGoBack()) {
       controllerGoBack();
       return false;
     }
