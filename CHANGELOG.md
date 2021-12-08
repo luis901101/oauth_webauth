@@ -9,5 +9,9 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 1.0.0+2
+### Changed
+- README updated
+
 ## 1.0.0+1
 - First release

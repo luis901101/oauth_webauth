@@ -5,11 +5,11 @@ This plugin offers a WebView implementation approach for OAuth authorization/aut
 
 ## Compatibility
 
-| Platform | Compatibility |  
-| ------ | ------ |  
-| Android | :white_check_mark: |  
-| iOS | :white_check_mark: |  
-| Web | *Work in progress* |  
+| Platform | Compatibility |
+| ------ | ------ |
+| Android | :white_check_mark: |
+| iOS | :white_check_mark: |
+| Web | *Work in progress* |
 
 ## Preamble
 Other plugins like [Flutter AppAuth](https://pub.dev/packages/flutter_appauth) uses native implementation of [AppAuth](https://appauth.io/) which in turn uses `SFAuthenticationSession` and `CustomTabs` for iOS and Android respectively. When using `SFAuthenticationSession` and `CustomTabs` your app will/could present some problems like:
@@ -32,9 +32,9 @@ As stated before this plugin uses WebView implementation specifically the plugin
 Just add the internet permission to your `AndroidManifest`
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.example">  
-	 <uses-permission android:name="android.permission.INTERNET"/>  
+    <uses-permission android:name="android.permission.INTERNET"/>  
  <application>  
-	 ...
+    ...
  </application>
 ```
 
@@ -44,15 +44,15 @@ Just add this to your `Info.plist`
 ```xml
 <plist version="1.0">  
 <dict>
-	....
-	....
-	<key>NSAppTransportSecurity</key>  
-	<dict>  
-	  <key>NSAllowsArbitraryLoads</key>  
-	  <true/>  
-	</dict>
-	....
-	....
+    ....
+    ....
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+    ....
+    ....
 </dict>  
 </plist>
 ```
@@ -71,48 +71,50 @@ This plugin offers two variants to handle these outputs.
 ### Variant 1
 Awaiting response from navigator route `Future`.
 ```dart
-void loginV1() async {  
-  final result = await OAuthWebScreen.start(  
-	context: context,  
-	authorizationEndpointUrl: authorizationEndpointUrl,  
-	tokenEndpointUrl: tokenEndpointUrl,  
-	clientSecret: clientSecret,  
-	clientId: clientId,  
-	redirectUrl: redirectUrl,  
-	scopes: scopes,  
-	promptValues: const ['login'],  
-	loginHint: 'johndoe@mail.com',
-	onCertificateValidate: (certificate) {///This is recommended  
-	 /// Do certificate validations here
-	 /// If false is returned then a CertificateException() will be thrown
-	 return true;  
-	},  
-	textLocales: { ///Optionally texts can be localized  
-	  OAuthWebView.backButtonTooltipKey: 'Ir atrás',  
-	  OAuthWebView.forwardButtonTooltipKey: 'Ir adelante',  
-	  OAuthWebView.reloadButtonTooltipKey: 'Recargar',  
-	  OAuthWebView.clearCacheButtonTooltipKey: 'Limpiar caché',  
-	  OAuthWebView.closeButtonTooltipKey: 'Cerrar',  
-	  OAuthWebView.clearCacheWarningMessageKey: '¿Está seguro que desea limpiar la caché?',  
-	}  
-  );  
-  if(result != null) {  
-    if(result is Credentials) {  
-      authResponse = getPrettyCredentialsJson(result);  
-  } else {  
-    authResponse = result.toString();  
-  }  
-  } else {  
-    authResponse = 'User cancelled authentication';  
-  }  
-  setState(() {});  
+void loginV1() async {
+  final result = await OAuthWebScreen.start(
+      context: context,
+      authorizationEndpointUrl: authorizationEndpointUrl,
+      tokenEndpointUrl: tokenEndpointUrl,
+      clientSecret: clientSecret,
+      clientId: clientId,
+      redirectUrl: redirectUrl,
+      scopes: scopes,
+      promptValues: const ['login'],
+      loginHint: 'johndoe@mail.com',
+      onCertificateValidate: (certificate) {
+        ///This is recommended
+        /// Do certificate validations here
+        /// If false is returned then a CertificateException() will be thrown
+        return true;
+      },
+      textLocales: {
+        ///Optionally texts can be localized
+        OAuthWebView.backButtonTooltipKey: 'Ir atrás',
+        OAuthWebView.forwardButtonTooltipKey: 'Ir adelante',
+        OAuthWebView.reloadButtonTooltipKey: 'Recargar',
+        OAuthWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
+        OAuthWebView.closeButtonTooltipKey: 'Cerrar',
+        OAuthWebView.clearCacheWarningMessageKey:
+        '¿Está seguro que desea limpiar la caché?',
+      });
+  if (result != null) {
+    if (result is Credentials) {
+      authResponse = getPrettyCredentialsJson(result);
+    } else {
+      authResponse = result.toString();
+    }
+  } else {
+    authResponse = 'User cancelled authentication';
+  }
+  setState(() {});
 }
 ```
 
 ### Variant2
 Using callbacks
  ```dart
- void loginV2() {
+void loginV2() {
   OAuthWebScreen.start(
       context: context,
       authorizationEndpointUrl: authorizationEndpointUrl,
@@ -123,18 +125,21 @@ Using callbacks
       scopes: scopes,
       promptValues: const ['login'],
       loginHint: 'johndoe@mail.com',
-      onCertificateValidate: (certificate) {///This is recommended  
+      onCertificateValidate: (certificate) {
+        ///This is recommended
         /// Do certificate validations here
         /// If false is returned then a CertificateException() will be thrown
         return true;
       },
-      textLocales: { ///Optionally text can be localized  
+      textLocales: {
+        ///Optionally text can be localized
         OAuthWebView.backButtonTooltipKey: 'Ir atrás',
         OAuthWebView.forwardButtonTooltipKey: 'Ir adelante',
         OAuthWebView.reloadButtonTooltipKey: 'Recargar',
         OAuthWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
         OAuthWebView.closeButtonTooltipKey: 'Cerrar',
-        OAuthWebView.clearCacheWarningMessageKey: '¿Está seguro que desea limpiar la caché?',
+        OAuthWebView.clearCacheWarningMessageKey:
+        '¿Está seguro que desea limpiar la caché?',
       },
       onSuccess: (credentials) {
         setState(() {
@@ -150,7 +155,6 @@ Using callbacks
         setState(() {
           authResponse = 'User cancelled authentication';
         });
-      }
-  );
+      });
 }
  ```
