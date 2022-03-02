@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 1.1.0+3 (2022-03-02)
+### Added
+- `contentLocale` property can be set to indicate the web auth to use that locale for internationalization.
+
 ## 1.0.0+2
 ### Changed
 - README updated

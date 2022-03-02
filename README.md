@@ -16,16 +16,19 @@ Other plugins like [Flutter AppAuth](https://pub.dev/packages/flutter_appauth) u
 - UI: users will notice a breaking UI difference when system browser opens to handle the identity provider authentication process.
 - In iOS an annoying system dialog shows up every time the user tries to authenticate, indicating that the current app and browser could share their information.
 - Your system browser cache is shared with your app which is good and **bad**, bad because any cache problem due to your every day navigation use could affect your app authentication and the only way to clean cache it's by cleaning system browser cache at operating system level.
+- Authentication page will use the locale from System Browser which in fact uses the Operating System locale, this means if your app uses different language than the Operating System then authentication page will show different internationalization than your app. 
 
 ## Features
-
 With this plugin you will get:
 - Full control over the UI, WebView will run inside your app so Theme and Color Scheme will be yours to choose, in fact you can add AppBar or FloatingActionButton or whatever you thinks it's necessary to your UI.
 - No system dialog will be shown when users tries to authenticate.
 - Users will not be affected by any system browser problem cache and also will be able to clean app browser cache from the authentication screen itself.
+- Authentication page locale can be set from app using the `contentLocale` property to ensure the same locale. By default Operating System locale will be used if no `contentLocale` is specified.
+
+**Note:**
+- `contentLocale` will apply only if the authentication page supports the specified `Locale('...')` and accepts the header: `'Accept-Language': 'es-ES'`
 
 ## Getting started
-
 As stated before this plugin uses WebView implementation specifically the plugin [flutter_inappwebview](https://pub.dev/packages/flutter_inappwebview). For any WebView related problem please check the documentation of that plugin at [docs](https://inappwebview.dev/docs/).
 
 ### Android setup
@@ -88,6 +91,7 @@ void loginV1() async {
         /// If false is returned then a CertificateException() will be thrown
         return true;
       },
+      contentLocale: Locale('es'),
       textLocales: {
         ///Optionally texts can be localized
         OAuthWebView.backButtonTooltipKey: 'Ir atrás',
@@ -131,6 +135,7 @@ void loginV2() {
         /// If false is returned then a CertificateException() will be thrown
         return true;
       },
+      contentLocale: Locale('es'),
       textLocales: {
         ///Optionally text can be localized
         OAuthWebView.backButtonTooltipKey: 'Ir atrás',

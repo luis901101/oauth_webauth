@@ -47,6 +47,7 @@ class OAuthWebView extends StatefulWidget {
 
   final ThemeData? themeData;
   final Map<String, String>? textLocales;
+  final Locale? contentLocale;
 
   const OAuthWebView({
     Key? key,
@@ -64,6 +65,7 @@ class OAuthWebView extends StatefulWidget {
     this.onCertificateValidate,
     this.themeData,
     this.textLocales,
+    this.contentLocale,
   }) : super(key: key);
 
   @override
@@ -207,7 +209,12 @@ class OAuthWebViewState extends State<OAuthWebView>
             /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
           ),
         ),
-        initialUrlRequest: URLRequest(url: authorizationUri),
+        initialUrlRequest: URLRequest(
+          url: authorizationUri,
+          headers: widget.contentLocale == null
+              ? null
+              : {'Accept-Language': widget.contentLocale!.toLanguageTag()},
+        ),
         onReceivedServerTrustAuthRequest: (controller, challenge) async {
           return ServerTrustAuthResponse(
               action: ServerTrustAuthResponseAction.PROCEED);

@@ -3,23 +3,25 @@ import 'package:oauth2/oauth2.dart';
 import 'package:oauth_webauth/src/oauth_web_view.dart';
 
 class OAuthWebScreen extends StatelessWidget {
-  static Future? start(
-          {Key? key,
-          required BuildContext context,
-          required String authorizationEndpointUrl,
-          required String tokenEndpointUrl,
-          required String redirectUrl,
-          required String clientId,
-          String? clientSecret,
-          List<String>? scopes,
-          String? loginHint,
-          List<String>? promptValues,
-          ValueChanged<Credentials>? onSuccess,
-          ValueChanged<dynamic>? onError,
-          VoidCallback? onCancel,
-          CertificateValidator? onCertificateValidate,
-          ThemeData? themeData,
-          Map<String, String>? textLocales}) =>
+  static Future? start({
+    Key? key,
+    required BuildContext context,
+    required String authorizationEndpointUrl,
+    required String tokenEndpointUrl,
+    required String redirectUrl,
+    required String clientId,
+    String? clientSecret,
+    List<String>? scopes,
+    String? loginHint,
+    List<String>? promptValues,
+    ValueChanged<Credentials>? onSuccess,
+    ValueChanged<dynamic>? onError,
+    VoidCallback? onCancel,
+    CertificateValidator? onCertificateValidate,
+    ThemeData? themeData,
+    Map<String, String>? textLocales,
+    Locale? contentLocale,
+  }) =>
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -38,6 +40,7 @@ class OAuthWebScreen extends StatelessWidget {
                     onCertificateValidate: onCertificateValidate,
                     themeData: themeData,
                     textLocales: textLocales,
+                    contentLocale: contentLocale,
                   )));
 
   final String authorizationEndpointUrl;
@@ -65,6 +68,7 @@ class OAuthWebScreen extends StatelessWidget {
 
   final ThemeData? themeData;
   final Map<String, String>? textLocales;
+  final Locale? contentLocale;
 
   late final BuildContext context;
   final paymentViewStateKey = GlobalKey<OAuthWebViewState>();
@@ -85,6 +89,7 @@ class OAuthWebScreen extends StatelessWidget {
     this.onCertificateValidate,
     this.themeData,
     this.textLocales,
+    this.contentLocale,
   }) : super(key: key);
 
   @override
@@ -111,6 +116,7 @@ class OAuthWebScreen extends StatelessWidget {
               onCertificateValidate: onCertificateValidate,
               themeData: themeData,
               textLocales: textLocales,
+              contentLocale: contentLocale,
             ),
           ),
         );

@@ -10,6 +10,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,6 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
       .split(' ');
 
   String authResponse = 'Authorization data will be shown here';
+  Locale? contentLocale;
+  final locales = const [null, Locale('es'), Locale('en')];
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +68,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 authResponse,
               ),
               const SizedBox(height: 16),
+              SizedBox(
+                width: 120,
+                child: DropdownButtonFormField<Locale>(
+                  items: locales
+                      .map((e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e?.toLanguageTag() ?? 'Default OS')))
+                      .toList(),
+                  value: contentLocale,
+                  onChanged: (locale) {
+                    setState(() {
+                      contentLocale = locale;
+                    });
+                  },
+                  decoration:
+                      const InputDecoration(label: Text('Content language')),
+                ),
+              ),
               ElevatedButton(
                 onPressed: loginV1,
                 child: const Text('Login variant 1'),
@@ -85,31 +106,33 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void loginV1() async {
     final result = await OAuthWebScreen.start(
-        context: context,
-        authorizationEndpointUrl: authorizationEndpointUrl,
-        tokenEndpointUrl: tokenEndpointUrl,
-        clientSecret: clientSecret,
-        clientId: clientId,
-        redirectUrl: redirectUrl,
-        scopes: scopes,
-        promptValues: const ['login'],
-        loginHint: 'johndoe@mail.com',
-        onCertificateValidate: (certificate) {
-          ///This is recommended
-          /// Do certificate validations here
-          /// If false is returned then a CertificateException() will be thrown
-          return true;
-        },
-        textLocales: {
-          ///Optionally texts can be localized
-          OAuthWebView.backButtonTooltipKey: 'Ir atrás',
-          OAuthWebView.forwardButtonTooltipKey: 'Ir adelante',
-          OAuthWebView.reloadButtonTooltipKey: 'Recargar',
-          OAuthWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
-          OAuthWebView.closeButtonTooltipKey: 'Cerrar',
-          OAuthWebView.clearCacheWarningMessageKey:
-              '¿Está seguro que desea limpiar la caché?',
-        });
+      context: context,
+      authorizationEndpointUrl: authorizationEndpointUrl,
+      tokenEndpointUrl: tokenEndpointUrl,
+      clientSecret: clientSecret,
+      clientId: clientId,
+      redirectUrl: redirectUrl,
+      scopes: scopes,
+      promptValues: const ['login'],
+      loginHint: 'johndoe@mail.com',
+      onCertificateValidate: (certificate) {
+        ///This is recommended
+        /// Do certificate validations here
+        /// If false is returned then a CertificateException() will be thrown
+        return true;
+      },
+      textLocales: {
+        ///Optionally texts can be localized
+        OAuthWebView.backButtonTooltipKey: 'Ir atrás',
+        OAuthWebView.forwardButtonTooltipKey: 'Ir adelante',
+        OAuthWebView.reloadButtonTooltipKey: 'Recargar',
+        OAuthWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
+        OAuthWebView.closeButtonTooltipKey: 'Cerrar',
+        OAuthWebView.clearCacheWarningMessageKey:
+            '¿Está seguro que desea limpiar la caché?',
+      },
+      contentLocale: contentLocale,
+    );
     if (result != null) {
       if (result is Credentials) {
         authResponse = getPrettyCredentialsJson(result);
@@ -149,6 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
           OAuthWebView.clearCacheWarningMessageKey:
               '¿Está seguro que desea limpiar la caché?',
         },
+        contentLocale: contentLocale,
         onSuccess: (credentials) {
           setState(() {
             authResponse = getPrettyCredentialsJson(credentials);
