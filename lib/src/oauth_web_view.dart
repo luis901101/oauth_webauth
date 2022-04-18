@@ -107,7 +107,7 @@ class OAuthWebViewState extends State<OAuthWebView>
         showToolbar = true;
       });
     });
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     redirectUrlEncoded = widget.redirectUrl;
     authorizationCodeGrant = oauth2.AuthorizationCodeGrant(
       widget.clientId,
@@ -204,9 +204,10 @@ class OAuthWebViewState extends State<OAuthWebView>
           crossPlatform: InAppWebViewOptions(
             useShouldOverrideUrlLoading: true,
             supportZoom: false,
-            userAgent: 'Mozilla/5.0',
-
-            /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
+            userAgent: 'Mozilla/5.0', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
+          ),
+          android: AndroidInAppWebViewOptions(
+            useHybridComposition: true,
           ),
         ),
         initialUrlRequest: URLRequest(

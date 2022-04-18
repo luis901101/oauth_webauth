@@ -9,6 +9,11 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 1.2.0+4 (2022-04-XX)
+### Fixed
+- `useHybridComposition` set to true for Android to avoid bugs with keyboard on recent Android versions > 10.
+- AndroidManifest from example project updated to allow project to run in Android 12.
+
 ## 1.1.0+3 (2022-03-02)
 ### Added
 - `contentLocale` property can be set to indicate the web auth to use that locale for internationalization.
