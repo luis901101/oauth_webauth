@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:oauth2/oauth2.dart';
+import 'package:oauth_webauth/src/base_web_view.dart';
 import 'package:oauth_webauth/src/oauth_web_view.dart';
 
 class OAuthWebScreen extends StatelessWidget {
@@ -71,7 +72,7 @@ class OAuthWebScreen extends StatelessWidget {
   final Locale? contentLocale;
 
   late final BuildContext context;
-  final paymentViewStateKey = GlobalKey<OAuthWebViewState>();
+  final globalKey = GlobalKey<OAuthWebViewState>();
 
   OAuthWebScreen({
     Key? key,
@@ -98,25 +99,28 @@ class OAuthWebScreen extends StatelessWidget {
       builder: (context) {
         this.context = context;
         return Scaffold(
-          body: WillPopScope(
-            onWillPop: onBackPressed,
-            child: OAuthWebView(
-              key: paymentViewStateKey,
-              authorizationEndpointUrl: authorizationEndpointUrl,
-              tokenEndpointUrl: tokenEndpointUrl,
-              clientId: clientId,
-              clientSecret: clientSecret,
-              redirectUrl: redirectUrl,
-              scopes: scopes,
-              loginHint: loginHint,
-              promptValues: promptValues,
-              onSuccess: _onSuccess,
-              onError: _onError,
-              onCancel: _onCancel,
-              onCertificateValidate: onCertificateValidate,
-              themeData: themeData,
-              textLocales: textLocales,
-              contentLocale: contentLocale,
+          body: SafeArea(
+            bottom: false, left: false, right: false,
+            child: WillPopScope(
+              onWillPop: onBackPressed,
+              child: OAuthWebView(
+                key: globalKey,
+                authorizationEndpointUrl: authorizationEndpointUrl,
+                tokenEndpointUrl: tokenEndpointUrl,
+                clientId: clientId,
+                clientSecret: clientSecret,
+                redirectUrl: redirectUrl,
+                scopes: scopes,
+                loginHint: loginHint,
+                promptValues: promptValues,
+                onSuccessAuth: _onSuccess,
+                onError: _onError,
+                onCancel: _onCancel,
+                onCertificateValidate: onCertificateValidate,
+                themeData: themeData,
+                textLocales: textLocales,
+                contentLocale: contentLocale,
+              ),
             ),
           ),
         );
@@ -140,7 +144,7 @@ class OAuthWebScreen extends StatelessWidget {
   }
 
   Future<bool> onBackPressed() async {
-    if (!((await paymentViewStateKey.currentState?.onBackPressed()) ?? false)) {
+    if (!((await globalKey.currentState?.onBackPressed()) ?? false)) {
       return false;
     }
     onCancel?.call();
