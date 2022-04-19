@@ -22,6 +22,11 @@ class OAuthWebScreen extends StatelessWidget {
     ThemeData? themeData,
     Map<String, String>? textLocales,
     Locale? contentLocale,
+    bool? goBackBtnVisible,
+    bool? goForwardBtnVisible,
+    bool? refreshBtnVisible,
+    bool? clearCacheBtnVisible,
+    bool? closeBtnVisible,
   }) =>
       Navigator.push(
           context,
@@ -42,6 +47,11 @@ class OAuthWebScreen extends StatelessWidget {
                     themeData: themeData,
                     textLocales: textLocales,
                     contentLocale: contentLocale,
+                    goBackBtnVisible: goBackBtnVisible,
+                    goForwardBtnVisible: goForwardBtnVisible,
+                    refreshBtnVisible: refreshBtnVisible,
+                    clearCacheBtnVisible: clearCacheBtnVisible,
+                    closeBtnVisible: closeBtnVisible,
                   )));
 
   final String authorizationEndpointUrl;
@@ -70,6 +80,11 @@ class OAuthWebScreen extends StatelessWidget {
   final ThemeData? themeData;
   final Map<String, String>? textLocales;
   final Locale? contentLocale;
+  final bool? goBackBtnVisible;
+  final bool? goForwardBtnVisible;
+  final bool? refreshBtnVisible;
+  final bool? clearCacheBtnVisible;
+  final bool? closeBtnVisible;
 
   late final BuildContext context;
   final globalKey = GlobalKey<OAuthWebViewState>();
@@ -91,6 +106,11 @@ class OAuthWebScreen extends StatelessWidget {
     this.themeData,
     this.textLocales,
     this.contentLocale,
+    this.goBackBtnVisible,
+    this.goForwardBtnVisible,
+    this.refreshBtnVisible,
+    this.clearCacheBtnVisible,
+    this.closeBtnVisible,
   }) : super(key: key);
 
   @override
@@ -100,7 +120,9 @@ class OAuthWebScreen extends StatelessWidget {
         this.context = context;
         return Scaffold(
           body: SafeArea(
-            bottom: false, left: false, right: false,
+            bottom: false,
+            left: false,
+            right: false,
             child: WillPopScope(
               onWillPop: onBackPressed,
               child: OAuthWebView(
@@ -120,6 +142,11 @@ class OAuthWebScreen extends StatelessWidget {
                 themeData: themeData,
                 textLocales: textLocales,
                 contentLocale: contentLocale,
+                goBackBtnVisible: goBackBtnVisible,
+                goForwardBtnVisible: goForwardBtnVisible,
+                refreshBtnVisible: refreshBtnVisible,
+                clearCacheBtnVisible: clearCacheBtnVisible,
+                closeBtnVisible: closeBtnVisible,
               ),
             ),
           ),

@@ -5,7 +5,6 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:oauth_webauth/src/base_web_view.dart';
 
 class OAuthWebView extends BaseWebView {
-
   final String authorizationEndpointUrl;
   final String tokenEndpointUrl;
   final String redirectUrl;
@@ -36,17 +35,29 @@ class OAuthWebView extends BaseWebView {
     ThemeData? themeData,
     Map<String, String>? textLocales,
     Locale? contentLocale,
+    bool? goBackBtnVisible,
+    bool? goForwardBtnVisible,
+    bool? refreshBtnVisible,
+    bool? clearCacheBtnVisible,
+    bool? closeBtnVisible,
   }) : super(
-    key: key,
-    initialUrl: '', /// Initial url is obtained from getAuthorizationUrl below.
-    redirectUrls: [redirectUrl],
-    onError: onError,
-    onCancel: onCancel,
-    onCertificateValidate: onCertificateValidate,
-    themeData: themeData,
-    textLocales: textLocales,
-    contentLocale: contentLocale,
-  );
+          key: key,
+          initialUrl: '',
+
+          /// Initial url is obtained from getAuthorizationUrl below.
+          redirectUrls: [redirectUrl],
+          onError: onError,
+          onCancel: onCancel,
+          onCertificateValidate: onCertificateValidate,
+          themeData: themeData,
+          textLocales: textLocales,
+          contentLocale: contentLocale,
+          goBackBtnVisible: goBackBtnVisible,
+          goForwardBtnVisible: goForwardBtnVisible,
+          refreshBtnVisible: refreshBtnVisible,
+          clearCacheBtnVisible: clearCacheBtnVisible,
+          closeBtnVisible: closeBtnVisible,
+        );
 
   @override
   OAuthWebViewState createState() => OAuthWebViewState();
@@ -77,16 +88,16 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
     );
 
     initialUri = initialUri.replace(
-      queryParameters: Map.from(initialUri.queryParameters)
-        ..addAll({
-          'state': const Base64Encoder.urlSafe()
-              .convert(DateTime.now().toIso8601String().codeUnits),
-          'nonce': const Base64Encoder.urlSafe().convert(
-              DateTime.now().millisecondsSinceEpoch.toString().codeUnits),
-          if (widget.loginHint != null) 'login_hint': widget.loginHint!,
-          if (widget.promptValues?.isNotEmpty ?? false)
-            'prompt': widget.promptValues!.join(' '),
-        }));
+        queryParameters: Map.from(initialUri.queryParameters)
+          ..addAll({
+            'state': const Base64Encoder.urlSafe()
+                .convert(DateTime.now().toIso8601String().codeUnits),
+            'nonce': const Base64Encoder.urlSafe().convert(
+                DateTime.now().millisecondsSinceEpoch.toString().codeUnits),
+            if (widget.loginHint != null) 'login_hint': widget.loginHint!,
+            if (widget.promptValues?.isNotEmpty ?? false)
+              'prompt': widget.promptValues!.join(' '),
+          }));
     webView = initWebView();
   }
 

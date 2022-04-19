@@ -14,21 +14,31 @@ class BaseWebScreen extends StatelessWidget {
     ThemeData? themeData,
     Map<String, String>? textLocales,
     Locale? contentLocale,
+    bool? goBackBtnVisible,
+    bool? goForwardBtnVisible,
+    bool? refreshBtnVisible,
+    bool? clearCacheBtnVisible,
+    bool? closeBtnVisible,
   }) =>
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BaseWebScreen(
-          initialUrl: initialUrl,
-          redirectUrls: redirectUrls,
-          onSuccess: onSuccess,
-          onError: onError,
-          onCancel: onCancel,
-          onCertificateValidate: onCertificateValidate,
-          themeData: themeData,
-          textLocales: textLocales,
-          contentLocale: contentLocale,
-        )));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => BaseWebScreen(
+                    initialUrl: initialUrl,
+                    redirectUrls: redirectUrls,
+                    onSuccess: onSuccess,
+                    onError: onError,
+                    onCancel: onCancel,
+                    onCertificateValidate: onCertificateValidate,
+                    themeData: themeData,
+                    textLocales: textLocales,
+                    contentLocale: contentLocale,
+                    goBackBtnVisible: goBackBtnVisible,
+                    goForwardBtnVisible: goForwardBtnVisible,
+                    refreshBtnVisible: refreshBtnVisible,
+                    clearCacheBtnVisible: clearCacheBtnVisible,
+                    closeBtnVisible: closeBtnVisible,
+                  )));
 
   final String initialUrl;
   final List<String> redirectUrls;
@@ -48,6 +58,11 @@ class BaseWebScreen extends StatelessWidget {
   final ThemeData? themeData;
   final Map<String, String>? textLocales;
   final Locale? contentLocale;
+  final bool? goBackBtnVisible;
+  final bool? goForwardBtnVisible;
+  final bool? refreshBtnVisible;
+  final bool? clearCacheBtnVisible;
+  final bool? closeBtnVisible;
 
   late final BuildContext context;
   final globalKey = GlobalKey<BaseWebViewState>();
@@ -63,6 +78,11 @@ class BaseWebScreen extends StatelessWidget {
     this.themeData,
     this.textLocales,
     this.contentLocale,
+    this.goBackBtnVisible,
+    this.goForwardBtnVisible,
+    this.refreshBtnVisible,
+    this.clearCacheBtnVisible,
+    this.closeBtnVisible,
   }) : super(key: key);
 
   @override
@@ -72,7 +92,9 @@ class BaseWebScreen extends StatelessWidget {
         this.context = context;
         return Scaffold(
           body: SafeArea(
-            bottom: false, left: false, right: false,
+            bottom: false,
+            left: false,
+            right: false,
             child: WillPopScope(
               onWillPop: onBackPressed,
               child: BaseWebView(
@@ -86,6 +108,11 @@ class BaseWebScreen extends StatelessWidget {
                 themeData: themeData,
                 textLocales: textLocales,
                 contentLocale: contentLocale,
+                goBackBtnVisible: goBackBtnVisible,
+                goForwardBtnVisible: goForwardBtnVisible,
+                refreshBtnVisible: refreshBtnVisible,
+                clearCacheBtnVisible: clearCacheBtnVisible,
+                closeBtnVisible: closeBtnVisible,
               ),
             ),
           ),

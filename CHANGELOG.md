@@ -9,9 +9,14 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
-## 2.0.0+4 (2022-04-XX)
+## 2.0.0+4
 ### Added
-- BaseWebView to manage basic web view handling with redirects. *(OAuthWebView uses this under the hook)*
+- BaseWebView to handle basic web view with redirects. *(OAuthWebView uses this under the hook)*.
+- Boolean flags for controlling toolbar buttons visibility.
+
+### Changed
+- OAuthWebView extends from BaseWebView.
+- OAuthWebView `onSuccess` function changed to `onSuccessAuth`.
 
 ### Fixed
 - `useHybridComposition` set to true for Android to avoid bugs with keyboard on recent Android versions > 10.

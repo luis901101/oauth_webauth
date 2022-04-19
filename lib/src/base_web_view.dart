@@ -40,6 +40,12 @@ class BaseWebView extends StatefulWidget {
   final Map<String, String>? textLocales;
   final Locale? contentLocale;
 
+  final bool goBackBtnVisible;
+  final bool goForwardBtnVisible;
+  final bool refreshBtnVisible;
+  final bool clearCacheBtnVisible;
+  final bool closeBtnVisible;
+
   const BaseWebView({
     Key? key,
     required this.initialUrl,
@@ -51,10 +57,21 @@ class BaseWebView extends StatefulWidget {
     this.themeData,
     this.textLocales,
     this.contentLocale,
-  }) : super(key: key);
+    bool? goBackBtnVisible = true,
+    bool? goForwardBtnVisible = true,
+    bool? refreshBtnVisible = true,
+    bool? clearCacheBtnVisible = true,
+    bool? closeBtnVisible = true,
+  })  : goBackBtnVisible = goBackBtnVisible ?? true,
+        goForwardBtnVisible = goForwardBtnVisible ?? true,
+        refreshBtnVisible = refreshBtnVisible ?? true,
+        clearCacheBtnVisible = clearCacheBtnVisible ?? true,
+        closeBtnVisible = closeBtnVisible ?? true,
+        super(key: key);
 
   @override
-  BaseWebViewState<BaseWebView> createState() => BaseWebViewState<BaseWebView>();
+  BaseWebViewState<BaseWebView> createState() =>
+      BaseWebViewState<BaseWebView>();
 }
 
 class BaseWebViewState<S extends BaseWebView> extends State<S>
@@ -82,6 +99,12 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   late Widget webView;
 
   List<String> get redirectUrls => widget.redirectUrls;
+  bool get toolbarVisible =>
+      widget.goBackBtnVisible ||
+      widget.goForwardBtnVisible ||
+      widget.refreshBtnVisible ||
+      widget.clearCacheBtnVisible ||
+      widget.closeBtnVisible;
 
   @override
   void initState() {
@@ -166,7 +189,9 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
           crossPlatform: InAppWebViewOptions(
             useShouldOverrideUrlLoading: true,
             supportZoom: false,
-            userAgent: 'Mozilla/5.0', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
+            userAgent: 'Mozilla/5.0',
+
+            /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
           ),
           android: AndroidInAppWebViewOptions(
             useHybridComposition: true,
@@ -236,7 +261,8 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     }
   }
 
-  bool startsWithAnyRedirectUrl(String url) => redirectUrls.any((redirectUrl) => url.startsWith(redirectUrl));
+  bool startsWithAnyRedirectUrl(String url) =>
+      redirectUrls.any((redirectUrl) => url.startsWith(redirectUrl));
 
   bool onNavigateTo(String url) {
     if (url != 'about:blank') showLoading();
@@ -313,7 +339,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
           ),
           bottomNavigationBar: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            height: showToolbar ? null : 0,
+            height: toolbarVisible && showToolbar ? null : 0,
             child: BottomAppBar(
               elevation: 8,
               color: Theme.of(context).bottomAppBarColor,
@@ -321,59 +347,66 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  iconButton(
-                    iconData: Icons.arrow_back_ios_rounded,
-                    tooltip: backButtonTooltip,
-                    onPressed: !allowGoBack ? null : () => controllerGoBack(),
-                  ),
-                  iconButton(
-                    iconData: Icons.arrow_forward_ios_rounded,
-                    tooltip: forwardButtonTooltip,
-                    onPressed:
-                        !allowGoForward ? null : () => controllerGoForward(),
-                  ),
-                  iconButton(
-                    iconData: Icons.refresh_rounded,
-                    tooltip: reloadButtonTooltip,
-                    onPressed: () => controllerReload(),
-                  ),
-                  iconButton(
-                    iconData: Icons.cleaning_services_rounded,
-                    tooltip: clearCacheButtonTooltip,
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text(clearCacheButtonTooltip),
-                              content: Text(clearCacheWarningMessage),
-                              actions: [
-                                TextButton(
-                                  child: Text(MaterialLocalizations.of(context)
-                                      .cancelButtonLabel),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                TextButton(
-                                  child: Text(MaterialLocalizations.of(context)
-                                      .okButtonLabel),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    controllerClearCache();
-                                  },
-                                ),
-                              ],
-                            );
-                          });
-                    },
-                  ),
-                  iconButton(
-                    iconData: Icons.close,
-                    tooltip: closeButtonTooltip,
-                    respectLoading: false,
-                    onPressed: () => onCancel(),
-                  ),
+                  if (widget.goBackBtnVisible)
+                    iconButton(
+                      iconData: Icons.arrow_back_ios_rounded,
+                      tooltip: backButtonTooltip,
+                      onPressed: !allowGoBack ? null : () => controllerGoBack(),
+                    ),
+                  if (widget.goForwardBtnVisible)
+                    iconButton(
+                      iconData: Icons.arrow_forward_ios_rounded,
+                      tooltip: forwardButtonTooltip,
+                      onPressed:
+                          !allowGoForward ? null : () => controllerGoForward(),
+                    ),
+                  if (widget.refreshBtnVisible)
+                    iconButton(
+                      iconData: Icons.refresh_rounded,
+                      tooltip: reloadButtonTooltip,
+                      onPressed: () => controllerReload(),
+                    ),
+                  if (widget.clearCacheBtnVisible)
+                    iconButton(
+                      iconData: Icons.cleaning_services_rounded,
+                      tooltip: clearCacheButtonTooltip,
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text(clearCacheButtonTooltip),
+                                content: Text(clearCacheWarningMessage),
+                                actions: [
+                                  TextButton(
+                                    child: Text(
+                                        MaterialLocalizations.of(context)
+                                            .cancelButtonLabel),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text(
+                                        MaterialLocalizations.of(context)
+                                            .okButtonLabel),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      controllerClearCache();
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
+                      },
+                    ),
+                  if (widget.closeBtnVisible)
+                    iconButton(
+                      iconData: Icons.close,
+                      tooltip: closeButtonTooltip,
+                      respectLoading: false,
+                      onPressed: () => onCancel(),
+                    ),
                 ],
               ),
             ),

@@ -9,12 +9,15 @@ class BaseRedirectSampleScreen extends StatefulWidget {
   const BaseRedirectSampleScreen({Key? key}) : super(key: key);
 
   @override
-  State<BaseRedirectSampleScreen> createState() => _BaseRedirectSampleScreenState();
+  State<BaseRedirectSampleScreen> createState() =>
+      _BaseRedirectSampleScreenState();
 }
 
 class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
-  static String initialUrl = const String.fromEnvironment('INITIAL_URL', defaultValue: '');
-  static String baseUrl = const String.fromEnvironment('BASE_URL', defaultValue: 'https://some.base.url.com');
+  static String initialUrl =
+      const String.fromEnvironment('INITIAL_URL', defaultValue: '');
+  static String baseUrl = const String.fromEnvironment('BASE_URL',
+      defaultValue: 'https://some.base.url.com');
   static const String authorizationEndpointUrl = String.fromEnvironment(
       'AUTHORIZATION_ENDPOINT_URL',
       defaultValue: 'https://test-auth-endpoint.com');
@@ -31,7 +34,6 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
           defaultValue: 'https://test-redirect-to.com')
       .split(' ');
 
-
   String response = 'Response feedback will be shown here';
   Locale? contentLocale;
   final locales = const [null, Locale('es'), Locale('en')];
@@ -41,7 +43,7 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
     super.initState();
 
     /// Here a validation to generate a valid initialUrl from OAuth data
-    if(initialUrl.isEmpty) {
+    if (initialUrl.isEmpty) {
       final authorizationCodeGrant = oauth2.AuthorizationCodeGrant(
         clientId,
         Uri.parse(authorizationEndpointUrl),
@@ -54,13 +56,13 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
       );
 
       initialUri = initialUri.replace(
-        queryParameters: Map.from(initialUri.queryParameters)
-          ..addAll({
-            'state': const Base64Encoder.urlSafe()
-                .convert(DateTime.now().toIso8601String().codeUnits),
-            'nonce': const Base64Encoder.urlSafe().convert(
-                DateTime.now().millisecondsSinceEpoch.toString().codeUnits),
-          }));
+          queryParameters: Map.from(initialUri.queryParameters)
+            ..addAll({
+              'state': const Base64Encoder.urlSafe()
+                  .convert(DateTime.now().toIso8601String().codeUnits),
+              'nonce': const Base64Encoder.urlSafe().convert(
+                  DateTime.now().millisecondsSinceEpoch.toString().codeUnits),
+            }));
       initialUrl = initialUri.toString();
     }
   }
@@ -141,13 +143,18 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
       contentLocale: contentLocale,
     );
     if (result != null) {
-      if (result == true) { /// If result is true it means redirected successful
+      if (result is bool && result == true) {
+        /// If result is true it means redirected successful
         response = 'User redirected';
       } else {
         response = result.toString();
+
+        /// If result is not bool then some error occurred
       }
     } else {
-      response = 'User cancelled authentication';
+      response = 'User cancelled';
+
+      /// If no result means user cancelled
     }
     setState(() {});
   }
@@ -186,7 +193,7 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
         },
         onCancel: () {
           setState(() {
-            response = 'User cancelled authentication';
+            response = 'User cancelled';
           });
         });
   }

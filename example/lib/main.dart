@@ -46,9 +46,10 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => const AuthSampleScreen()
-                  ));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AuthSampleScreen()));
                 },
                 child: const Text('Oauth login samples'),
                 style: ButtonStyle(
@@ -57,9 +58,11 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 4),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => const BaseRedirectSampleScreen()
-                  ));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const BaseRedirectSampleScreen()));
                 },
                 child: const Text('Base redirect samples'),
               ),

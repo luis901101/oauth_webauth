@@ -28,6 +28,10 @@ With this plugin you will get:
 **Note:**
 - `contentLocale` will apply only if the authentication page supports the specified `Locale('...')` and accepts the header: `'Accept-Language': 'es-ES'`
 
+## Migration from ^1.0.0 to ^2.0.0
+- Static constants key for tooltips, message and hero tags were moved from `OAuthWebView` to `BaseWebView` 
+- `OAuthWebView` renamed `onSuccess` function to `onSuccessAuth`.
+
 ## Getting started
 As stated before this plugin uses WebView implementation specifically the plugin [flutter_inappwebview](https://pub.dev/packages/flutter_inappwebview). For any WebView related problem please check the documentation of that plugin at [docs](https://inappwebview.dev/docs/).
 
@@ -61,9 +65,11 @@ Just add this to your `Info.plist`
 ```
 
 ## Usage
-This plugin offers a widget `OAuthWebView` which handles all the authorization/authentication and navigation logic; this widget can be used in any widget tree of your current app or as an individual authentication screen. For individual authentication screen it offers the widget `OAuthWebScreen` which can be started as a new route and also handles the Android back button to navigate backward when applies.
-**NOTE**: both widgets can be extended to change/improve its features.
+- This plugin offers a widget `OAuthWebView` which handles all the authorization/authentication and navigation logic; this widget can be used in any widget tree of your current app or as an individual authentication screen. For individual authentication screen it offers the widget `OAuthWebScreen` which can be started as a new route and also handles the Android back button to navigate backward when applies.
+- In addition, this plugin offers a simple widget `BaseWebView` which may be useful for cases in which you need to handle a link to your Auth server, let's say for email confirmation, or password reset, etc. This widget will handle the web UI and automatically get back to you when loaded any of the specified `redirectUrls`. The `BaseWebView` widget works very similar to `OAuthWebView`, it can be used in any widget tree of your current app or as an individual screen. For individual screen it offers the widget `BaseWebScreen` which can be started as a new route and also handles the Android back button to navigate backward when applies.
+**NOTE**: all widgets can be extended to change/improve its features.
 
+## OAuthWebView
 #### An authorization/authentication process can get 3 outputs.
 1. User successfully authenticates
 2. An error occurred during authorization/authentication, or maybe certificate validation failed
@@ -92,6 +98,8 @@ void loginV1() async {
         return true;
       },
       contentLocale: Locale('es'),
+      refreshBtnVisible: false,
+      clearCacheBtnVisible: false,
       textLocales: {
         ///Optionally texts can be localized
         OAuthWebView.backButtonTooltipKey: 'Ir atrás',
@@ -136,6 +144,8 @@ void loginV2() {
         return true;
       },
       contentLocale: Locale('es'),
+      refreshBtnVisible: false,
+      clearCacheBtnVisible: false,
       textLocales: {
         ///Optionally text can be localized
         OAuthWebView.backButtonTooltipKey: 'Ir atrás',
@@ -163,3 +173,101 @@ void loginV2() {
       });
 }
  ```
+
+## BaseWebView
+#### 3 possible outputs.
+1. User is successfully redirected.
+2. An error occurred during navigation.
+3. User canceled web view.
+
+This plugin offers two variants to handle these outputs.
+
+### Variant 1
+Awaiting response from navigator route `Future`.
+```dart
+void baseRedirectV1() async {
+  final result = await BaseWebScreen.start(
+    context: context,
+    initialUrl: initialUrl,
+    redirectUrls: [redirectUrl, baseUrl],
+    onCertificateValidate: (certificate) {
+      ///This is recommended
+      /// Do certificate validations here
+      /// If false is returned then a CertificateException() will be thrown
+      return true;
+    },
+    textLocales: {
+      ///Optionally texts can be localized
+      BaseWebView.backButtonTooltipKey: 'Ir atrás',
+      BaseWebView.forwardButtonTooltipKey: 'Ir adelante',
+      BaseWebView.reloadButtonTooltipKey: 'Recargar',
+      BaseWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
+      BaseWebView.closeButtonTooltipKey: 'Cerrar',
+      BaseWebView.clearCacheWarningMessageKey:
+      '¿Está seguro que desea limpiar la caché?',
+    },
+    contentLocale: contentLocale,
+    refreshBtnVisible: false,
+    clearCacheBtnVisible: false,
+  );
+  if (result != null) {
+    if (result is bool && result == true) { /// If result is true it means redirected successful
+      response = 'User redirected';
+    } else {
+      response = result.toString(); /// If result is not bool then some error occurred
+    }
+  } else {
+    response = 'User cancelled'; /// If no result means user cancelled
+  }
+  setState(() {});
+}
+```
+
+### Variant2
+Using callbacks
+ ```dart
+void baseRedirectV2() {
+  BaseWebScreen.start(
+      context: context,
+      initialUrl: initialUrl,
+      redirectUrls: [redirectUrl, baseUrl],
+      onCertificateValidate: (certificate) {
+        ///This is recommended
+        /// Do certificate validations here
+        /// If false is returned then a CertificateException() will be thrown
+        return true;
+      },
+      textLocales: {
+        ///Optionally text can be localized
+        BaseWebView.backButtonTooltipKey: 'Ir atrás',
+        BaseWebView.forwardButtonTooltipKey: 'Ir adelante',
+        BaseWebView.reloadButtonTooltipKey: 'Recargar',
+        BaseWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
+        BaseWebView.closeButtonTooltipKey: 'Cerrar',
+        BaseWebView.clearCacheWarningMessageKey:
+        '¿Está seguro que desea limpiar la caché?',
+      },
+      contentLocale: contentLocale,
+      refreshBtnVisible: false,
+      clearCacheBtnVisible: false,
+      onSuccess: () {
+        setState(() {
+          response = 'User redirected';
+        });
+      },
+      onError: (error) {
+        setState(() {
+          response = error.toString();
+        });
+      },
+      onCancel: () {
+        setState(() {
+          response = 'User cancelled';
+        });
+      });
+}
+ ```
+
+## Notes
+- `goBackBtnVisible`, `goForwardBtnVisible`, `refreshBtnVisible`, `clearCacheBtnVisible`, `closeBtnVisible` allows you to show/hide buttons from toolbar, if you want to completely hide toolbar, set all buttons to false.
+- For more details on how to use check the sample project of this plugin.
