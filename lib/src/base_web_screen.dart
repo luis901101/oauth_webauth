@@ -4,16 +4,18 @@ import 'package:oauth_webauth/src/base_web_view.dart';
 class BaseWebScreen extends StatelessWidget {
   static Future? start({
     Key? key,
+    GlobalKey<BaseWebViewState>? globalKey,
     required BuildContext context,
     required String initialUrl,
     required List<String> redirectUrls,
-    VoidCallback? onSuccess,
+    ValueChanged<String>? onSuccess,
     ValueChanged<dynamic>? onError,
     VoidCallback? onCancel,
     CertificateValidator? onCertificateValidate,
     ThemeData? themeData,
     Map<String, String>? textLocales,
     Locale? contentLocale,
+    Stream<String>? urlStream,
     bool? goBackBtnVisible,
     bool? goForwardBtnVisible,
     bool? refreshBtnVisible,
@@ -33,6 +35,7 @@ class BaseWebScreen extends StatelessWidget {
                     themeData: themeData,
                     textLocales: textLocales,
                     contentLocale: contentLocale,
+                    urlStream: urlStream,
                     goBackBtnVisible: goBackBtnVisible,
                     goForwardBtnVisible: goForwardBtnVisible,
                     refreshBtnVisible: refreshBtnVisible,
@@ -43,8 +46,9 @@ class BaseWebScreen extends StatelessWidget {
   final String initialUrl;
   final List<String> redirectUrls;
 
-  /// This function will be called when redirectUrl is loaded in web view.
-  final VoidCallback? onSuccess;
+  /// This function will be called when any of the redirectUrls is loaded in web view.
+  /// It will pass the url it causes redirect.
+  final ValueChanged<String>? onSuccess;
 
   /// This function will be called if any error occurs.
   /// It will receive the error data which could be some Exception or Error
@@ -58,6 +62,10 @@ class BaseWebScreen extends StatelessWidget {
   final ThemeData? themeData;
   final Map<String, String>? textLocales;
   final Locale? contentLocale;
+
+  /// Use this stream when you need to asynchronously navigate to a specific url
+  final Stream<String>? urlStream;
+
   final bool? goBackBtnVisible;
   final bool? goForwardBtnVisible;
   final bool? refreshBtnVisible;
@@ -65,10 +73,11 @@ class BaseWebScreen extends StatelessWidget {
   final bool? closeBtnVisible;
 
   late final BuildContext context;
-  final globalKey = GlobalKey<BaseWebViewState>();
+  final GlobalKey<BaseWebViewState> globalKey;
 
   BaseWebScreen({
     Key? key,
+    GlobalKey<BaseWebViewState>? globalKey,
     required this.initialUrl,
     required this.redirectUrls,
     this.onSuccess,
@@ -78,12 +87,14 @@ class BaseWebScreen extends StatelessWidget {
     this.themeData,
     this.textLocales,
     this.contentLocale,
+    this.urlStream,
     this.goBackBtnVisible,
     this.goForwardBtnVisible,
     this.refreshBtnVisible,
     this.clearCacheBtnVisible,
     this.closeBtnVisible,
-  }) : super(key: key);
+  })  : globalKey = globalKey ?? GlobalKey<BaseWebViewState>(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +119,7 @@ class BaseWebScreen extends StatelessWidget {
                 themeData: themeData,
                 textLocales: textLocales,
                 contentLocale: contentLocale,
+                urlStream: urlStream,
                 goBackBtnVisible: goBackBtnVisible,
                 goForwardBtnVisible: goForwardBtnVisible,
                 refreshBtnVisible: refreshBtnVisible,
@@ -121,9 +133,9 @@ class BaseWebScreen extends StatelessWidget {
     );
   }
 
-  void _onSuccess() {
+  void _onSuccess(String responseRedirect) {
     Navigator.pop(context, true);
-    onSuccess?.call();
+    onSuccess?.call(responseRedirect);
   }
 
   void _onError(dynamic error) {

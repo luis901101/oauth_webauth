@@ -22,8 +22,9 @@ class BaseWebView extends StatefulWidget {
   final String initialUrl;
   final List<String> redirectUrls;
 
-  /// This function will be called when redirectUrl is loaded in web view.
-  final VoidCallback? onSuccessRedirect;
+  /// This function will be called when any of the redirectUrls is loaded in web view.
+  /// It will pass the url it causes redirect.
+  final ValueChanged<String>? onSuccessRedirect;
 
   /// This function will be called if any error occurs.
   /// It will receive the error data which could be some Exception or Error
@@ -39,6 +40,9 @@ class BaseWebView extends StatefulWidget {
   final ThemeData? themeData;
   final Map<String, String>? textLocales;
   final Locale? contentLocale;
+
+  /// Use this stream when you need to asynchronously navigate to a specific url
+  final Stream<String>? urlStream;
 
   final bool goBackBtnVisible;
   final bool goForwardBtnVisible;
@@ -57,6 +61,7 @@ class BaseWebView extends StatefulWidget {
     this.themeData,
     this.textLocales,
     this.contentLocale,
+    this.urlStream,
     bool? goBackBtnVisible = true,
     bool? goForwardBtnVisible = true,
     bool? refreshBtnVisible = true,
@@ -83,7 +88,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   bool allowGoForward = false;
   bool tooltipsAlreadyInitialized = false;
   WebViewXController? webViewXController;
-  InAppWebViewController? inAppWebViewControllerController;
+  InAppWebViewController? inAppWebViewController;
   @override
   late BuildContext context;
 
@@ -97,6 +102,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
 
   late Timer toolbarTimerShow;
   late Widget webView;
+  StreamSubscription? urlStreamSubscription;
 
   List<String> get redirectUrls => widget.redirectUrls;
   bool get toolbarVisible =>
@@ -109,6 +115,11 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   @override
   void initState() {
     super.initState();
+    initBase();
+    webView = initWebView();
+  }
+
+  void initBase() {
     initialUri = Uri.parse(widget.initialUrl);
     toolbarTimerShow = Timer(const Duration(seconds: 5), () {
       setState(() {
@@ -116,7 +127,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
       });
     });
     WidgetsBinding.instance.addObserver(this);
-    webView = initWebView();
+    urlStreamSubscription = widget.urlStream?.listen(controllerGo);
   }
 
   void initTooltips() {
@@ -185,6 +196,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
       /// native WebView does not allow to access an URL with a certificate not authorized by
       /// known certification authority.
       content = InAppWebView(
+        // windowId: 12345,
         initialOptions: InAppWebViewGroupOptions(
           crossPlatform: InAppWebViewOptions(
             useShouldOverrideUrlLoading: true,
@@ -208,7 +220,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
               action: ServerTrustAuthResponseAction.PROCEED);
         },
         onWebViewCreated: (controller) {
-          inAppWebViewControllerController = controller;
+          inAppWebViewController = controller;
         },
         shouldOverrideUrlLoading: (controller, navigationAction) async {
           final url = navigationAction.request.url?.toString() ?? '';
@@ -242,7 +254,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   }
 
   void showLoading() {
-    if (!isLoading) {
+    if (!isLoading && mounted) {
       setState(() {
         isLoading = true;
       });
@@ -250,7 +262,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   }
 
   Future<void> hideLoading() async {
-    if (isLoading) {
+    if (isLoading && mounted) {
       ready = true;
       showToolbar = true;
       toolbarTimerShow.cancel();
@@ -274,7 +286,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   }
 
   void onSuccess(String responseRedirect) async {
-    widget.onSuccessRedirect?.call();
+    widget.onSuccessRedirect?.call(responseRedirect);
   }
 
   void onError(dynamic error) {
@@ -422,41 +434,73 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
         : content;
   }
 
+  Future<void> controllerGo(String url) async {
+    showLoading();
+    webViewXController?.loadContent(url, SourceType.url);
+    inAppWebViewController?.loadUrl(
+        urlRequest: URLRequest(
+      url: Uri.parse(url),
+      headers: widget.contentLocale == null
+          ? null
+          : {'Accept-Language': widget.contentLocale!.toLanguageTag()},
+    ));
+  }
+
   Future<void> controllerGoBack() async {
     showLoading();
     webViewXController?.goBack();
-    inAppWebViewControllerController?.goBack();
+    inAppWebViewController?.goBack();
   }
 
   Future<void> controllerGoForward() async {
     showLoading();
     webViewXController?.goForward();
-    inAppWebViewControllerController?.goForward();
+    inAppWebViewController?.goForward();
   }
 
   Future<void> controllerReload() async {
     showLoading();
     webViewXController?.reload();
-    inAppWebViewControllerController?.reload();
+    inAppWebViewController?.reload();
   }
 
   Future<void> controllerClearCache() async {
     showLoading();
     await webViewXController?.clearCache();
-    await inAppWebViewControllerController?.clearCache();
+    await inAppWebViewController?.clearCache();
     hideLoading();
   }
 
   Future<bool> controllerCanGoForward() async {
-    return await webViewXController?.canGoForward() ??
-        await inAppWebViewControllerController?.canGoForward() ??
-        false;
+    bool? webViewXCanGoForward;
+    bool? inAppWebViewCanGoForward;
+    try {
+      webViewXCanGoForward = await webViewXController?.canGoForward();
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
+    try {
+      inAppWebViewCanGoForward = await inAppWebViewController?.canGoForward();
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
+    return webViewXCanGoForward ?? inAppWebViewCanGoForward ?? false;
   }
 
   Future<bool> controllerCanGoBack() async {
-    return await webViewXController?.canGoBack() ??
-        await inAppWebViewControllerController?.canGoBack() ??
-        false;
+    bool? webViewXCanGoBack;
+    bool? inAppWebViewCanGoBack;
+    try {
+      webViewXCanGoBack = await webViewXController?.canGoBack();
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
+    try {
+      inAppWebViewCanGoBack = await inAppWebViewController?.canGoBack();
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
+    return webViewXCanGoBack ?? inAppWebViewCanGoBack ?? false;
   }
 
   @override
@@ -481,6 +525,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   @override
   void dispose() {
     super.dispose();
+    urlStreamSubscription?.cancel();
     toolbarTimerShow.cancel();
   }
 }

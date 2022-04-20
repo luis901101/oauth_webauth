@@ -9,10 +9,12 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
-## 2.0.0+4
+## 2.0.0+5
 ### Added
 - BaseWebView to handle basic web view with redirects. *(OAuthWebView uses this under the hook)*.
 - Boolean flags for controlling toolbar buttons visibility.
+- `GlobalKey`s added to BaseWebScreen and OauthWebScreen to allow webview control from outside.
+- `urlStream` added to allow to asynchronously indicate web view to navigate to a different url.
 
 ### Changed
 - OAuthWebView extends from BaseWebView.
@@ -21,6 +23,7 @@ Types of changes
 ### Fixed
 - `useHybridComposition` set to true for Android to avoid bugs with keyboard on recent Android versions > 10.
 - AndroidManifest from example project updated to allow project to run in Android 12.
+- Minor bugs fixed on UI state update.
 
 ## 1.1.0+3 (2022-03-02)
 ### Added

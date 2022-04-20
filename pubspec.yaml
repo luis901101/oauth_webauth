@@ -1,6 +1,6 @@
 name: oauth_webauth
 description: This plugin provides an alternative to AppAuth using WebView for OAuth 2.0 authorization/authentication.
-version: 2.0.0+4
+version: 2.0.0+5
 homepage: https://github.com/luis901101/oauth_webauth
 
 environment:
@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   oauth2: ^2.0.0
   webviewx: ^0.2.1
-  flutter_inappwebview: ^5.4.0+1
+  flutter_inappwebview: ^5.4.0+2
 
 dev_dependencies:
   flutter_test:

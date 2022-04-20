@@ -67,13 +67,14 @@ Just add this to your `Info.plist`
 ## Usage
 - This plugin offers a widget `OAuthWebView` which handles all the authorization/authentication and navigation logic; this widget can be used in any widget tree of your current app or as an individual authentication screen. For individual authentication screen it offers the widget `OAuthWebScreen` which can be started as a new route and also handles the Android back button to navigate backward when applies.
 - In addition, this plugin offers a simple widget `BaseWebView` which may be useful for cases in which you need to handle a link to your Auth server, let's say for email confirmation, or password reset, etc. This widget will handle the web UI and automatically get back to you when loaded any of the specified `redirectUrls`. The `BaseWebView` widget works very similar to `OAuthWebView`, it can be used in any widget tree of your current app or as an individual screen. For individual screen it offers the widget `BaseWebScreen` which can be started as a new route and also handles the Android back button to navigate backward when applies.
-**NOTE**: all widgets can be extended to change/improve its features.
+
+#### **NOTE**: all widgets can be extended to change/improve its features.
 
 ## OAuthWebView
 #### An authorization/authentication process can get 3 outputs.
-1. User successfully authenticates
-2. An error occurred during authorization/authentication, or maybe certificate validation failed
-3. User canceled authentication
+1. User successfully authenticates, which returns an Oauth2 Credentials object with the access-token and refresh-token.
+2. An error occurred during authorization/authentication, or maybe certificate validation failed.
+3. User canceled authentication.
 
 This plugin offers two variants to handle these outputs.
 
@@ -176,7 +177,7 @@ void loginV2() {
 
 ## BaseWebView
 #### 3 possible outputs.
-1. User is successfully redirected.
+1. User is successfully redirected, which returns the full redirect url.
 2. An error occurred during navigation.
 3. User canceled web view.
 
@@ -211,13 +212,16 @@ void baseRedirectV1() async {
     clearCacheBtnVisible: false,
   );
   if (result != null) {
-    if (result is bool && result == true) { /// If result is true it means redirected successful
-      response = 'User redirected';
+    if (result is String) {
+      /// If result is String it means redirected successful
+      response = 'User redirected to: $result';
     } else {
-      response = result.toString(); /// If result is not bool then some error occurred
+      /// If result is not String then some error occurred
+      response = result.toString();
     }
   } else {
-    response = 'User cancelled'; /// If no result means user cancelled
+    /// If no result means user cancelled
+    response = 'User cancelled';
   }
   setState(() {});
 }
@@ -268,6 +272,7 @@ void baseRedirectV2() {
 }
  ```
 
-## Notes
+## Important notes
 - `goBackBtnVisible`, `goForwardBtnVisible`, `refreshBtnVisible`, `clearCacheBtnVisible`, `closeBtnVisible` allows you to show/hide buttons from toolbar, if you want to completely hide toolbar, set all buttons to false.
+- Use `urlStream` when you need to asynchronously navigate to a specific url, like when user registered using `OauthWebAuth` and the web view waits for user email verification; in this case when the user opens the email verification link you can navigate to this link by emitting the new url to the stream you previously set in the `urlStream` instead of creating a new `OautHWebAuth` or `BaseWebView`.
 - For more details on how to use check the sample project of this plugin.

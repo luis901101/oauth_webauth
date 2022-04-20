@@ -6,6 +6,7 @@ import 'package:oauth_webauth/src/oauth_web_view.dart';
 class OAuthWebScreen extends StatelessWidget {
   static Future? start({
     Key? key,
+    GlobalKey<OAuthWebViewState>? globalKey,
     required BuildContext context,
     required String authorizationEndpointUrl,
     required String tokenEndpointUrl,
@@ -22,6 +23,7 @@ class OAuthWebScreen extends StatelessWidget {
     ThemeData? themeData,
     Map<String, String>? textLocales,
     Locale? contentLocale,
+    Stream<String>? urlStream,
     bool? goBackBtnVisible,
     bool? goForwardBtnVisible,
     bool? refreshBtnVisible,
@@ -47,6 +49,7 @@ class OAuthWebScreen extends StatelessWidget {
                     themeData: themeData,
                     textLocales: textLocales,
                     contentLocale: contentLocale,
+                    urlStream: urlStream,
                     goBackBtnVisible: goBackBtnVisible,
                     goForwardBtnVisible: goForwardBtnVisible,
                     refreshBtnVisible: refreshBtnVisible,
@@ -80,6 +83,10 @@ class OAuthWebScreen extends StatelessWidget {
   final ThemeData? themeData;
   final Map<String, String>? textLocales;
   final Locale? contentLocale;
+
+  /// Use this stream when you need to asynchronously navigate to a specific url
+  final Stream<String>? urlStream;
+
   final bool? goBackBtnVisible;
   final bool? goForwardBtnVisible;
   final bool? refreshBtnVisible;
@@ -87,10 +94,11 @@ class OAuthWebScreen extends StatelessWidget {
   final bool? closeBtnVisible;
 
   late final BuildContext context;
-  final globalKey = GlobalKey<OAuthWebViewState>();
+  final GlobalKey<OAuthWebViewState> globalKey;
 
   OAuthWebScreen({
     Key? key,
+    GlobalKey<OAuthWebViewState>? globalKey,
     required this.authorizationEndpointUrl,
     required this.tokenEndpointUrl,
     required this.redirectUrl,
@@ -106,12 +114,14 @@ class OAuthWebScreen extends StatelessWidget {
     this.themeData,
     this.textLocales,
     this.contentLocale,
+    this.urlStream,
     this.goBackBtnVisible,
     this.goForwardBtnVisible,
     this.refreshBtnVisible,
     this.clearCacheBtnVisible,
     this.closeBtnVisible,
-  }) : super(key: key);
+  })  : globalKey = globalKey ?? GlobalKey<OAuthWebViewState>(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +152,7 @@ class OAuthWebScreen extends StatelessWidget {
                 themeData: themeData,
                 textLocales: textLocales,
                 contentLocale: contentLocale,
+                urlStream: urlStream,
                 goBackBtnVisible: goBackBtnVisible,
                 goForwardBtnVisible: goForwardBtnVisible,
                 refreshBtnVisible: refreshBtnVisible,

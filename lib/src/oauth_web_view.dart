@@ -35,6 +35,7 @@ class OAuthWebView extends BaseWebView {
     ThemeData? themeData,
     Map<String, String>? textLocales,
     Locale? contentLocale,
+    Stream<String>? urlStream,
     bool? goBackBtnVisible,
     bool? goForwardBtnVisible,
     bool? refreshBtnVisible,
@@ -52,6 +53,7 @@ class OAuthWebView extends BaseWebView {
           themeData: themeData,
           textLocales: textLocales,
           contentLocale: contentLocale,
+          urlStream: urlStream,
           goBackBtnVisible: goBackBtnVisible,
           goForwardBtnVisible: goForwardBtnVisible,
           refreshBtnVisible: refreshBtnVisible,
@@ -68,14 +70,8 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
   late oauth2.AuthorizationCodeGrant authorizationCodeGrant;
 
   @override
-  void initState() {
-    super.initState();
-    toolbarTimerShow = Timer(const Duration(seconds: 5), () {
-      setState(() {
-        showToolbar = true;
-      });
-    });
-    WidgetsBinding.instance.addObserver(this);
+  void initBase() {
+    super.initBase();
     authorizationCodeGrant = oauth2.AuthorizationCodeGrant(
       widget.clientId,
       Uri.parse(widget.authorizationEndpointUrl),
@@ -86,7 +82,6 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
       Uri.parse(widget.redirectUrl),
       scopes: widget.scopes,
     );
-
     initialUri = initialUri.replace(
         queryParameters: Map.from(initialUri.queryParameters)
           ..addAll({
@@ -98,7 +93,6 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
             if (widget.promptValues?.isNotEmpty ?? false)
               'prompt': widget.promptValues!.join(' '),
           }));
-    webView = initWebView();
   }
 
   @override

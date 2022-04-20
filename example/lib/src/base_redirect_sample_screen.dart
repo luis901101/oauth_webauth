@@ -143,18 +143,16 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
       contentLocale: contentLocale,
     );
     if (result != null) {
-      if (result is bool && result == true) {
-        /// If result is true it means redirected successful
-        response = 'User redirected';
+      if (result is String) {
+        /// If result is String it means redirected successful
+        response = 'User redirected to: $result';
       } else {
+        /// If result is not String then some error occurred
         response = result.toString();
-
-        /// If result is not bool then some error occurred
       }
     } else {
-      response = 'User cancelled';
-
       /// If no result means user cancelled
+      response = 'User cancelled';
     }
     setState(() {});
   }
@@ -181,9 +179,9 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
               '¿Está seguro que desea limpiar la caché?',
         },
         contentLocale: contentLocale,
-        onSuccess: () {
+        onSuccess: (responseRedirect) {
           setState(() {
-            response = 'User redirected';
+            response = 'User redirected to: $responseRedirect';
           });
         },
         onError: (error) {
