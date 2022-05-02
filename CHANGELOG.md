@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 2.0.1+6
+### Changed
+- WidgetsBinding.instance?.addObserver(this) added null-safety operator for stable channel compatibility.
+
 ## 2.0.0+5
 ### Added
 - BaseWebView to handle basic web view with redirects. *(OAuthWebView uses this under the hook)*.

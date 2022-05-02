@@ -126,7 +126,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
         showToolbar = true;
       });
     });
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
     urlStreamSubscription = widget.urlStream?.listen(controllerGo);
   }
 
