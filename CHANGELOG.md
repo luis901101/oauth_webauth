@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 2.0.2+7
+### Changed
+- T? _ambiguate<T>(T? value) => value; implemented for compatibility reasons to avoid warnings about unnecessary null-safety operator for SchedulerBinding.instance? and WidgetsBinding.instance?.
+
 ## 2.0.1+6
 ### Changed
 - WidgetsBinding.instance?.addObserver(this) added null-safety operator for stable channel compatibility.

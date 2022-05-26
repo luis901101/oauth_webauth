@@ -7,6 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:webviewx/webviewx.dart';
 
+/// This allows a value of type T or T?
+/// to be treated as a value of type T?.
+///
+/// We use this so that APIs that have become
+/// non-nullable can still be used with `!` and `?`
+/// to support older versions of the API as well.
+T? _ambiguate<T>(T? value) => value;
+
 typedef CertificateValidator = bool Function(X509Certificate certificate);
 
 class BaseWebView extends StatefulWidget {
@@ -126,7 +134,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
         showToolbar = true;
       });
     });
-    WidgetsBinding.instance?.addObserver(this);
+    _ambiguate(WidgetsBinding.instance)?.addObserver(this);
     urlStreamSubscription = widget.urlStream?.listen(controllerGo);
   }
 
