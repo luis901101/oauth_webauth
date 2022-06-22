@@ -11,6 +11,7 @@ class OAuthWebScreen extends StatelessWidget {
     required String authorizationEndpointUrl,
     required String tokenEndpointUrl,
     required String redirectUrl,
+    final String? baseUrl,
     required String clientId,
     String? clientSecret,
     List<String>? scopes,
@@ -37,6 +38,7 @@ class OAuthWebScreen extends StatelessWidget {
                     authorizationEndpointUrl: authorizationEndpointUrl,
                     tokenEndpointUrl: tokenEndpointUrl,
                     redirectUrl: redirectUrl,
+                    baseUrl: baseUrl,
                     clientId: clientId,
                     clientSecret: clientSecret,
                     scopes: scopes,
@@ -60,6 +62,7 @@ class OAuthWebScreen extends StatelessWidget {
   final String authorizationEndpointUrl;
   final String tokenEndpointUrl;
   final String redirectUrl;
+  final String? baseUrl;
   final String clientId;
   final String? clientSecret;
   final List<String>? scopes;
@@ -102,6 +105,7 @@ class OAuthWebScreen extends StatelessWidget {
     required this.authorizationEndpointUrl,
     required this.tokenEndpointUrl,
     required this.redirectUrl,
+    this.baseUrl,
     required this.clientId,
     this.clientSecret,
     this.scopes,
@@ -142,6 +146,7 @@ class OAuthWebScreen extends StatelessWidget {
                 clientId: clientId,
                 clientSecret: clientSecret,
                 redirectUrl: redirectUrl,
+                baseUrl: baseUrl,
                 scopes: scopes,
                 loginHint: loginHint,
                 promptValues: promptValues,

@@ -89,6 +89,7 @@ void loginV1() async {
       clientSecret: clientSecret,
       clientId: clientId,
       redirectUrl: redirectUrl,
+      baseUrl: baseUrl, //Optional, if you want to get back to the application when the web view gets redirected to baseUrl. This will be like an onCancel callback
       scopes: scopes,
       promptValues: const ['login'],
       loginHint: 'johndoe@mail.com',
@@ -135,6 +136,7 @@ void loginV2() {
       clientSecret: clientSecret,
       clientId: clientId,
       redirectUrl: redirectUrl,
+      baseUrl: baseUrl, //Optional, if you want to get back to the application when the web view gets redirected to baseUrl. This will be like an onCancel callback
       scopes: scopes,
       promptValues: const ['login'],
       loginHint: 'johndoe@mail.com',

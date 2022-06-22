@@ -8,6 +8,7 @@ class OAuthWebView extends BaseWebView {
   final String authorizationEndpointUrl;
   final String tokenEndpointUrl;
   final String redirectUrl;
+  final String? baseUrl;
   final String clientId;
   final String? clientSecret;
   final List<String>? scopes;
@@ -23,6 +24,7 @@ class OAuthWebView extends BaseWebView {
     required this.authorizationEndpointUrl,
     required this.tokenEndpointUrl,
     required this.redirectUrl,
+    this.baseUrl,
     required this.clientId,
     this.clientSecret,
     this.scopes,
@@ -46,7 +48,8 @@ class OAuthWebView extends BaseWebView {
           initialUrl: '',
 
           /// Initial url is obtained from getAuthorizationUrl below.
-          redirectUrls: [redirectUrl],
+          redirectUrls:
+              baseUrl != null ? [redirectUrl, baseUrl] : [redirectUrl],
           onError: onError,
           onCancel: onCancel,
           onCertificateValidate: onCertificateValidate,
@@ -97,6 +100,11 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
 
   @override
   void onSuccess(String responseRedirect) async {
+    if ((widget.baseUrl?.isNotEmpty ?? false) &&
+        responseRedirect.startsWith(widget.baseUrl!)) {
+      return onCancel();
+    }
+
     responseRedirect = responseRedirect.trim().replaceAll('#', '');
     final parameters = Uri.dataFromString(responseRedirect).queryParameters;
 

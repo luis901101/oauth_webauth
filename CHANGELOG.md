@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 2.1.0+8
+### Added
+- `baseUrl` added to `OauthWebView` and `OauthWebScreen` to allow to get back to application when web view gets redirected to baseUrl. A `baseUrl` redirect will be treated as a `onCancel`.
+
 ## 2.0.2+7
 ### Changed
 - T? _ambiguate<T>(T? value) => value; implemented for compatibility reasons to avoid warnings about unnecessary null-safety operator for SchedulerBinding.instance? and WidgetsBinding.instance?.
