@@ -48,6 +48,7 @@ class BaseWebView extends StatefulWidget {
   final ThemeData? themeData;
   final Map<String, String>? textLocales;
   final Locale? contentLocale;
+  final Map<String, String> headers;
 
   /// Use this stream when you need to asynchronously navigate to a specific url
   final Stream<String>? urlStream;
@@ -69,13 +70,15 @@ class BaseWebView extends StatefulWidget {
     this.themeData,
     this.textLocales,
     this.contentLocale,
+    Map<String, String>? headers,
     this.urlStream,
     bool? goBackBtnVisible = true,
     bool? goForwardBtnVisible = true,
     bool? refreshBtnVisible = true,
     bool? clearCacheBtnVisible = true,
     bool? closeBtnVisible = true,
-  })  : goBackBtnVisible = goBackBtnVisible ?? true,
+  })  : headers = headers ?? const {},
+        goBackBtnVisible = goBackBtnVisible ?? true,
         goForwardBtnVisible = goForwardBtnVisible ?? true,
         refreshBtnVisible = refreshBtnVisible ?? true,
         clearCacheBtnVisible = clearCacheBtnVisible ?? true,
@@ -182,14 +185,20 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
       content = WebViewX(
         width: MediaQueryData.fromWindow(window).size.width,
         height: MediaQueryData.fromWindow(window).size.height,
-        initialContent: initialUri.toString(),
-        initialSourceType: SourceType.url,
+        // initialContent: initialUri.toString(),
+        // initialSourceType: SourceType.url,
         javascriptMode: JavascriptMode.unrestricted,
-        userAgent: 'Mozilla/5.0',
 
         /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
+        userAgent: 'Mozilla/5.0',
         onWebViewCreated: (controller) {
           webViewXController = controller;
+          controller
+              .loadContent(initialUri.toString(), SourceType.url, headers: {
+            ...widget.headers,
+            if (widget.contentLocale != null)
+              'Accept-Language': widget.contentLocale!.toLanguageTag()
+          });
         },
         navigationDelegate: (request) async =>
             onNavigateTo(request.content.source)
@@ -209,20 +218,19 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
           crossPlatform: InAppWebViewOptions(
             useShouldOverrideUrlLoading: true,
             supportZoom: false,
-            userAgent: 'Mozilla/5.0',
 
             /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
+            userAgent: 'Mozilla/5.0',
           ),
           android: AndroidInAppWebViewOptions(
             useHybridComposition: true,
           ),
         ),
-        initialUrlRequest: URLRequest(
-          url: initialUri,
-          headers: widget.contentLocale == null
-              ? null
-              : {'Accept-Language': widget.contentLocale!.toLanguageTag()},
-        ),
+        initialUrlRequest: URLRequest(url: initialUri, headers: {
+          ...widget.headers,
+          if (widget.contentLocale != null)
+            'Accept-Language': widget.contentLocale!.toLanguageTag()
+        }),
         onReceivedServerTrustAuthRequest: (controller, challenge) async {
           return ServerTrustAuthResponse(
               action: ServerTrustAuthResponseAction.PROCEED);

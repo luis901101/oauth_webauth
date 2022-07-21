@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 2.2.0+9
+### Added
+- `headers` can now be set to web view.
+
 ## 2.1.0+8
 ### Added
 - `baseUrl` added to `OauthWebView` and `OauthWebScreen` to allow to get back to application when web view gets redirected to baseUrl. A `baseUrl` redirect will be treated as a `onCancel`.

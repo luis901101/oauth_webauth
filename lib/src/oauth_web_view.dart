@@ -37,6 +37,7 @@ class OAuthWebView extends BaseWebView {
     ThemeData? themeData,
     Map<String, String>? textLocales,
     Locale? contentLocale,
+    Map<String, String>? headers,
     Stream<String>? urlStream,
     bool? goBackBtnVisible,
     bool? goForwardBtnVisible,
@@ -45,9 +46,9 @@ class OAuthWebView extends BaseWebView {
     bool? closeBtnVisible,
   }) : super(
           key: key,
-          initialUrl: '',
 
           /// Initial url is obtained from getAuthorizationUrl below.
+          initialUrl: '',
           redirectUrls:
               baseUrl != null ? [redirectUrl, baseUrl] : [redirectUrl],
           onError: onError,
@@ -56,6 +57,7 @@ class OAuthWebView extends BaseWebView {
           themeData: themeData,
           textLocales: textLocales,
           contentLocale: contentLocale,
+          headers: headers,
           urlStream: urlStream,
           goBackBtnVisible: goBackBtnVisible,
           goForwardBtnVisible: goForwardBtnVisible,

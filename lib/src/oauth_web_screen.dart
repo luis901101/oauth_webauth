@@ -24,6 +24,7 @@ class OAuthWebScreen extends StatelessWidget {
     ThemeData? themeData,
     Map<String, String>? textLocales,
     Locale? contentLocale,
+    Map<String, String>? headers,
     Stream<String>? urlStream,
     bool? goBackBtnVisible,
     bool? goForwardBtnVisible,
@@ -51,6 +52,7 @@ class OAuthWebScreen extends StatelessWidget {
                     themeData: themeData,
                     textLocales: textLocales,
                     contentLocale: contentLocale,
+                    headers: headers,
                     urlStream: urlStream,
                     goBackBtnVisible: goBackBtnVisible,
                     goForwardBtnVisible: goForwardBtnVisible,
@@ -86,6 +88,7 @@ class OAuthWebScreen extends StatelessWidget {
   final ThemeData? themeData;
   final Map<String, String>? textLocales;
   final Locale? contentLocale;
+  final Map<String, String>? headers;
 
   /// Use this stream when you need to asynchronously navigate to a specific url
   final Stream<String>? urlStream;
@@ -118,6 +121,7 @@ class OAuthWebScreen extends StatelessWidget {
     this.themeData,
     this.textLocales,
     this.contentLocale,
+    this.headers,
     this.urlStream,
     this.goBackBtnVisible,
     this.goForwardBtnVisible,
@@ -157,6 +161,7 @@ class OAuthWebScreen extends StatelessWidget {
                 themeData: themeData,
                 textLocales: textLocales,
                 contentLocale: contentLocale,
+                headers: headers,
                 urlStream: urlStream,
                 goBackBtnVisible: goBackBtnVisible,
                 goForwardBtnVisible: goForwardBtnVisible,
