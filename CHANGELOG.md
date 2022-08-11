@@ -9,6 +9,11 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 3.0.0+10
+### Added
+- Web support added.
+- `shared_preferences` dependency added to support temporary state storage.
+
 ## 2.2.0+9
 ### Added
 - `headers` can now be set to web view.

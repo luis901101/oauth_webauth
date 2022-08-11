@@ -34,6 +34,21 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
   final locales = const [null, Locale('es'), Locale('en')];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(
+        const Duration(milliseconds: 300),
+        () {
+          if (OauthWebAuth.instance.restoreCodeVerifier() != null) {
+            loginV1();
+          }
+        },
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

@@ -1,8 +1,10 @@
+import 'package:oauth_webauth/src/utils/cross_platform_support.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
-import 'package:oauth_webauth/src/base_web_view.dart';
+import 'package:oauth_webauth/oauth_webauth.dart';
 
 class OAuthWebView extends BaseWebView {
   final String authorizationEndpointUrl;
@@ -23,7 +25,7 @@ class OAuthWebView extends BaseWebView {
     Key? key,
     required this.authorizationEndpointUrl,
     required this.tokenEndpointUrl,
-    required this.redirectUrl,
+    required String redirectUrl,
     this.baseUrl,
     required this.clientId,
     this.clientSecret,
@@ -44,7 +46,9 @@ class OAuthWebView extends BaseWebView {
     bool? refreshBtnVisible,
     bool? clearCacheBtnVisible,
     bool? closeBtnVisible,
-  }) : super(
+  })  : redirectUrl =
+            originUrl() != null ? redirectUrl = originUrl()! : redirectUrl,
+        super(
           key: key,
 
           /// Initial url is obtained from getAuthorizationUrl below.
@@ -77,12 +81,18 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
   @override
   void initBase() {
     super.initBase();
+    String? codeVerifier;
+    if (kIsWeb) {
+      codeVerifier = OauthWebAuth.instance.restoreCodeVerifier() ??
+          OauthWebAuth.instance.generateCodeVerifier();
+    }
+
     authorizationCodeGrant = oauth2.AuthorizationCodeGrant(
-      widget.clientId,
-      Uri.parse(widget.authorizationEndpointUrl),
-      Uri.parse(widget.tokenEndpointUrl),
-      secret: widget.clientSecret,
-    );
+        widget.clientId,
+        Uri.parse(widget.authorizationEndpointUrl),
+        Uri.parse(widget.tokenEndpointUrl),
+        secret: widget.clientSecret,
+        codeVerifier: codeVerifier);
     initialUri = authorizationCodeGrant.getAuthorizationUrl(
       Uri.parse(widget.redirectUrl),
       scopes: widget.scopes,
@@ -98,6 +108,24 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
             if (widget.promptValues?.isNotEmpty ?? false)
               'prompt': widget.promptValues!.join(' '),
           }));
+
+    if (kIsWeb) {
+      if (onNavigateTo(OauthWebAuth.instance.appBaseUrl)) {
+        OauthWebAuth.instance.saveCodeVerifier(codeVerifier ?? '');
+        loadPage(initialUri.toString());
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return kIsWeb ? const SizedBox() : super.build(context);
+  }
+
+  @override
+  void onCancel() {
+    if (kIsWeb) OauthWebAuth.instance.clearCodeVerifier();
+    super.onCancel();
   }
 
   @override
@@ -113,6 +141,10 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
     try {
       final client =
           await authorizationCodeGrant.handleAuthorizationResponse(parameters);
+      if (kIsWeb) {
+        OauthWebAuth.instance.clearCodeVerifier();
+        OauthWebAuth.instance.resetAppBaseUrl();
+      }
       widget.onSuccessAuth(client.credentials);
     } catch (e) {
       onError(e);

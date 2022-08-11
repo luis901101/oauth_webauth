@@ -289,8 +289,8 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     }
   }
 
-  bool startsWithAnyRedirectUrl(String url) =>
-      redirectUrls.any((redirectUrl) => url.startsWith(redirectUrl));
+  bool startsWithAnyRedirectUrl(String url) => redirectUrls
+      .any((redirectUrl) => url != redirectUrl && url.startsWith(redirectUrl));
 
   bool onNavigateTo(String url) {
     if (url != 'about:blank') showLoading();
@@ -341,8 +341,8 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
           body: Stack(
             children: [
               WillPopScope(
-                child: webView,
                 onWillPop: onBackPressed,
+                child: webView,
               ),
               Positioned.fill(
                 child: Hero(

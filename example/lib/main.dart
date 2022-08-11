@@ -2,8 +2,11 @@ import 'package:example/src/auth_sample_screen.dart';
 import 'package:example/src/base_redirect_sample_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:oauth_webauth/oauth_webauth.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await OauthWebAuth.instance.init();
   runApp(const MyApp());
 }
 
@@ -33,6 +36,21 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(
+        const Duration(milliseconds: 300),
+        () {
+          if (OauthWebAuth.instance.restoreCodeVerifier() != null) {
+            goAuthSampleScreen();
+          }
+        },
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -46,10 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AuthSampleScreen()));
+                  goAuthSampleScreen();
                 },
                 child: const Text('Oauth login samples'),
                 style: ButtonStyle(
@@ -58,11 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 4),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const BaseRedirectSampleScreen()));
+                  goBaseRedirectSampleScreen();
                 },
                 child: const Text('Base redirect samples'),
               ),
@@ -71,5 +82,17 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  void goAuthSampleScreen() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const AuthSampleScreen()));
+  }
+
+  void goBaseRedirectSampleScreen() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const BaseRedirectSampleScreen()));
   }
 }
