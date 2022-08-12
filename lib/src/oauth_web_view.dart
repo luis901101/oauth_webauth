@@ -77,11 +77,11 @@ class OAuthWebView extends BaseWebView {
 class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
     with WidgetsBindingObserver {
   late oauth2.AuthorizationCodeGrant authorizationCodeGrant;
+  String? codeVerifier;
 
   @override
   void initBase() {
     super.initBase();
-    String? codeVerifier;
     if (kIsWeb) {
       codeVerifier = OauthWebAuth.instance.restoreCodeVerifier() ??
           OauthWebAuth.instance.generateCodeVerifier();
@@ -109,23 +109,11 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
               'prompt': widget.promptValues!.join(' '),
           }));
 
-    if (kIsWeb) {
-      if (onNavigateTo(OauthWebAuth.instance.appBaseUrl)) {
-        OauthWebAuth.instance.saveCodeVerifier(codeVerifier ?? '');
-        loadPage(initialUri.toString());
-      }
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return kIsWeb ? const SizedBox() : super.build(context);
-  }
-
-  @override
-  void onCancel() {
-    if (kIsWeb) OauthWebAuth.instance.clearCodeVerifier();
-    super.onCancel();
   }
 
   @override
@@ -141,13 +129,22 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
     try {
       final client =
           await authorizationCodeGrant.handleAuthorizationResponse(parameters);
-      if (kIsWeb) {
-        OauthWebAuth.instance.clearCodeVerifier();
-        OauthWebAuth.instance.resetAppBaseUrl();
-      }
+      clearWebState();
       widget.onSuccessAuth(client.credentials);
     } catch (e) {
       onError(e);
     }
+  }
+
+  @override
+  void saveWebState() {
+    super.saveWebState();
+    if (kIsWeb) OauthWebAuth.instance.saveCodeVerifier(codeVerifier ?? '');
+  }
+
+  @override
+  void clearWebState() {
+    super.clearWebState();
+    if (kIsWeb) OauthWebAuth.instance.clearCodeVerifier();
   }
 }

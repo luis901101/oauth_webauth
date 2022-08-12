@@ -13,7 +13,6 @@ dependencies:
   flutter:
     sdk: flutter
   oauth2: ^2.0.0
-  webviewx: ^0.2.1
   flutter_inappwebview: ^5.4.0+2
   shared_preferences: ^2.0.0
 

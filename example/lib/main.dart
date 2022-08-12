@@ -35,6 +35,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool isLoading = OauthWebAuth.instance.restoreCodeVerifier() != null;
   @override
   void initState() {
     super.initState();
@@ -62,6 +63,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              if(isLoading) const CircularProgressIndicator(),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   goAuthSampleScreen();

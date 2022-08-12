@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:webviewx/webviewx.dart';
+import 'package:oauth_webauth/oauth_webauth.dart';
+import 'package:oauth_webauth/src/utils/cross_platform_support.dart';
 
 /// This allows a value of type T or T?
 /// to be treated as a value of type T?.
@@ -98,7 +98,6 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   bool allowGoBack = false;
   bool allowGoForward = false;
   bool tooltipsAlreadyInitialized = false;
-  WebViewXController? webViewXController;
   InAppWebViewController? inAppWebViewController;
   @override
   late BuildContext context;
@@ -128,6 +127,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     super.initState();
     initBase();
     webView = initWebView();
+    if (kIsWeb) onNavigateTo(OauthWebAuth.instance.appBaseUrl);
   }
 
   void initBase() {
@@ -166,46 +166,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     final Widget content;
 
     if (kIsWeb) {
-      // content = WebView(
-      //   initialUrl: authorizationUri.toString(),
-      //   javascriptMode: JavascriptMode.unrestricted,
-      //   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36', /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
-      //   zoomEnabled: false,
-      //   gestureNavigationEnabled: false,
-      //   onWebViewCreated: (controller) {
-      //     webViewXController = controller;
-      //   },
-      //   navigationDelegate: (request) async =>
-      //   onNavigateTo(request.url) ?
-      //   NavigationDecision.navigate :
-      //   NavigationDecision.prevent,
-      //   onPageFinished: (url) => hideLoading(),
-      // );
-
-      content = WebViewX(
-        width: MediaQueryData.fromWindow(window).size.width,
-        height: MediaQueryData.fromWindow(window).size.height,
-        // initialContent: initialUri.toString(),
-        // initialSourceType: SourceType.url,
-        javascriptMode: JavascriptMode.unrestricted,
-
-        /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
-        userAgent: 'Mozilla/5.0',
-        onWebViewCreated: (controller) {
-          webViewXController = controller;
-          controller
-              .loadContent(initialUri.toString(), SourceType.url, headers: {
-            ...widget.headers,
-            if (widget.contentLocale != null)
-              'Accept-Language': widget.contentLocale!.toLanguageTag()
-          });
-        },
-        navigationDelegate: (request) async =>
-            onNavigateTo(request.content.source)
-                ? NavigationDecision.navigate
-                : NavigationDecision.prevent,
-        onPageFinished: (url) => hideLoading(),
-      );
+      content = const SizedBox();
     } else {
       /// InAppWebView is a better choice for Android and iOS than official plugin for WebViews
       /// (WebViewX uses official WebView plugin) due to the possibility to
@@ -298,18 +259,25 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
       onSuccess(url);
       return false;
     }
+    if (kIsWeb) {
+      saveWebState();
+      loadPage(initialUri.toString());
+    }
     return true;
   }
 
   void onSuccess(String responseRedirect) async {
+    clearWebState();
     widget.onSuccessRedirect?.call(responseRedirect);
   }
 
   void onError(dynamic error) {
+    clearWebState();
     widget.onError?.call(error);
   }
 
   void onCancel() {
+    clearWebState();
     widget.onCancel?.call();
   }
 
@@ -452,7 +420,6 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
 
   Future<void> controllerGo(String url) async {
     showLoading();
-    webViewXController?.loadContent(url, SourceType.url);
     inAppWebViewController?.loadUrl(
         urlRequest: URLRequest(
       url: Uri.parse(url),
@@ -464,59 +431,43 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
 
   Future<void> controllerGoBack() async {
     showLoading();
-    webViewXController?.goBack();
     inAppWebViewController?.goBack();
   }
 
   Future<void> controllerGoForward() async {
     showLoading();
-    webViewXController?.goForward();
     inAppWebViewController?.goForward();
   }
 
   Future<void> controllerReload() async {
     showLoading();
-    webViewXController?.reload();
     inAppWebViewController?.reload();
   }
 
   Future<void> controllerClearCache() async {
     showLoading();
-    await webViewXController?.clearCache();
     await inAppWebViewController?.clearCache();
     hideLoading();
   }
 
   Future<bool> controllerCanGoForward() async {
-    bool? webViewXCanGoForward;
     bool? inAppWebViewCanGoForward;
-    try {
-      webViewXCanGoForward = await webViewXController?.canGoForward();
-    } catch (e) {
-      if (kDebugMode) print(e);
-    }
     try {
       inAppWebViewCanGoForward = await inAppWebViewController?.canGoForward();
     } catch (e) {
       if (kDebugMode) print(e);
     }
-    return webViewXCanGoForward ?? inAppWebViewCanGoForward ?? false;
+    return inAppWebViewCanGoForward ?? false;
   }
 
   Future<bool> controllerCanGoBack() async {
-    bool? webViewXCanGoBack;
     bool? inAppWebViewCanGoBack;
-    try {
-      webViewXCanGoBack = await webViewXController?.canGoBack();
-    } catch (e) {
-      if (kDebugMode) print(e);
-    }
     try {
       inAppWebViewCanGoBack = await inAppWebViewController?.canGoBack();
     } catch (e) {
       if (kDebugMode) print(e);
     }
-    return webViewXCanGoBack ?? inAppWebViewCanGoBack ?? false;
+    return inAppWebViewCanGoBack ?? false;
   }
 
   @override
@@ -536,6 +487,11 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
       return false;
     }
     return true;
+  }
+
+  void saveWebState() {}
+  void clearWebState() {
+    if (kIsWeb) OauthWebAuth.instance.resetAppBaseUrl();
   }
 
   @override

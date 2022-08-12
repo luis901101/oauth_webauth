@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:oauth_webauth/oauth_webauth.dart';
+import 'package:oauth_webauth/src/utils/cross_platform_support.dart';
 
 class BaseRedirectSampleScreen extends StatefulWidget {
   const BaseRedirectSampleScreen({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
       String.fromEnvironment('CLIENT_SECRET', defaultValue: 'XXXXXXXXX');
   static const String clientId =
       String.fromEnvironment('CLIENT_ID', defaultValue: 'realmClientID');
-  static const String redirectUrl = String.fromEnvironment('REDIRECT_URL',
+  static String redirectUrl = originUrl() != null ? originUrl()! : const String.fromEnvironment('REDIRECT_URL',
       defaultValue: 'https://test-redirect-to.com');
   final List<String> scopes = const String.fromEnvironment('SCOPES',
           defaultValue: 'https://test-redirect-to.com')

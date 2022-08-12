@@ -13,6 +13,7 @@ class AuthSampleScreen extends StatefulWidget {
 }
 
 class _AuthSampleScreenState extends State<AuthSampleScreen> {
+  bool isLoading = OauthWebAuth.instance.restoreCodeVerifier() != null;
   static const String authorizationEndpointUrl = String.fromEnvironment(
       'AUTHORIZATION_ENDPOINT_URL',
       defaultValue: 'https://test-auth-endpoint.com');
@@ -64,6 +65,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
                 authResponse,
               ),
               const SizedBox(height: 16),
+              if(isLoading) const CircularProgressIndicator(),
               SizedBox(
                 width: 120,
                 child: DropdownButtonFormField<Locale>(
@@ -129,6 +131,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
       },
       contentLocale: contentLocale,
     );
+    isLoading = false;
     if (result != null) {
       if (result is Credentials) {
         authResponse = getPrettyCredentialsJson(result);
@@ -170,16 +173,19 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
         },
         contentLocale: contentLocale,
         onSuccess: (credentials) {
+          isLoading = false;
           setState(() {
             authResponse = getPrettyCredentialsJson(credentials);
           });
         },
         onError: (error) {
+          isLoading = false;
           setState(() {
             authResponse = error.toString();
           });
         },
         onCancel: () {
+          isLoading = false;
           setState(() {
             authResponse = 'User cancelled authentication';
           });
