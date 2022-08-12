@@ -108,7 +108,6 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
             if (widget.promptValues?.isNotEmpty ?? false)
               'prompt': widget.promptValues!.join(' '),
           }));
-
   }
 
   @override

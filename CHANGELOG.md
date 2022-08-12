@@ -11,7 +11,7 @@ Types of changes
 
 ## 3.0.0+10
 ### Added
-- Web support added.
+- Web support added. Despite this is a breaking change update, it really doesn't brake anything, you can still use it with no change required. Nevertheless if you want Web support to be enabled then you have to do an `init()` call, check README to see details.   
 - `shared_preferences` dependency added to support temporary state storage.
 
 ## 2.2.0+9

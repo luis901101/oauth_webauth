@@ -29,8 +29,10 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
       String.fromEnvironment('CLIENT_SECRET', defaultValue: 'XXXXXXXXX');
   static const String clientId =
       String.fromEnvironment('CLIENT_ID', defaultValue: 'realmClientID');
-  static String redirectUrl = originUrl() != null ? originUrl()! : const String.fromEnvironment('REDIRECT_URL',
-      defaultValue: 'https://test-redirect-to.com');
+  static String redirectUrl = originUrl() != null
+      ? originUrl()!
+      : const String.fromEnvironment('REDIRECT_URL',
+          defaultValue: 'https://test-redirect-to.com');
   final List<String> scopes = const String.fromEnvironment('SCOPES',
           defaultValue: 'https://test-redirect-to.com')
       .split(' ');

@@ -65,7 +65,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
                 authResponse,
               ),
               const SizedBox(height: 16),
-              if(isLoading) const CircularProgressIndicator(),
+              if (isLoading) const CircularProgressIndicator(),
               SizedBox(
                 width: 120,
                 child: DropdownButtonFormField<Locale>(

@@ -292,5 +292,11 @@ void baseRedirectV2() {
 
 ## Important notes
 - `goBackBtnVisible`, `goForwardBtnVisible`, `refreshBtnVisible`, `clearCacheBtnVisible`, `closeBtnVisible` allows you to show/hide buttons from toolbar, if you want to completely hide toolbar, set all buttons to false.
-- Use `urlStream` when you need to asynchronously navigate to a specific url, like when user registered using `OauthWebAuth` and the web view waits for user email verification; in this case when the user opens the email verification link you can navigate to this link by emitting the new url to the stream you previously set in the `urlStream` instead of creating a new `OautHWebAuth` or `BaseWebView`.
+- Use `urlStream` when you need to asynchronously navigate to a specific url, like when user registered using `OauthWebAuth` and the web view waits for user email verification; in this case when the user opens the email verification link you can navigate to this link by emitting the new url to the stream you previously set in the `urlStream` instead of creating a new `OauthWebAuth` or `BaseWebView`.
 - For more details on how to use check the sample project of this plugin.
+
+## Authentication/Authorization services tested
+- Keycloak
+- Auth0
+
+*Note: It should work with any Oauth2 comatible service that uses **Authorization Code Grant**. *
