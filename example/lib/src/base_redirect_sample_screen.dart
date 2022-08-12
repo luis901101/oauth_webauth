@@ -106,7 +106,8 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
               ),
               ElevatedButton(
                 onPressed: kIsWeb ? null : baseRedirectV1,
-                child: const Text('Base redirect variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}'),
+                child: const Text(
+                    'Base redirect variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}'),
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.green)),
               ),

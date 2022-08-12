@@ -404,14 +404,11 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   Future<void> controllerGo(String url) async {
     showLoading();
     inAppWebViewController?.loadUrl(
-        urlRequest: URLRequest(
-      url: Uri.parse(url),
-      headers: {
-        ...widget.headers,
-        if (widget.contentLocale != null)
-          'Accept-Language': widget.contentLocale!.toLanguageTag()
-      }
-    ));
+        urlRequest: URLRequest(url: Uri.parse(url), headers: {
+      ...widget.headers,
+      if (widget.contentLocale != null)
+        'Accept-Language': widget.contentLocale!.toLanguageTag()
+    }));
   }
 
   Future<void> controllerGoBack() async {

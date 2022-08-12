@@ -25,20 +25,21 @@ class BaseWebScreen extends StatelessWidget {
     bool? closeBtnVisible,
   }) {
     assert(
-    !kIsWeb ||
-        (kIsWeb &&
-            onSuccess != null &&
-            onError != null &&
-            onCancel != null),
-    'You must set onSuccess, onError and onCancel function when running on Web otherwise you will not get any result.');
-    if(kIsWeb) {
-      final baseFlow = BaseFlow()..init(
-        initialUri: Uri.parse(initialUrl),
-        redirectUrls: redirectUrls,
-        onSuccessRedirect: onSuccess,
-        onError: onError,
-        onCancel: onCancel,
-      );
+        !kIsWeb ||
+            (kIsWeb &&
+                onSuccess != null &&
+                onError != null &&
+                onCancel != null),
+        'You must set onSuccess, onError and onCancel function when running on Web otherwise you will not get any result.');
+    if (kIsWeb) {
+      final baseFlow = BaseFlow()
+        ..init(
+          initialUri: Uri.parse(initialUrl),
+          redirectUrls: redirectUrls,
+          onSuccessRedirect: onSuccess,
+          onError: onError,
+          onCancel: onCancel,
+        );
       baseFlow.onNavigateTo(OauthWebAuth.instance.appBaseUrl);
       return null;
     }
@@ -46,25 +47,24 @@ class BaseWebScreen extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) => BaseWebScreen(
-              initialUrl: initialUrl,
-              redirectUrls: redirectUrls,
-              onSuccess: onSuccess,
-              onError: onError,
-              onCancel: onCancel,
-              onCertificateValidate: onCertificateValidate,
-              themeData: themeData,
-              textLocales: textLocales,
-              contentLocale: contentLocale,
-              headers: headers,
-              urlStream: urlStream,
-              goBackBtnVisible: goBackBtnVisible,
-              goForwardBtnVisible: goForwardBtnVisible,
-              refreshBtnVisible: refreshBtnVisible,
-              clearCacheBtnVisible: clearCacheBtnVisible,
-              closeBtnVisible: closeBtnVisible,
-            )));
+                  initialUrl: initialUrl,
+                  redirectUrls: redirectUrls,
+                  onSuccess: onSuccess,
+                  onError: onError,
+                  onCancel: onCancel,
+                  onCertificateValidate: onCertificateValidate,
+                  themeData: themeData,
+                  textLocales: textLocales,
+                  contentLocale: contentLocale,
+                  headers: headers,
+                  urlStream: urlStream,
+                  goBackBtnVisible: goBackBtnVisible,
+                  goForwardBtnVisible: goForwardBtnVisible,
+                  refreshBtnVisible: refreshBtnVisible,
+                  clearCacheBtnVisible: clearCacheBtnVisible,
+                  closeBtnVisible: closeBtnVisible,
+                )));
   }
-
 
   final String initialUrl;
   final List<String> redirectUrls;

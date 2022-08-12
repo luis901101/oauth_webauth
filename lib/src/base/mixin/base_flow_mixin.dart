@@ -23,12 +23,12 @@ mixin BaseFlowMixin {
     ValueChanged<dynamic>? onError,
     VoidCallback? onCancel,
   }) {
-    if(initialUri != null) this.initialUri = initialUri;
-    if(redirectUrls != null) {
+    if (initialUri != null) this.initialUri = initialUri;
+    if (redirectUrls != null) {
       this.redirectUrls.clear();
       this.redirectUrls.addAll(redirectUrls);
     }
-    if(originUrl() != null) this.redirectUrls.add(originUrl()!);
+    if (originUrl() != null) this.redirectUrls.add(originUrl()!);
     _onSuccessRedirect = onSuccessRedirect;
     _onError = onError;
     _onCancel = onCancel;

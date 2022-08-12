@@ -7,6 +7,7 @@ import 'package:oauth_webauth/oauth_webauth.dart';
 mixin BaseOAuthFlowMixin on BaseFlowMixin {
   late oauth2.AuthorizationCodeGrant authorizationCodeGrant;
   String? codeVerifier;
+
   /// This function will be called when user successfully authenticates.
   /// It will receive the Oauth Credentials
   ValueChanged<oauth2.Credentials>? onSuccessAuth;
@@ -26,7 +27,8 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
     ValueChanged<dynamic>? onError,
     VoidCallback? onCancel,
   }) {
-    redirectUrl = originUrl() != null ? redirectUrl = originUrl()! : redirectUrl;
+    redirectUrl =
+        originUrl() != null ? redirectUrl = originUrl()! : redirectUrl;
     this.baseUrl = baseUrl;
     this.onSuccessAuth = onSuccessAuth;
     super.init(
@@ -40,12 +42,9 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
           OauthWebAuth.instance.generateCodeVerifier();
     }
 
-    authorizationCodeGrant = oauth2.AuthorizationCodeGrant(
-        clientId,
-        Uri.parse(authorizationEndpointUrl),
-        Uri.parse(tokenEndpointUrl),
-        secret: clientSecret,
-        codeVerifier: codeVerifier);
+    authorizationCodeGrant = oauth2.AuthorizationCodeGrant(clientId,
+        Uri.parse(authorizationEndpointUrl), Uri.parse(tokenEndpointUrl),
+        secret: clientSecret, codeVerifier: codeVerifier);
     initialUri = authorizationCodeGrant.getAuthorizationUrl(
       Uri.parse(redirectUrl),
       scopes: scopes,
@@ -75,7 +74,7 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
 
     try {
       final client =
-      await authorizationCodeGrant.handleAuthorizationResponse(parameters);
+          await authorizationCodeGrant.handleAuthorizationResponse(parameters);
       clearState();
       onSuccessAuth?.call(client.credentials);
     } catch (e) {

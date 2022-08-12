@@ -87,7 +87,8 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
               ),
               ElevatedButton(
                 onPressed: kIsWeb ? null : loginV1,
-                child: const Text('Login variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}'),
+                child: const Text(
+                    'Login variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}'),
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.green)),
               ),
