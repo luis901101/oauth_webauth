@@ -1,4 +1,3 @@
-import 'package:oauth_webauth/src/base/base_oauth_flow_mixin.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +70,7 @@ class OAuthWebView extends BaseWebView {
 }
 
 class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
-    with WidgetsBindingObserver, BaseOauthFlowMixin {
+    with WidgetsBindingObserver, BaseOAuthFlowMixin {
 
   @override
   void initBase() {

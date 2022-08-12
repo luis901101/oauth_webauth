@@ -1,4 +1,3 @@
-import 'package:oauth_webauth/src/utils/cross_platform_support.dart';
 import 'package:flutter/foundation.dart';
 import 'package:oauth_webauth/oauth_webauth.dart';
 

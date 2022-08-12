@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:oauth2/oauth2.dart';
@@ -42,7 +43,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
         const Duration(milliseconds: 300),
         () {
           if (OauthWebAuth.instance.restoreCodeVerifier() != null) {
-            loginV1();
+            loginV2();
           }
         },
       );
@@ -85,8 +86,8 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
                 ),
               ),
               ElevatedButton(
-                onPressed: loginV1,
-                child: const Text('Login variant 1'),
+                onPressed: kIsWeb ? null : loginV1,
+                child: const Text('Login variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}'),
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.green)),
               ),
@@ -112,7 +113,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
       redirectUrl: redirectUrl,
       scopes: scopes,
       promptValues: const ['login'],
-      loginHint: 'luis',
+      loginHint: 'johndoe@mail.com',
       onCertificateValidate: (certificate) {
         ///This is recommended
         /// Do certificate validations here
@@ -154,7 +155,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
         redirectUrl: redirectUrl,
         scopes: scopes,
         promptValues: const ['login'],
-        loginHint: 'luis',
+        loginHint: 'johndoe@mail.com',
         onCertificateValidate: (certificate) {
           ///This is recommended
           /// Do certificate validations here

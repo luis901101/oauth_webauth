@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:oauth_webauth/oauth_webauth.dart';
-import 'package:oauth_webauth/src/base/base_flow_mixin.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
-import 'package:oauth_webauth/src/utils/cross_platform_support.dart';
+import 'package:oauth_webauth/oauth_webauth.dart';
 
-mixin BaseOauthFlowMixin on BaseFlowMixin {
+mixin BaseOAuthFlowMixin on BaseFlowMixin {
   late oauth2.AuthorizationCodeGrant authorizationCodeGrant;
   String? codeVerifier;
   /// This function will be called when user successfully authenticates.

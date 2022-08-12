@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:oauth_webauth/oauth_webauth.dart';
-import 'package:oauth_webauth/src/base/base_flow_mixin.dart';
 
 /// This allows a value of type T or T?
 /// to be treated as a value of type T?.

@@ -5,6 +5,14 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+export 'package:oauth_webauth/src/base/mixin/base_flow_mixin.dart';
+export 'package:oauth_webauth/src/base/mixin/base_oauth_flow_mixin.dart';
+
+export 'package:oauth_webauth/src/base/base_flow.dart';
+export 'package:oauth_webauth/src/base/base_oauth_flow.dart';
+
+export 'package:oauth_webauth/src/utils/cross_platform_support.dart';
+
 export 'package:oauth_webauth/src/oauth_web_view.dart';
 export 'package:oauth_webauth/src/base_web_view.dart';
 export 'package:oauth_webauth/src/oauth_web_screen.dart';

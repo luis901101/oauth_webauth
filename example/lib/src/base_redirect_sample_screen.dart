@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:oauth_webauth/oauth_webauth.dart';
-import 'package:oauth_webauth/src/utils/cross_platform_support.dart';
 
 class BaseRedirectSampleScreen extends StatefulWidget {
   const BaseRedirectSampleScreen({Key? key}) : super(key: key);
@@ -105,8 +105,8 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
                 ),
               ),
               ElevatedButton(
-                onPressed: baseRedirectV1,
-                child: const Text('Base redirect variant 1'),
+                onPressed: kIsWeb ? null : baseRedirectV1,
+                child: const Text('Base redirect variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}'),
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.green)),
               ),

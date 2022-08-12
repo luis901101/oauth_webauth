@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:oauth2/oauth2.dart';
-import 'package:oauth_webauth/src/base_web_view.dart';
-import 'package:oauth_webauth/src/oauth_web_view.dart';
+import 'package:oauth_webauth/oauth_webauth.dart';
 
 class OAuthWebScreen extends StatelessWidget {
   static Future? start({
@@ -31,35 +31,62 @@ class OAuthWebScreen extends StatelessWidget {
     bool? refreshBtnVisible,
     bool? clearCacheBtnVisible,
     bool? closeBtnVisible,
-  }) =>
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => OAuthWebScreen(
-                    authorizationEndpointUrl: authorizationEndpointUrl,
-                    tokenEndpointUrl: tokenEndpointUrl,
-                    redirectUrl: redirectUrl,
-                    baseUrl: baseUrl,
-                    clientId: clientId,
-                    clientSecret: clientSecret,
-                    scopes: scopes,
-                    loginHint: loginHint,
-                    promptValues: promptValues,
-                    onSuccess: onSuccess,
-                    onError: onError,
-                    onCancel: onCancel,
-                    onCertificateValidate: onCertificateValidate,
-                    themeData: themeData,
-                    textLocales: textLocales,
-                    contentLocale: contentLocale,
-                    headers: headers,
-                    urlStream: urlStream,
-                    goBackBtnVisible: goBackBtnVisible,
-                    goForwardBtnVisible: goForwardBtnVisible,
-                    refreshBtnVisible: refreshBtnVisible,
-                    clearCacheBtnVisible: clearCacheBtnVisible,
-                    closeBtnVisible: closeBtnVisible,
-                  )));
+  }) {
+    assert(
+        !kIsWeb ||
+            (kIsWeb &&
+                onSuccess != null &&
+                onError != null &&
+                onCancel != null),
+        'You must set onSuccess, onError and onCancel function when running on Web otherwise you will not get any result.');
+    if(kIsWeb) {
+      final oauthFlow = BaseOAuthFlow()..initOauth(
+        authorizationEndpointUrl: authorizationEndpointUrl,
+        tokenEndpointUrl: tokenEndpointUrl,
+        redirectUrl: redirectUrl,
+        baseUrl: baseUrl,
+        clientId: clientId,
+        clientSecret: clientSecret,
+        scopes: scopes,
+        loginHint: loginHint,
+        promptValues: promptValues,
+        onSuccessAuth: onSuccess!,
+        onError: onError,
+        onCancel: onCancel,
+      );
+      oauthFlow.onNavigateTo(OauthWebAuth.instance.appBaseUrl);
+      return null;
+    }
+    return Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => OAuthWebScreen(
+              authorizationEndpointUrl: authorizationEndpointUrl,
+              tokenEndpointUrl: tokenEndpointUrl,
+              redirectUrl: redirectUrl,
+              baseUrl: baseUrl,
+              clientId: clientId,
+              clientSecret: clientSecret,
+              scopes: scopes,
+              loginHint: loginHint,
+              promptValues: promptValues,
+              onSuccess: onSuccess,
+              onError: onError,
+              onCancel: onCancel,
+              onCertificateValidate: onCertificateValidate,
+              themeData: themeData,
+              textLocales: textLocales,
+              contentLocale: contentLocale,
+              headers: headers,
+              urlStream: urlStream,
+              goBackBtnVisible: goBackBtnVisible,
+              goForwardBtnVisible: goForwardBtnVisible,
+              refreshBtnVisible: refreshBtnVisible,
+              clearCacheBtnVisible: clearCacheBtnVisible,
+              closeBtnVisible: closeBtnVisible,
+            )));
+  }
+
 
   final String authorizationEndpointUrl;
   final String tokenEndpointUrl;
