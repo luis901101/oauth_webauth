@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:oauth_webauth/oauth_webauth.dart';
-import 'package:oauth_webauth/src/base/base_flow.dart';
+import 'package:oauth_webauth/src/base/base_flow_mixin.dart';
 
 /// This allows a value of type T or T?
 /// to be treated as a value of type T?.
@@ -100,7 +100,7 @@ class BaseWebView extends StatefulWidget {
 }
 
 class BaseWebViewState<S extends BaseWebView> extends State<S>
-    with WidgetsBindingObserver, BaseFlow {
+    with WidgetsBindingObserver, BaseFlowMixin {
   bool ready = false;
   bool showToolbar = false;
   bool isLoading = true;
@@ -138,8 +138,13 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   }
 
   void initBase() {
-    initialUri = Uri.parse(widget.initialUrl);
-    redirectUrls = widget.redirectUrls;
+    init(
+      initialUri: Uri.parse(widget.initialUrl),
+      redirectUrls: widget.redirectUrls,
+      onSuccessRedirect: widget.onSuccessRedirect,
+      onError: widget.onError,
+      onCancel: widget.onCancel,
+    );
     toolbarTimerShow = Timer(const Duration(seconds: 5), () {
       setState(() {
         showToolbar = true;
@@ -258,24 +263,6 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
       allowGoForward = await controllerCanGoForward();
       setState(() {});
     }
-  }
-
-  @override
-  void onSuccess(String responseRedirect) async {
-    super.onSuccess(responseRedirect);
-    widget.onSuccessRedirect?.call(responseRedirect);
-  }
-
-  @override
-  void onError(dynamic error) {
-    super.onError(error);
-    widget.onError?.call(error);
-  }
-
-  @override
-  void onCancel() {
-    super.onCancel();
-    widget.onCancel?.call();
   }
 
   bool onCertificateValidate(X509Certificate certificate) {

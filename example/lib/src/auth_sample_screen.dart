@@ -112,7 +112,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
       redirectUrl: redirectUrl,
       scopes: scopes,
       promptValues: const ['login'],
-      loginHint: 'johndoe@mail.com',
+      loginHint: 'luis',
       onCertificateValidate: (certificate) {
         ///This is recommended
         /// Do certificate validations here
@@ -154,7 +154,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
         redirectUrl: redirectUrl,
         scopes: scopes,
         promptValues: const ['login'],
-        loginHint: 'johndoe@mail.com',
+        loginHint: 'luis',
         onCertificateValidate: (certificate) {
           ///This is recommended
           /// Do certificate validations here
