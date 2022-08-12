@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:oauth_webauth/oauth_webauth.dart';
-import 'package:oauth_webauth/src/utils/cross_platform_support.dart';
+import 'package:oauth_webauth/src/base/base_flow.dart';
 
 /// This allows a value of type T or T?
 /// to be treated as a value of type T?.
@@ -100,7 +100,7 @@ class BaseWebView extends StatefulWidget {
 }
 
 class BaseWebViewState<S extends BaseWebView> extends State<S>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, BaseFlow {
   bool ready = false;
   bool showToolbar = false;
   bool isLoading = true;
@@ -111,7 +111,6 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   @override
   late BuildContext context;
 
-  late Uri initialUri;
   late String backButtonTooltip;
   late String forwardButtonTooltip;
   late String reloadButtonTooltip;
@@ -123,7 +122,6 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
   late Widget webView;
   StreamSubscription? urlStreamSubscription;
 
-  List<String> get redirectUrls => widget.redirectUrls;
   bool get toolbarVisible =>
       widget.goBackBtnVisible ||
       widget.goForwardBtnVisible ||
@@ -141,6 +139,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
 
   void initBase() {
     initialUri = Uri.parse(widget.initialUrl);
+    redirectUrls = widget.redirectUrls;
     toolbarTimerShow = Timer(const Duration(seconds: 5), () {
       setState(() {
         showToolbar = true;
@@ -239,6 +238,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     );
   }
 
+  @override
   void showLoading() {
     if (!isLoading && mounted) {
       setState(() {
@@ -247,6 +247,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     }
   }
 
+  @override
   Future<void> hideLoading() async {
     if (isLoading && mounted) {
       ready = true;
@@ -259,34 +260,21 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     }
   }
 
-  bool startsWithAnyRedirectUrl(String url) => redirectUrls
-      .any((redirectUrl) => url != redirectUrl && url.startsWith(redirectUrl));
-
-  bool onNavigateTo(String url) {
-    if (url != 'about:blank') showLoading();
-    if (startsWithAnyRedirectUrl(url)) {
-      onSuccess(url);
-      return false;
-    }
-    if (kIsWeb) {
-      saveWebState();
-      loadPage(initialUri.toString());
-    }
-    return true;
-  }
-
+  @override
   void onSuccess(String responseRedirect) async {
-    clearWebState();
+    super.onSuccess(responseRedirect);
     widget.onSuccessRedirect?.call(responseRedirect);
   }
 
+  @override
   void onError(dynamic error) {
-    clearWebState();
+    super.onError(error);
     widget.onError?.call(error);
   }
 
+  @override
   void onCancel() {
-    clearWebState();
+    super.onCancel();
     widget.onCancel?.call();
   }
 
@@ -498,11 +486,6 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
       return false;
     }
     return true;
-  }
-
-  void saveWebState() {}
-  void clearWebState() {
-    if (kIsWeb) OauthWebAuth.instance.resetAppBaseUrl();
   }
 
   @override

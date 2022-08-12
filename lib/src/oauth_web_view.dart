@@ -128,7 +128,7 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
     try {
       final client =
           await authorizationCodeGrant.handleAuthorizationResponse(parameters);
-      clearWebState();
+      clearState();
       widget.onSuccessAuth(client.credentials);
     } catch (e) {
       onError(e);
@@ -136,14 +136,8 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
   }
 
   @override
-  void saveWebState() {
-    super.saveWebState();
+  void saveState() {
+    super.saveState();
     if (kIsWeb) OauthWebAuth.instance.saveCodeVerifier(codeVerifier ?? '');
-  }
-
-  @override
-  void clearWebState() {
-    super.clearWebState();
-    if (kIsWeb) OauthWebAuth.instance.clearCodeVerifier();
   }
 }
