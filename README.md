@@ -24,9 +24,11 @@ With this plugin you will get:
 - No system dialog will be shown when users tries to authenticate.
 - Users will not be affected by any system browser problem cache and also will be able to clean app browser cache from the authentication screen itself.
 - Authentication page locale can be set from app using the `contentLocale` property to ensure the same locale. By default Operating System locale will be used if no `contentLocale` is specified.
+- Custom headers can be set if necessary.
 
-**Note:**
-- `contentLocale` will apply only if the authentication page supports the specified `Locale('...')` and accepts the header: `'Accept-Language': 'es-ES'`
+**Notes:**
+- `contentLocale` will apply only if the authentication page supports the specified `Locale('...')` and accepts the header: `'Accept-Language': 'es-ES'`.
+- Web implementation deson't allow `contentLocale`, custom headers, nor full control over UI, because web implementation loads the page directly in the browser.
 
 ## Migration from ^1.0.0 to ^2.0.0
 - Static constants key for tooltips, message and hero tags were moved from `OAuthWebView` to `BaseWebView`
@@ -299,4 +301,4 @@ void baseRedirectV2() {
 - Keycloak
 - Auth0
 
-*Note: It should work with any Oauth2 comatible service that uses **Authorization Code Grant**. *
+*Note: It should work with any Oauth2 comatible service that uses **Authorization Code Grant***

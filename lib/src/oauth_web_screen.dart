@@ -83,14 +83,23 @@ class OAuthWebScreen extends StatelessWidget {
   final VoidCallback? onCancel;
 
   /// This function will be called when [authorizationEndpointUrl] is first loaded.
+  /// Not available for Web
   final CertificateValidator? onCertificateValidate;
 
+  /// Not available for Web
   final ThemeData? themeData;
+
+  /// Not available for Web
   final Map<String, String>? textLocales;
+
+  /// Not available for Web
   final Locale? contentLocale;
+
+  /// Not available for Web
   final Map<String, String>? headers;
 
   /// Use this stream when you need to asynchronously navigate to a specific url
+  /// Not available for Web
   final Stream<String>? urlStream;
 
   final bool? goBackBtnVisible;

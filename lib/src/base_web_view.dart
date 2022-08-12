@@ -43,14 +43,23 @@ class BaseWebView extends StatefulWidget {
 
   /// This function will be called when [authorizationEndpointUrl] is first loaded.
   /// If false is returned then a CertificateException() will be thrown
+  /// Not available for Web
   final CertificateValidator? onCertificateValidate;
 
+  /// Not available for Web
   final ThemeData? themeData;
+
+  /// Not available for Web
   final Map<String, String>? textLocales;
+
+  /// Not available for Web
   final Locale? contentLocale;
+
+  /// Not available for Web
   final Map<String, String> headers;
 
   /// Use this stream when you need to asynchronously navigate to a specific url
+  /// Not available for Web
   final Stream<String>? urlStream;
 
   final bool goBackBtnVisible;
@@ -423,9 +432,11 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     inAppWebViewController?.loadUrl(
         urlRequest: URLRequest(
       url: Uri.parse(url),
-      headers: widget.contentLocale == null
-          ? null
-          : {'Accept-Language': widget.contentLocale!.toLanguageTag()},
+      headers: {
+        ...widget.headers,
+        if (widget.contentLocale != null)
+          'Accept-Language': widget.contentLocale!.toLanguageTag()
+      }
     ));
   }
 
