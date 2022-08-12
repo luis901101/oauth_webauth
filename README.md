@@ -34,6 +34,12 @@ With this plugin you will get:
 - Static constants key for tooltips, message and hero tags were moved from `OAuthWebView` to `BaseWebView`
 - `OAuthWebView` renamed `onSuccess` function to `onSuccessAuth`.
 
+## Migration from ^2.0.0 to ^3.0.0
+Probably you will not need to do any migration. You only need to do changes:
+- If you override some of the plugin widgets in your code, you will have to check for the differences and apply it to your code.
+- If you plan to support web you will have to initialize the plugin, this is explained below in the **Initialization** section.
+
+
 ## Getting started
 As stated before this plugin uses WebView implementation specifically the plugin [flutter_inappwebview](https://pub.dev/packages/flutter_inappwebview). For any WebView related problem please check the documentation of that plugin at [docs](https://inappwebview.dev/docs/).
 
