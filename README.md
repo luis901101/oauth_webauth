@@ -1,7 +1,7 @@
 
 # OAuth WebAuth
 
-This plugin offers a WebView implementation approach for OAuth authorization/authentication with identity providers.
+This plugin offers a WebView implementation approach for OAuth authorization/authentication with identity providers. In the case of Web it doesn't use WebView, instead it loads the page directly in the browser.
 
 ## Compatibility
 
@@ -9,14 +9,14 @@ This plugin offers a WebView implementation approach for OAuth authorization/aut
 | ------ | ------ |
 | Android | :white_check_mark: |
 | iOS | :white_check_mark: |
-| Web | *Work in progress* |
+| Web | :white_check_mark: |
 
 ## Preamble
 Other plugins like [Flutter AppAuth](https://pub.dev/packages/flutter_appauth) uses native implementation of [AppAuth](https://appauth.io/) which in turn uses `SFAuthenticationSession` and `CustomTabs` for iOS and Android respectively. When using `SFAuthenticationSession` and `CustomTabs` your app will/could present some problems like:
 - UI: users will notice a breaking UI difference when system browser opens to handle the identity provider authentication process.
 - In iOS an annoying system dialog shows up every time the user tries to authenticate, indicating that the current app and browser could share their information.
 - Your system browser cache is shared with your app which is good and **bad**, bad because any cache problem due to your every day navigation use could affect your app authentication and the only way to clean cache it's by cleaning system browser cache at operating system level.
-- Authentication page will use the locale from System Browser which in fact uses the Operating System locale, this means if your app uses different language than the Operating System then authentication page will show different internationalization than your app. 
+- Authentication page will use the locale from System Browser which in fact uses the Operating System locale, this means if your app uses different language than the Operating System then authentication page will show different internationalization than your app.
 
 ## Features
 With this plugin you will get:
@@ -29,7 +29,7 @@ With this plugin you will get:
 - `contentLocale` will apply only if the authentication page supports the specified `Locale('...')` and accepts the header: `'Accept-Language': 'es-ES'`
 
 ## Migration from ^1.0.0 to ^2.0.0
-- Static constants key for tooltips, message and hero tags were moved from `OAuthWebView` to `BaseWebView` 
+- Static constants key for tooltips, message and hero tags were moved from `OAuthWebView` to `BaseWebView`
 - `OAuthWebView` renamed `onSuccess` function to `onSuccessAuth`.
 
 ## Getting started
@@ -64,11 +64,27 @@ Just add this to your `Info.plist`
 </plist>
 ```
 
+### Web setup
+No setup required
+
 ## Usage
 - This plugin offers a widget `OAuthWebView` which handles all the authorization/authentication and navigation logic; this widget can be used in any widget tree of your current app or as an individual authentication screen. For individual authentication screen it offers the widget `OAuthWebScreen` which can be started as a new route and also handles the Android back button to navigate backward when applies.
 - In addition, this plugin offers a simple widget `BaseWebView` which may be useful for cases in which you need to handle a link to your Auth server, let's say for email confirmation, or password reset, etc. This widget will handle the web UI and automatically get back to you when loaded any of the specified `redirectUrls`. The `BaseWebView` widget works very similar to `OAuthWebView`, it can be used in any widget tree of your current app or as an individual screen. For individual screen it offers the widget `BaseWebScreen` which can be started as a new route and also handles the Android back button to navigate backward when applies.
 
 #### **NOTE**: all widgets can be extended to change/improve its features.
+
+### Initialization
+In the `main()` function you should initialize this plugin just before runApp(...):
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await OauthWebAuth.instance.init();
+  runApp(const MyApp());
+}
+```
+#### IMPORTANT:
+- Note that it's required to call `WidgetsFlutterBinding.ensureInitialized();` before `.init()`. In the case of testing `TestWidgetsFlutterBinding.ensureInitialized()` should be called.
+- **The plugin initialization is only required for Web, if you plan to use this plugin only for iOS or Android you can ignore initialization.**
 
 ## OAuthWebView
 #### An authorization/authentication process can get 3 outputs.
