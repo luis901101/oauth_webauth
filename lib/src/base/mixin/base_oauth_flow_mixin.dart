@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:oauth_webauth/oauth_webauth.dart';
@@ -20,6 +21,9 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
     final String? baseUrl,
     required final String clientId,
     final String? clientSecret,
+    final String? delimiter,
+    final bool? basicAuth,
+    final http.Client? httpClient,
     final List<String>? scopes,
     final String? loginHint,
     final List<String>? promptValues,
@@ -42,9 +46,14 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
           OauthWebAuth.instance.generateCodeVerifier();
     }
 
-    authorizationCodeGrant = oauth2.AuthorizationCodeGrant(clientId,
+    authorizationCodeGrant = oauth2.AuthorizationCodeGrant(
+        clientId,
         Uri.parse(authorizationEndpointUrl), Uri.parse(tokenEndpointUrl),
-        secret: clientSecret, codeVerifier: codeVerifier);
+        secret: clientSecret, codeVerifier: codeVerifier,
+        delimiter: delimiter,
+        basicAuth: basicAuth ?? true,
+        httpClient: httpClient,
+    );
     initialUri = authorizationCodeGrant.getAuthorizationUrl(
       Uri.parse(redirectUrl),
       scopes: scopes,

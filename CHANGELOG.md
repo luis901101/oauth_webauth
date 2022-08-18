@@ -9,6 +9,11 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 3.1.0+11
+### Added
+- Detailed documentation added to OauthWebView parameters.
+- New parameters added: `delimiter`, `basicAuth`, `httpClient`. Each param is described in the OauthWebView class. 
+
 ## 3.0.0+10
 ### Added
 - Web support added. Despite this is a breaking change update, it really doesn't brake anything, you can still use it with no change required. Nevertheless if you want Web support to be enabled then you have to do an `init()` call, check README to see details.   
