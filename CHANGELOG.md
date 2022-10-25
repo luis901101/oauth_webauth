@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 3.1.1+12
+### Fixed
+- Fixed bug on BaseWebView setState call after widget no longer appears in the widget tree.
+
 ## 3.1.0+11
 ### Added
 - Detailed documentation added to OauthWebView parameters.

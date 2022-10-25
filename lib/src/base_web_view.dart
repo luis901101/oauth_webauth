@@ -244,7 +244,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
 
   @override
   void setState(VoidCallback fn) {
-    // if(!mounted) return;
+    if (!mounted) return;
     super.setState(fn);
   }
 

@@ -47,12 +47,14 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
     }
 
     authorizationCodeGrant = oauth2.AuthorizationCodeGrant(
-        clientId,
-        Uri.parse(authorizationEndpointUrl), Uri.parse(tokenEndpointUrl),
-        secret: clientSecret, codeVerifier: codeVerifier,
-        delimiter: delimiter,
-        basicAuth: basicAuth ?? true,
-        httpClient: httpClient,
+      clientId,
+      Uri.parse(authorizationEndpointUrl),
+      Uri.parse(tokenEndpointUrl),
+      secret: clientSecret,
+      codeVerifier: codeVerifier,
+      delimiter: delimiter,
+      basicAuth: basicAuth ?? true,
+      httpClient: httpClient,
     );
     initialUri = authorizationCodeGrant.getAuthorizationUrl(
       Uri.parse(redirectUrl),

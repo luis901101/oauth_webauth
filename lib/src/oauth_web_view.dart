@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:oauth_webauth/oauth_webauth.dart';
 
 class OAuthWebView extends BaseWebView {
-
   /// A URL provided by the authorization server that serves as the base for the
   /// URL that the resource owner will be redirected to to authorize this
   /// client.
