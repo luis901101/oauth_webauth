@@ -75,15 +75,15 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
 
   @override
   void onSuccess(String responseRedirect) async {
-    if ((baseUrl?.isNotEmpty ?? false) &&
-        responseRedirect.startsWith(baseUrl!)) {
-      return onCancel();
-    }
-
-    responseRedirect = responseRedirect.trim().replaceAll('#', '');
-    final parameters = Uri.dataFromString(responseRedirect).queryParameters;
-
     try {
+      responseRedirect = responseRedirect.trim().replaceAll('#', '');
+      final parameters = Uri.dataFromString(responseRedirect).queryParameters;
+
+      if (parameters.isEmpty && (baseUrl?.isNotEmpty ?? false) &&
+          responseRedirect.startsWith(baseUrl!)) {
+        return onCancel();
+      }
+
       final client =
           await authorizationCodeGrant.handleAuthorizationResponse(parameters);
       clearState();
