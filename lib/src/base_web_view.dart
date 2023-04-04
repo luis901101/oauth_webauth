@@ -69,7 +69,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     super.initState();
     initBase();
     webView = initWebView();
-    if (kIsWeb) onNavigateTo(OauthWebAuth.instance.appBaseUrl);
+    if (kIsWeb) onNavigateTo(OAuthWebAuth.instance.appBaseUrl);
   }
 
   void initBase() {
@@ -335,7 +335,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
                                                     Navigator.pop(context);
                                                     if (clearCacheSwitch &&
                                                         clearCookiesSwitch) {
-                                                      controllerFullClearCache();
+                                                      controllerClearAll();
                                                     } else if (clearCacheSwitch) {
                                                       controllerClearCache();
                                                     } else {
@@ -401,22 +401,21 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
 
   Future<void> controllerClearCache() async {
     showLoading();
-    await OauthWebAuth.instance.clearCache(controller: inAppWebViewController);
+    await OAuthWebAuth.instance.clearCache(controller: inAppWebViewController);
     hideLoading();
     controllerReload();
   }
 
   Future<void> controllerClearCookies() async {
     showLoading();
-    await OauthWebAuth.instance.clearCookies();
+    await OAuthWebAuth.instance.clearCookies();
     hideLoading();
     controllerReload();
   }
 
-  Future<void> controllerFullClearCache() async {
+  Future<void> controllerClearAll() async {
     showLoading();
-    await OauthWebAuth.instance
-        .fullClearCache(controller: inAppWebViewController);
+    await OAuthWebAuth.instance.clearAll(controller: inAppWebViewController);
     hideLoading();
     controllerReload();
   }

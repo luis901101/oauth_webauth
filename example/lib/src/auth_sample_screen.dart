@@ -15,7 +15,7 @@ class AuthSampleScreen extends StatefulWidget {
 }
 
 class _AuthSampleScreenState extends State<AuthSampleScreen> {
-  bool isLoading = OauthWebAuth.instance.restoreCodeVerifier() != null;
+  bool isLoading = OAuthWebAuth.instance.restoreCodeVerifier() != null;
   static const String authorizationEndpointUrl = String.fromEnvironment(
       'AUTHORIZATION_ENDPOINT_URL',
       defaultValue: 'https://test-auth-endpoint.com');
@@ -43,7 +43,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
       Future.delayed(
         const Duration(milliseconds: 300),
         () {
-          if (OauthWebAuth.instance.restoreCodeVerifier() != null) {
+          if (OAuthWebAuth.instance.restoreCodeVerifier() != null) {
             loginV2();
           }
         },
@@ -55,7 +55,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Oauth login samples'),
+        title: const Text('OAuth login samples'),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: Center(
@@ -108,7 +108,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
   void loginV1() async {
     final result = await OAuthWebScreen.start(
         context: context,
-        configuration: OauthConfiguration(
+        configuration: OAuthConfiguration(
           authorizationEndpointUrl: authorizationEndpointUrl,
           tokenEndpointUrl: tokenEndpointUrl,
           clientSecret: clientSecret,
@@ -151,7 +151,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
   void loginV2() {
     OAuthWebScreen.start(
       context: context,
-      configuration: OauthConfiguration(
+      configuration: OAuthConfiguration(
           authorizationEndpointUrl: authorizationEndpointUrl,
           tokenEndpointUrl: tokenEndpointUrl,
           clientSecret: clientSecret,

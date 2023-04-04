@@ -23,9 +23,9 @@ export 'package:oauth_webauth/src/base_web_screen.dart';
 export 'package:oauth_webauth/src/base/model/base_configuration.dart';
 export 'package:oauth_webauth/src/base/model/oauth_configuration.dart';
 
-class OauthWebAuth {
+class OAuthWebAuth {
   ///Singleton instance
-  static final instance = OauthWebAuth();
+  static final instance = OAuthWebAuth();
   SharedPreferences? _sharedPreferences;
   String appBaseUrl = '';
 
@@ -34,7 +34,7 @@ class OauthWebAuth {
   ///
   /// e.g:
   ///   WidgetsFlutterBinding.ensureInitialized();
-  ///   await OauthWebAuth.instance.init();
+  ///   await OAuthWebAuth.instance.init();
   Future<void> init({String? appBaseUrl}) async {
     try {
       this.appBaseUrl = appBaseUrl ?? Uri.base.toString().trim();
@@ -48,7 +48,7 @@ class OauthWebAuth {
       }
       _sharedPreferences = await SharedPreferences.getInstance();
       if (kDebugMode) {
-        print('------ OauthWebAuth appBaseUri: ${this.appBaseUrl} ------');
+        print('------ OAuthWebAuth appBaseUri: ${this.appBaseUrl} ------');
       }
     } catch (e) {
       if (kDebugMode) print(e);
@@ -84,7 +84,7 @@ class OauthWebAuth {
     }
   }
 
-  Future<void> fullClearCache({InAppWebViewController? controller}) async {
+  Future<void> clearAll({InAppWebViewController? controller}) async {
     await clearCache(controller: controller);
     await clearCookies();
   }
@@ -110,7 +110,7 @@ class OauthWebAuth {
   /// Only used in web.
   String? restoreCodeVerifier() {
     final code = _sharedPreferences?.getString(_codeVerifierKey);
-    if (kDebugMode) print('------ OauthWebAuth codeVerifier: $code ------');
+    if (kDebugMode) print('------ OAuthWebAuth codeVerifier: $code ------');
     return code;
   }
 

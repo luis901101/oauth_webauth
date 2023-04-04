@@ -11,10 +11,11 @@ Types of changes
 
 ## 4.0.0+14
 ### Added
-- Added support to `clearCache` and `clearCookies` directly from `OauthWebAuth.instance`.
+- Added support to `clearCache` and `clearCookies` directly from `OAuthWebAuth.instance`.
 
 ### Changed
-- Full code refactor to use `BaseConfiguration(...)` and `OauthConfiguration(...)`. See readme for migration.
+- `OauthWebScreen` renamed to `OAuthWebScreen` and `OauthWebView` renamed to `OAuthWebView`.
+- Full code refactor to use `BaseConfiguration(...)` and `OAuthConfiguration(...)`. See readme for migration.
 - SDK constraints updated to `sdk: ">=2.19.0 <3.0.0"` and `flutter: ">=2.0.0"`.
 
 ### Fixed

@@ -3,7 +3,7 @@ import 'package:oauth_webauth/oauth_webauth.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:http/http.dart' as http;
 
-class OauthConfiguration extends BaseConfiguration {
+class OAuthConfiguration extends BaseConfiguration {
   /// A URL provided by the authorization server that serves as the base for the
   /// URL that the resource owner will be redirected to to authorize this
   /// client.
@@ -75,10 +75,10 @@ class OauthConfiguration extends BaseConfiguration {
   final List<String>? promptValues;
 
   /// This function will be called when user successfully authenticates.
-  /// It will receive the Oauth Credentials
+  /// It will receive the OAuth Credentials
   final ValueChanged<oauth2.Credentials>? onSuccessAuth;
 
-  const OauthConfiguration({
+  const OAuthConfiguration({
     required this.authorizationEndpointUrl,
     required this.tokenEndpointUrl,
     required this.redirectUrl,
@@ -110,7 +110,7 @@ class OauthConfiguration extends BaseConfiguration {
           redirectUrls: const [],
         );
 
-  const OauthConfiguration._({
+  const OAuthConfiguration._({
     required this.authorizationEndpointUrl,
     required this.tokenEndpointUrl,
     required this.redirectUrl,
@@ -143,7 +143,7 @@ class OauthConfiguration extends BaseConfiguration {
   });
 
   @override
-  OauthConfiguration copyWith({
+  OAuthConfiguration copyWith({
     String? authorizationEndpointUrl,
     String? tokenEndpointUrl,
     String? redirectUrl,
@@ -174,7 +174,7 @@ class OauthConfiguration extends BaseConfiguration {
     bool? clearCacheBtnVisible,
     bool? closeBtnVisible,
   }) =>
-      OauthConfiguration._(
+      OAuthConfiguration._(
         authorizationEndpointUrl:
             authorizationEndpointUrl ?? this.authorizationEndpointUrl,
         tokenEndpointUrl: tokenEndpointUrl ?? this.tokenEndpointUrl,

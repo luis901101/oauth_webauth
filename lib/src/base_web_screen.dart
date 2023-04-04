@@ -25,7 +25,7 @@ class BaseWebScreen extends StatelessWidget {
           onError: configuration.onError,
           onCancel: configuration.onCancel,
         );
-      baseFlow.onNavigateTo(OauthWebAuth.instance.appBaseUrl);
+      baseFlow.onNavigateTo(OAuthWebAuth.instance.appBaseUrl);
       return null;
     }
     return Navigator.push(

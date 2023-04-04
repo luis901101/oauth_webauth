@@ -6,7 +6,7 @@ import 'package:oauth_webauth/oauth_webauth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await OauthWebAuth.instance.init();
+  await OAuthWebAuth.instance.init();
   runApp(const MyApp());
 }
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Oauth WebAuth samples'),
+      home: const MyHomePage(title: 'OAuth WebAuth samples'),
     );
   }
 }
@@ -35,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool isLoading = OauthWebAuth.instance.restoreCodeVerifier() != null;
+  bool isLoading = OAuthWebAuth.instance.restoreCodeVerifier() != null;
   @override
   void initState() {
     super.initState();
@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Future.delayed(
         const Duration(milliseconds: 300),
         () {
-          if (OauthWebAuth.instance.restoreCodeVerifier() != null) {
+          if (OAuthWebAuth.instance.restoreCodeVerifier() != null) {
             goAuthSampleScreen();
           }
         },
@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.green)),
-                child: const Text('Oauth login samples'),
+                child: const Text('OAuth login samples'),
               ),
               const SizedBox(height: 4),
               ElevatedButton(

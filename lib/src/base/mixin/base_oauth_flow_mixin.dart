@@ -9,12 +9,12 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
   String? codeVerifier;
 
   /// This function will be called when user successfully authenticates.
-  /// It will receive the Oauth Credentials
+  /// It will receive the OAuth Credentials
   ValueChanged<oauth2.Credentials>? onSuccessAuth;
   String? baseUrl;
 
-  void initOauth({
-    required OauthConfiguration configuration,
+  void initOAuth({
+    required OAuthConfiguration configuration,
   }) {
     final redirectUrl =
         originUrl() != null ? originUrl()! : configuration.redirectUrl;
@@ -27,8 +27,8 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
     );
 
     if (kIsWeb) {
-      codeVerifier = OauthWebAuth.instance.restoreCodeVerifier() ??
-          OauthWebAuth.instance.generateCodeVerifier();
+      codeVerifier = OAuthWebAuth.instance.restoreCodeVerifier() ??
+          OAuthWebAuth.instance.generateCodeVerifier();
     }
 
     authorizationCodeGrant = oauth2.AuthorizationCodeGrant(
@@ -87,6 +87,6 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
   @override
   void saveState() {
     super.saveState();
-    if (kIsWeb) OauthWebAuth.instance.saveCodeVerifier(codeVerifier ?? '');
+    if (kIsWeb) OAuthWebAuth.instance.saveCodeVerifier(codeVerifier ?? '');
   }
 }

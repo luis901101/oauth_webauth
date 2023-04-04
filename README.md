@@ -39,6 +39,11 @@ Probably you will not need to do any migration. You only need to do changes:
 - If you override some of the plugin widgets in your code, you will have to check for the differences and apply it to your code.
 - If you plan to support web you will have to initialize the plugin, this is explained below in the **Initialization** section.
 
+## Migration from ^3.0.0 to ^4.0.0
+- Static constants key for tooltips, message and hero tags were moved from `BaseWebView` to `BaseConfiguration`.
+- `OAuthWebScreen` and `OAuthWebView` now requires a `OAuthConfiguration` object and `BaseWebScreen` and `BaseWebView` now requires a `BaseConfiguration` object instead of properties directly.
+- Make sure your pubspec `enironment` fits the following constraints: `sdk: ">=2.19.0 <3.0.0"` and `flutter: ">=2.0.0"`.
+
 
 ## Getting started
 As stated before this plugin uses WebView implementation specifically the plugin [flutter_inappwebview](https://pub.dev/packages/flutter_inappwebview). For any WebView related problem please check the documentation of that plugin at [docs](https://inappwebview.dev/docs/).
@@ -86,7 +91,7 @@ In the `main()` function you should initialize this plugin just before runApp(..
 ```dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await OauthWebAuth.instance.init();
+  await OAuthWebAuth.instance.init();
   runApp(const MyApp());
 }
 ```
@@ -96,7 +101,7 @@ void main() async {
 
 ## OAuthWebView
 #### An authorization/authentication process can get 3 outputs.
-1. User successfully authenticates, which returns an Oauth2 Credentials object with the access-token and refresh-token.
+1. User successfully authenticates, which returns an OAuth2 Credentials object with the access-token and refresh-token.
 2. An error occurred during authorization/authentication, or maybe certificate validation failed.
 3. User canceled authentication.
 
@@ -108,34 +113,35 @@ Awaiting response from navigator route `Future`.
 void loginV1() async {
   final result = await OAuthWebScreen.start(
       context: context,
-      authorizationEndpointUrl: authorizationEndpointUrl,
-      tokenEndpointUrl: tokenEndpointUrl,
-      clientSecret: clientSecret,
-      clientId: clientId,
-      redirectUrl: redirectUrl,
-      baseUrl: baseUrl, //Optional, if you want to get back to the application when the web view gets redirected to baseUrl. This will be like an onCancel callback
-      scopes: scopes,
-      promptValues: const ['login'],
-      loginHint: 'johndoe@mail.com',
-      onCertificateValidate: (certificate) {
-        ///This is recommended
-        /// Do certificate validations here
-        /// If false is returned then a CertificateException() will be thrown
-        return true;
-      },
-      contentLocale: Locale('es'),
-      refreshBtnVisible: false,
-      clearCacheBtnVisible: false,
-      textLocales: {
-        ///Optionally texts can be localized
-        OAuthWebView.backButtonTooltipKey: 'Ir atrás',
-        OAuthWebView.forwardButtonTooltipKey: 'Ir adelante',
-        OAuthWebView.reloadButtonTooltipKey: 'Recargar',
-        OAuthWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
-        OAuthWebView.closeButtonTooltipKey: 'Cerrar',
-        OAuthWebView.clearCacheWarningMessageKey:
-        '¿Está seguro que desea limpiar la caché?',
-      });
+      configuration: OAuthConfiguration(
+        authorizationEndpointUrl: authorizationEndpointUrl,
+        tokenEndpointUrl: tokenEndpointUrl,
+        clientSecret: clientSecret,
+        clientId: clientId,
+        redirectUrl: redirectUrl,
+        scopes: scopes,
+        promptValues: const ['login'],
+        loginHint: 'johndoe@mail.com',
+        onCertificateValidate: (certificate) {
+          ///This is recommended
+          /// Do certificate validations here
+          /// If false is returned then a CertificateException() will be thrown
+          return true;
+        },
+        textLocales: {
+          ///Optionally texts can be localized
+          BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
+          BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
+          BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
+          BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
+          BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
+          BaseConfiguration.clearCacheWarningMessageKey:
+          '¿Está seguro que desea limpiar la caché?',
+        },
+        contentLocale: Locale('es'),
+        refreshBtnVisible: false,
+        clearCacheBtnVisible: false,
+      ));
   if (result != null) {
     if (result is Credentials) {
       authResponse = getPrettyCredentialsJson(result);
@@ -155,49 +161,53 @@ Using callbacks
 void loginV2() {
   OAuthWebScreen.start(
       context: context,
-      authorizationEndpointUrl: authorizationEndpointUrl,
-      tokenEndpointUrl: tokenEndpointUrl,
-      clientSecret: clientSecret,
-      clientId: clientId,
-      redirectUrl: redirectUrl,
-      baseUrl: baseUrl, //Optional, if you want to get back to the application when the web view gets redirected to baseUrl. This will be like an onCancel callback
-      scopes: scopes,
-      promptValues: const ['login'],
-      loginHint: 'johndoe@mail.com',
-      onCertificateValidate: (certificate) {
-        ///This is recommended
-        /// Do certificate validations here
-        /// If false is returned then a CertificateException() will be thrown
-        return true;
-      },
-      contentLocale: Locale('es'),
-      refreshBtnVisible: false,
-      clearCacheBtnVisible: false,
-      textLocales: {
-        ///Optionally text can be localized
-        OAuthWebView.backButtonTooltipKey: 'Ir atrás',
-        OAuthWebView.forwardButtonTooltipKey: 'Ir adelante',
-        OAuthWebView.reloadButtonTooltipKey: 'Recargar',
-        OAuthWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
-        OAuthWebView.closeButtonTooltipKey: 'Cerrar',
-        OAuthWebView.clearCacheWarningMessageKey:
-        '¿Está seguro que desea limpiar la caché?',
-      },
-      onSuccess: (credentials) {
-        setState(() {
-          authResponse = getPrettyCredentialsJson(credentials);
-        });
-      },
-      onError: (error) {
-        setState(() {
-          authResponse = error.toString();
-        });
-      },
-      onCancel: () {
-        setState(() {
-          authResponse = 'User cancelled authentication';
-        });
-      });
+      configuration: OAuthConfiguration(
+          authorizationEndpointUrl: authorizationEndpointUrl,
+          tokenEndpointUrl: tokenEndpointUrl,
+          clientSecret: clientSecret,
+          clientId: clientId,
+          redirectUrl: redirectUrl,
+          scopes: scopes,
+          promptValues: const ['login'],
+          loginHint: 'johndoe@mail.com',
+          onCertificateValidate: (certificate) {
+            ///This is recommended
+            /// Do certificate validations here
+            /// If false is returned then a CertificateException() will be thrown
+            return true;
+          },
+          textLocales: {
+            ///Optionally text can be localized
+            BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
+            BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
+            BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
+            BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
+            BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
+            BaseConfiguration.clearCacheWarningMessageKey:
+                '¿Está seguro que desea limpiar la caché?',
+          },
+          contentLocale: Locale('es'),
+          refreshBtnVisible: false,
+          clearCacheBtnVisible: false,
+          onSuccessAuth: (credentials) {
+            isLoading = false;
+            setState(() {
+              authResponse = getPrettyCredentialsJson(credentials);
+            });
+          },
+          onError: (error) {
+            isLoading = false;
+            setState(() {
+              authResponse = error.toString();
+            });
+          },
+          onCancel: () {
+            isLoading = false;
+            setState(() {
+              authResponse = 'User cancelled authentication';
+            });
+          }),
+    );
 }
  ```
 
@@ -214,29 +224,31 @@ Awaiting response from navigator route `Future`.
 ```dart
 void baseRedirectV1() async {
   final result = await BaseWebScreen.start(
-    context: context,
-    initialUrl: initialUrl,
-    redirectUrls: [redirectUrl, baseUrl],
-    onCertificateValidate: (certificate) {
-      ///This is recommended
-      /// Do certificate validations here
-      /// If false is returned then a CertificateException() will be thrown
-      return true;
-    },
-    textLocales: {
-      ///Optionally texts can be localized
-      BaseWebView.backButtonTooltipKey: 'Ir atrás',
-      BaseWebView.forwardButtonTooltipKey: 'Ir adelante',
-      BaseWebView.reloadButtonTooltipKey: 'Recargar',
-      BaseWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
-      BaseWebView.closeButtonTooltipKey: 'Cerrar',
-      BaseWebView.clearCacheWarningMessageKey:
-      '¿Está seguro que desea limpiar la caché?',
-    },
-    contentLocale: contentLocale,
-    refreshBtnVisible: false,
-    clearCacheBtnVisible: false,
-  );
+      context: context,
+      configuration: BaseConfiguration(
+        initialUrl: initialUrl,
+        redirectUrls: [redirectUrl, baseUrl],
+        onCertificateValidate: (certificate) {
+          ///This is recommended
+          /// Do certificate validations here
+          /// If false is returned then a CertificateException() will be thrown
+          return true;
+        },
+        textLocales: {
+          ///Optionally texts can be localized
+          BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
+          BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
+          BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
+          BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
+          BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
+          BaseConfiguration.clearCacheWarningMessageKey:
+              '¿Está seguro que desea limpiar la caché?',
+        },
+        contentLocale: Locale('es'),
+        refreshBtnVisible: false,
+        clearCacheBtnVisible: false,
+      ),
+    );
   if (result != null) {
     if (result is String) {
       /// If result is String it means redirected successful
@@ -259,52 +271,55 @@ Using callbacks
 void baseRedirectV2() {
   BaseWebScreen.start(
       context: context,
-      initialUrl: initialUrl,
-      redirectUrls: [redirectUrl, baseUrl],
-      onCertificateValidate: (certificate) {
-        ///This is recommended
-        /// Do certificate validations here
-        /// If false is returned then a CertificateException() will be thrown
-        return true;
-      },
-      textLocales: {
-        ///Optionally text can be localized
-        BaseWebView.backButtonTooltipKey: 'Ir atrás',
-        BaseWebView.forwardButtonTooltipKey: 'Ir adelante',
-        BaseWebView.reloadButtonTooltipKey: 'Recargar',
-        BaseWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
-        BaseWebView.closeButtonTooltipKey: 'Cerrar',
-        BaseWebView.clearCacheWarningMessageKey:
-        '¿Está seguro que desea limpiar la caché?',
-      },
-      contentLocale: contentLocale,
-      refreshBtnVisible: false,
-      clearCacheBtnVisible: false,
-      onSuccess: () {
-        setState(() {
-          response = 'User redirected';
-        });
-      },
-      onError: (error) {
-        setState(() {
-          response = error.toString();
-        });
-      },
-      onCancel: () {
-        setState(() {
-          response = 'User cancelled';
-        });
-      });
+      configuration: BaseConfiguration(
+          initialUrl: initialUrl,
+          redirectUrls: [redirectUrl, baseUrl],
+          onCertificateValidate: (certificate) {
+            ///This is recommended
+            /// Do certificate validations here
+            /// If false is returned then a CertificateException() will be thrown
+            return true;
+          },
+          textLocales: {
+            ///Optionally text can be localized
+            BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
+            BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
+            BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
+            BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
+            BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
+            BaseConfiguration.clearCacheWarningMessageKey:
+                '¿Está seguro que desea limpiar la caché?',
+          },
+          contentLocale: Locale('es'),
+          refreshBtnVisible: false,
+          clearCacheBtnVisible: false,
+          onSuccessRedirect: (responseRedirect) {
+            setState(() {
+              response = 'User redirected to: $responseRedirect';
+            });
+          },
+          onError: (error) {
+            setState(() {
+              response = error.toString();
+            });
+          },
+          onCancel: () {
+            setState(() {
+              response = 'User cancelled';
+            });
+          }),
+    );
 }
  ```
 
 ## Important notes
 - `goBackBtnVisible`, `goForwardBtnVisible`, `refreshBtnVisible`, `clearCacheBtnVisible`, `closeBtnVisible` allows you to show/hide buttons from toolbar, if you want to completely hide toolbar, set all buttons to false.
-- Use `urlStream` when you need to asynchronously navigate to a specific url, like when user registered using `OauthWebAuth` and the web view waits for user email verification; in this case when the user opens the email verification link you can navigate to this link by emitting the new url to the stream you previously set in the `urlStream` instead of creating a new `OauthWebAuth` or `BaseWebView`.
+- Use `urlStream` when you need to asynchronously navigate to a specific url, like when user registered using `OAuthWebAuth` and the web view waits for user email verification; in this case when the user opens the email verification link you can navigate to this link by emitting the new url to the stream you previously set in the `urlStream` instead of creating a new `OAuthWebAuth` or `BaseWebView`.
+- You can clear cache, clear cookies or both directly from `OAuthWebAuth.instance`, like `OAuthWebAuth.instance.clearCache()`, `OAuthWebAuth.instance.clearCookies()` or `OAuthWebAuth.instance.clearAll()`.
 - For more details on how to use check the sample project of this plugin.
 
 ## Authentication/Authorization services tested
 - Keycloak
 - Auth0
 
-*Note: It should work with any Oauth2 comatible service that uses **Authorization Code Grant***
+*Note: It should work with any OAuth2 comatible service that uses **Authorization Code Grant***

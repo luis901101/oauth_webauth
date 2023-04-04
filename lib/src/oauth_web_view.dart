@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:oauth_webauth/oauth_webauth.dart';
 
 class OAuthWebView extends BaseWebView {
-  final OauthConfiguration _configuration;
+  final OAuthConfiguration _configuration;
 
   const OAuthWebView({
     Key? key,
-    required OauthConfiguration configuration,
+    required OAuthConfiguration configuration,
   })  : _configuration = configuration,
         super(key: key, configuration: configuration);
 
@@ -18,12 +18,12 @@ class OAuthWebView extends BaseWebView {
 class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
     with WidgetsBindingObserver, BaseOAuthFlowMixin {
   @override
-  OauthConfiguration get configuration => widget._configuration;
+  OAuthConfiguration get configuration => widget._configuration;
 
   @override
   void initBase() {
     super.initBase();
-    initOauth(
+    initOAuth(
       configuration: configuration,
     );
   }

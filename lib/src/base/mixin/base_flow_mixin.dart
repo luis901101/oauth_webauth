@@ -72,8 +72,8 @@ mixin BaseFlowMixin {
   void saveState() {}
   void clearState() {
     if (kIsWeb) {
-      OauthWebAuth.instance.resetAppBaseUrl();
-      OauthWebAuth.instance.clearCodeVerifier();
+      OAuthWebAuth.instance.resetAppBaseUrl();
+      OAuthWebAuth.instance.clearCodeVerifier();
     }
   }
 }
