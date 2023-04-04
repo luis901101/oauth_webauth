@@ -55,6 +55,7 @@ class OAuthWebAuth {
     }
   }
 
+  /// Clears WebView cache
   Future<void> clearCache({InAppWebViewController? controller}) async {
     if (kIsWeb) return;
     Future<void> clearCache(InAppWebViewController controller) async {
@@ -76,6 +77,7 @@ class OAuthWebAuth {
         .timeout(const Duration(seconds: 5), onTimeout: () {});
   }
 
+  /// Clears WebView cookies
   Future<void> clearCookies() async {
     try {
       await CookieManager.instance().deleteAllCookies();
@@ -84,6 +86,7 @@ class OAuthWebAuth {
     }
   }
 
+  /// Clears WebView cache and cookies
   Future<void> clearAll({InAppWebViewController? controller}) async {
     await clearCache(controller: controller);
     await clearCookies();
