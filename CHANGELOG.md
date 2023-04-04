@@ -9,6 +9,17 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 4.0.0+14
+### Added
+- Added support to `clearCache` and `clearCookies` directly from `OauthWebAuth.instance`.
+
+### Changed
+- Full code refactor to use `BaseConfiguration(...)` and `OauthConfiguration(...)`. See readme for migration.
+- SDK constraints updated to `sdk: ">=2.19.0 <3.0.0"` and `flutter: ">=2.0.0"`.
+
+### Fixed
+- Fixed bug in redirect url handling that caused `invalid_grant` due to content after `#` in url.
+
 ## 3.1.2+13
 ### Fixed
 - Fixed bug on BaseOAuthFlowMixin onSuccess function that caused wrong flow cancellation on baseUrl redirect.  

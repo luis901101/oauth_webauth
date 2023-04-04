@@ -1,9 +1,12 @@
 library oauth_webauth;
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:oauth_webauth/src/utils/widget_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 export 'package:oauth_webauth/src/base/mixin/base_flow_mixin.dart';
 export 'package:oauth_webauth/src/base/mixin/base_oauth_flow_mixin.dart';
@@ -17,6 +20,8 @@ export 'package:oauth_webauth/src/oauth_web_view.dart';
 export 'package:oauth_webauth/src/base_web_view.dart';
 export 'package:oauth_webauth/src/oauth_web_screen.dart';
 export 'package:oauth_webauth/src/base_web_screen.dart';
+export 'package:oauth_webauth/src/base/model/base_configuration.dart';
+export 'package:oauth_webauth/src/base/model/oauth_configuration.dart';
 
 class OauthWebAuth {
   ///Singleton instance
@@ -32,8 +37,11 @@ class OauthWebAuth {
   ///   await OauthWebAuth.instance.init();
   Future<void> init({String? appBaseUrl}) async {
     try {
-      this.appBaseUrl =
-          appBaseUrl ?? Uri.base.toString().trim().replaceAll('#', '');
+      this.appBaseUrl = appBaseUrl ?? Uri.base.toString().trim();
+      final int ignoreStartIndex = this.appBaseUrl.indexOf('#');
+      if (ignoreStartIndex > -1) {
+        this.appBaseUrl = this.appBaseUrl.substring(0, ignoreStartIndex);
+      }
       while (this.appBaseUrl.endsWith('/')) {
         this.appBaseUrl =
             this.appBaseUrl.substring(0, this.appBaseUrl.length - 1);
@@ -45,6 +53,40 @@ class OauthWebAuth {
     } catch (e) {
       if (kDebugMode) print(e);
     }
+  }
+
+  Future<void> clearCache({InAppWebViewController? controller}) async {
+    if (kIsWeb) return;
+    Future<void> clearCache(InAppWebViewController controller) async {
+      await controller.clearCache();
+    }
+
+    if (controller != null) return clearCache(controller);
+    final futureCompleter = Completer<void>();
+    try {
+      InAppWebView(
+        onWebViewCreated: (controller) async {
+          futureCompleter.complete(clearCache(controller));
+        },
+      ).buildWidgetOnBackground();
+    } catch (e) {
+      print(e);
+    }
+    return futureCompleter.future
+        .timeout(const Duration(seconds: 5), onTimeout: () {});
+  }
+
+  Future<void> clearCookies() async {
+    try {
+      await CookieManager.instance().deleteAllCookies();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> fullClearCache({InAppWebViewController? controller}) async {
+    await clearCache(controller: controller);
+    await clearCookies();
   }
 
   /// Resets the [appBaseUrl] to the origin url to remove any path segments and query parameters in it.

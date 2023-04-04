@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// ignore: depend_on_referenced_packages
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:oauth_webauth/oauth_webauth.dart';
 
@@ -106,10 +107,10 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
               ),
               ElevatedButton(
                 onPressed: kIsWeb ? null : baseRedirectV1,
-                child: const Text(
-                    'Base redirect variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}'),
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.green)),
+                child: const Text(
+                    'Base redirect variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}'),
               ),
               const SizedBox(height: 4),
               ElevatedButton(
@@ -126,25 +127,27 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
   void baseRedirectV1() async {
     final result = await BaseWebScreen.start(
       context: context,
-      initialUrl: initialUrl,
-      redirectUrls: [redirectUrl, baseUrl],
-      onCertificateValidate: (certificate) {
-        ///This is recommended
-        /// Do certificate validations here
-        /// If false is returned then a CertificateException() will be thrown
-        return true;
-      },
-      textLocales: {
-        ///Optionally texts can be localized
-        BaseWebView.backButtonTooltipKey: 'Ir atrás',
-        BaseWebView.forwardButtonTooltipKey: 'Ir adelante',
-        BaseWebView.reloadButtonTooltipKey: 'Recargar',
-        BaseWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
-        BaseWebView.closeButtonTooltipKey: 'Cerrar',
-        BaseWebView.clearCacheWarningMessageKey:
-            '¿Está seguro que desea limpiar la caché?',
-      },
-      contentLocale: contentLocale,
+      configuration: BaseConfiguration(
+        initialUrl: initialUrl,
+        redirectUrls: [redirectUrl, baseUrl],
+        onCertificateValidate: (certificate) {
+          ///This is recommended
+          /// Do certificate validations here
+          /// If false is returned then a CertificateException() will be thrown
+          return true;
+        },
+        textLocales: {
+          ///Optionally texts can be localized
+          BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
+          BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
+          BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
+          BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
+          BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
+          BaseConfiguration.clearCacheWarningMessageKey:
+              '¿Está seguro que desea limpiar la caché?',
+        },
+        contentLocale: contentLocale,
+      ),
     );
     if (result != null) {
       if (result is String) {
@@ -163,40 +166,42 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
 
   void baseRedirectV2() {
     BaseWebScreen.start(
-        context: context,
-        initialUrl: initialUrl,
-        redirectUrls: [redirectUrl, baseUrl],
-        onCertificateValidate: (certificate) {
-          ///This is recommended
-          /// Do certificate validations here
-          /// If false is returned then a CertificateException() will be thrown
-          return true;
-        },
-        textLocales: {
-          ///Optionally text can be localized
-          BaseWebView.backButtonTooltipKey: 'Ir atrás',
-          BaseWebView.forwardButtonTooltipKey: 'Ir adelante',
-          BaseWebView.reloadButtonTooltipKey: 'Recargar',
-          BaseWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
-          BaseWebView.closeButtonTooltipKey: 'Cerrar',
-          BaseWebView.clearCacheWarningMessageKey:
-              '¿Está seguro que desea limpiar la caché?',
-        },
-        contentLocale: contentLocale,
-        onSuccess: (responseRedirect) {
-          setState(() {
-            response = 'User redirected to: $responseRedirect';
-          });
-        },
-        onError: (error) {
-          setState(() {
-            response = error.toString();
-          });
-        },
-        onCancel: () {
-          setState(() {
-            response = 'User cancelled';
-          });
-        });
+      context: context,
+      configuration: BaseConfiguration(
+          initialUrl: initialUrl,
+          redirectUrls: [redirectUrl, baseUrl],
+          onCertificateValidate: (certificate) {
+            ///This is recommended
+            /// Do certificate validations here
+            /// If false is returned then a CertificateException() will be thrown
+            return true;
+          },
+          textLocales: {
+            ///Optionally text can be localized
+            BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
+            BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
+            BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
+            BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
+            BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
+            BaseConfiguration.clearCacheWarningMessageKey:
+                '¿Está seguro que desea limpiar la caché?',
+          },
+          contentLocale: contentLocale,
+          onSuccessRedirect: (responseRedirect) {
+            setState(() {
+              response = 'User redirected to: $responseRedirect';
+            });
+          },
+          onError: (error) {
+            setState(() {
+              response = error.toString();
+            });
+          },
+          onCancel: () {
+            setState(() {
+              response = 'User cancelled';
+            });
+          }),
+    );
   }
 }

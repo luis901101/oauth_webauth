@@ -34,8 +34,8 @@ linter:
     use_key_in_widget_constructors: false
     constant_identifier_names: false
     depend_on_referenced_packages: false
-    library_private_types_in_public_api: true # Change to true when there are no branches to merge
-    prefer_single_quotes: true  # Change to true when there are no branches to merge
+    library_private_types_in_public_api: true
+    prefer_single_quotes: true
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

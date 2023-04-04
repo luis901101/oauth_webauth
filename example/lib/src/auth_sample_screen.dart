@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// ignore: depend_on_referenced_packages
 import 'package:oauth2/oauth2.dart';
 import 'package:oauth_webauth/oauth_webauth.dart';
 
@@ -87,10 +88,10 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
               ),
               ElevatedButton(
                 onPressed: kIsWeb ? null : loginV1,
-                child: const Text(
-                    'Login variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}'),
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.green)),
+                child: const Text(
+                    'Login variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}'),
               ),
               const SizedBox(height: 4),
               ElevatedButton(
@@ -106,33 +107,34 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
 
   void loginV1() async {
     final result = await OAuthWebScreen.start(
-      context: context,
-      authorizationEndpointUrl: authorizationEndpointUrl,
-      tokenEndpointUrl: tokenEndpointUrl,
-      clientSecret: clientSecret,
-      clientId: clientId,
-      redirectUrl: redirectUrl,
-      scopes: scopes,
-      promptValues: const ['login'],
-      loginHint: 'johndoe@mail.com',
-      onCertificateValidate: (certificate) {
-        ///This is recommended
-        /// Do certificate validations here
-        /// If false is returned then a CertificateException() will be thrown
-        return true;
-      },
-      textLocales: {
-        ///Optionally texts can be localized
-        BaseWebView.backButtonTooltipKey: 'Ir atrás',
-        BaseWebView.forwardButtonTooltipKey: 'Ir adelante',
-        BaseWebView.reloadButtonTooltipKey: 'Recargar',
-        BaseWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
-        BaseWebView.closeButtonTooltipKey: 'Cerrar',
-        BaseWebView.clearCacheWarningMessageKey:
-            '¿Está seguro que desea limpiar la caché?',
-      },
-      contentLocale: contentLocale,
-    );
+        context: context,
+        configuration: OauthConfiguration(
+          authorizationEndpointUrl: authorizationEndpointUrl,
+          tokenEndpointUrl: tokenEndpointUrl,
+          clientSecret: clientSecret,
+          clientId: clientId,
+          redirectUrl: redirectUrl,
+          scopes: scopes,
+          promptValues: const ['login'],
+          loginHint: 'johndoe@mail.com',
+          onCertificateValidate: (certificate) {
+            ///This is recommended
+            /// Do certificate validations here
+            /// If false is returned then a CertificateException() will be thrown
+            return true;
+          },
+          textLocales: {
+            ///Optionally texts can be localized
+            BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
+            BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
+            BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
+            BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
+            BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
+            BaseConfiguration.clearCacheWarningMessageKey:
+                '¿Está seguro que desea limpiar la caché?',
+          },
+          contentLocale: contentLocale,
+        ));
     isLoading = false;
     if (result != null) {
       if (result is Credentials) {
@@ -148,50 +150,52 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
 
   void loginV2() {
     OAuthWebScreen.start(
-        context: context,
-        authorizationEndpointUrl: authorizationEndpointUrl,
-        tokenEndpointUrl: tokenEndpointUrl,
-        clientSecret: clientSecret,
-        clientId: clientId,
-        redirectUrl: redirectUrl,
-        scopes: scopes,
-        promptValues: const ['login'],
-        loginHint: 'johndoe@mail.com',
-        onCertificateValidate: (certificate) {
-          ///This is recommended
-          /// Do certificate validations here
-          /// If false is returned then a CertificateException() will be thrown
-          return true;
-        },
-        textLocales: {
-          ///Optionally text can be localized
-          BaseWebView.backButtonTooltipKey: 'Ir atrás',
-          BaseWebView.forwardButtonTooltipKey: 'Ir adelante',
-          BaseWebView.reloadButtonTooltipKey: 'Recargar',
-          BaseWebView.clearCacheButtonTooltipKey: 'Limpiar caché',
-          BaseWebView.closeButtonTooltipKey: 'Cerrar',
-          BaseWebView.clearCacheWarningMessageKey:
-              '¿Está seguro que desea limpiar la caché?',
-        },
-        contentLocale: contentLocale,
-        onSuccess: (credentials) {
-          isLoading = false;
-          setState(() {
-            authResponse = getPrettyCredentialsJson(credentials);
-          });
-        },
-        onError: (error) {
-          isLoading = false;
-          setState(() {
-            authResponse = error.toString();
-          });
-        },
-        onCancel: () {
-          isLoading = false;
-          setState(() {
-            authResponse = 'User cancelled authentication';
-          });
-        });
+      context: context,
+      configuration: OauthConfiguration(
+          authorizationEndpointUrl: authorizationEndpointUrl,
+          tokenEndpointUrl: tokenEndpointUrl,
+          clientSecret: clientSecret,
+          clientId: clientId,
+          redirectUrl: redirectUrl,
+          scopes: scopes,
+          promptValues: const ['login'],
+          loginHint: 'johndoe@mail.com',
+          onCertificateValidate: (certificate) {
+            ///This is recommended
+            /// Do certificate validations here
+            /// If false is returned then a CertificateException() will be thrown
+            return true;
+          },
+          textLocales: {
+            ///Optionally text can be localized
+            BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
+            BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
+            BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
+            BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
+            BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
+            BaseConfiguration.clearCacheWarningMessageKey:
+                '¿Está seguro que desea limpiar la caché?',
+          },
+          contentLocale: contentLocale,
+          onSuccessAuth: (credentials) {
+            isLoading = false;
+            setState(() {
+              authResponse = getPrettyCredentialsJson(credentials);
+            });
+          },
+          onError: (error) {
+            isLoading = false;
+            setState(() {
+              authResponse = error.toString();
+            });
+          },
+          onCancel: () {
+            isLoading = false;
+            setState(() {
+              authResponse = 'User cancelled authentication';
+            });
+          }),
+    );
   }
 
   String getPrettyCredentialsJson(Credentials credentials) {

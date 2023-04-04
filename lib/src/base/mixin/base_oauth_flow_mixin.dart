@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:oauth_webauth/oauth_webauth.dart';
@@ -15,30 +14,16 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
   String? baseUrl;
 
   void initOauth({
-    required final String authorizationEndpointUrl,
-    required final String tokenEndpointUrl,
-    required String redirectUrl,
-    final String? baseUrl,
-    required final String clientId,
-    final String? clientSecret,
-    final String? delimiter,
-    final bool? basicAuth,
-    final http.Client? httpClient,
-    final List<String>? scopes,
-    final String? loginHint,
-    final List<String>? promptValues,
-    required ValueChanged<oauth2.Credentials> onSuccessAuth,
-    ValueChanged<dynamic>? onError,
-    VoidCallback? onCancel,
+    required OauthConfiguration configuration,
   }) {
-    redirectUrl =
-        originUrl() != null ? redirectUrl = originUrl()! : redirectUrl;
-    this.baseUrl = baseUrl;
-    this.onSuccessAuth = onSuccessAuth;
+    final redirectUrl =
+        originUrl() != null ? originUrl()! : configuration.redirectUrl;
+    baseUrl = configuration.baseUrl;
+    onSuccessAuth = configuration.onSuccessAuth;
     super.init(
-      redirectUrls: baseUrl != null ? [redirectUrl, baseUrl] : [redirectUrl],
-      onError: onError,
-      onCancel: onCancel,
+      redirectUrls: baseUrl != null ? [redirectUrl, baseUrl!] : [redirectUrl],
+      onError: configuration.onError,
+      onCancel: configuration.onCancel,
     );
 
     if (kIsWeb) {
@@ -47,18 +32,18 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
     }
 
     authorizationCodeGrant = oauth2.AuthorizationCodeGrant(
-      clientId,
-      Uri.parse(authorizationEndpointUrl),
-      Uri.parse(tokenEndpointUrl),
-      secret: clientSecret,
+      configuration.clientId,
+      Uri.parse(configuration.authorizationEndpointUrl),
+      Uri.parse(configuration.tokenEndpointUrl),
+      secret: configuration.clientSecret,
       codeVerifier: codeVerifier,
-      delimiter: delimiter,
-      basicAuth: basicAuth ?? true,
-      httpClient: httpClient,
+      delimiter: configuration.delimiter,
+      basicAuth: configuration.basicAuth ?? true,
+      httpClient: configuration.httpClient,
     );
     initialUri = authorizationCodeGrant.getAuthorizationUrl(
       Uri.parse(redirectUrl),
-      scopes: scopes,
+      scopes: configuration.scopes,
     );
     initialUri = initialUri.replace(
         queryParameters: Map.from(initialUri.queryParameters)
@@ -67,16 +52,21 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
                 .convert(DateTime.now().toIso8601String().codeUnits),
             'nonce': const Base64Encoder.urlSafe().convert(
                 DateTime.now().millisecondsSinceEpoch.toString().codeUnits),
-            if (loginHint != null) 'login_hint': loginHint,
-            if (promptValues?.isNotEmpty ?? false)
-              'prompt': promptValues!.join(' '),
+            if (configuration.loginHint != null)
+              'login_hint': configuration.loginHint,
+            if (configuration.promptValues?.isNotEmpty ?? false)
+              'prompt': configuration.promptValues!.join(' '),
           }));
   }
 
   @override
   void onSuccess(String responseRedirect) async {
     try {
-      responseRedirect = responseRedirect.trim().replaceAll('#', '');
+      responseRedirect = responseRedirect.trim();
+      final int ignoreStartIndex = responseRedirect.indexOf('#');
+      if (ignoreStartIndex > -1) {
+        responseRedirect = responseRedirect.substring(0, ignoreStartIndex);
+      }
       final parameters = Uri.dataFromString(responseRedirect).queryParameters;
 
       if (parameters.isEmpty &&

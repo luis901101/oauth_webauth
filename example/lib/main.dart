@@ -69,9 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   goAuthSampleScreen();
                 },
-                child: const Text('Oauth login samples'),
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.green)),
+                child: const Text('Oauth login samples'),
               ),
               const SizedBox(height: 4),
               ElevatedButton(
