@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:oauth_webauth/src/utils/widget_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -56,7 +57,8 @@ class OAuthWebAuth {
   }
 
   /// Clears WebView cache
-  Future<void> clearCache({InAppWebViewController? controller}) async {
+  Future<void> clearCache(BuildContext context,
+      {InAppWebViewController? controller}) async {
     if (kIsWeb) return;
     Future<void> clearCache(InAppWebViewController controller) async {
       await controller.clearCache();
@@ -69,7 +71,7 @@ class OAuthWebAuth {
         onWebViewCreated: (controller) async {
           futureCompleter.complete(clearCache(controller));
         },
-      ).buildWidgetOnBackground();
+      ).buildWidgetOnBackground(context);
     } catch (e) {
       print(e);
     }
@@ -87,8 +89,9 @@ class OAuthWebAuth {
   }
 
   /// Clears WebView cache and cookies
-  Future<void> clearAll({InAppWebViewController? controller}) async {
-    await clearCache(controller: controller);
+  Future<void> clearAll(BuildContext context,
+      {InAppWebViewController? controller}) async {
+    await clearCache(context, controller: controller);
     await clearCookies();
   }
 
