@@ -57,8 +57,8 @@ class OAuthWebAuth {
   }
 
   /// Clears WebView cache
-  Future<void> clearCache(BuildContext context,
-      {InAppWebViewController? controller}) async {
+  Future<void> clearCache(
+      {BuildContext? context, InAppWebViewController? controller}) async {
     if (kIsWeb) return;
     Future<void> clearCache(InAppWebViewController controller) async {
       await controller.clearCache();
@@ -71,7 +71,7 @@ class OAuthWebAuth {
         onWebViewCreated: (controller) async {
           futureCompleter.complete(clearCache(controller));
         },
-      ).buildWidgetOnBackground(context);
+      ).buildWidgetOnBackground(context: context);
     } catch (e) {
       print(e);
     }
@@ -89,9 +89,9 @@ class OAuthWebAuth {
   }
 
   /// Clears WebView cache and cookies
-  Future<void> clearAll(BuildContext context,
-      {InAppWebViewController? controller}) async {
-    await clearCache(context, controller: controller);
+  Future<void> clearAll(
+      {BuildContext? context, InAppWebViewController? controller}) async {
+    await clearCache(context: context, controller: controller);
     await clearCookies();
   }
 

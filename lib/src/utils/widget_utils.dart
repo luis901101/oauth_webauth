@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 extension WidgetUtils on Widget {
-  Future<void> buildWidgetOnBackground(
-    BuildContext context, {
+  Future<void> buildWidgetOnBackground({
+    BuildContext? context,
     Duration waitToRender = const Duration(milliseconds: 300),
   }) async {
     final widget = RepaintBoundary(
@@ -23,18 +23,22 @@ extension WidgetUtils on Widget {
   /// Builds an image from the given widget by first spinning up a element and render tree,
   /// wait [waitToRender] to render the widget
   Future<void> _buildImageFromWidget(
-    BuildContext context,
+    BuildContext? context,
     Widget widget,
     Duration waitToRender,
   ) async {
     final RenderRepaintBoundary repaintBoundary = RenderRepaintBoundary();
 
-    final logicalSize =
-        View.of(context).physicalSize / View.of(context).devicePixelRatio;
-    final imageSize = View.of(context).physicalSize;
+    final view = context != null
+        ? View.of(context)
+        : WidgetsBinding.instance.platformDispatcher.implicitView ??
+            WidgetsBinding.instance.platformDispatcher.views.first;
+
+    final logicalSize = view.physicalSize / view.devicePixelRatio;
+    final imageSize = view.physicalSize;
 
     final RenderView renderView = RenderView(
-      view: View.of(context),
+      view: view,
       child: RenderPositionedBox(
           alignment: Alignment.center, child: repaintBoundary),
       configuration: ViewConfiguration(
