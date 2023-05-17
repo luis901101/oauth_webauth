@@ -57,6 +57,8 @@ class OAuthWebAuth {
   }
 
   /// Clears WebView cache
+  /// It's recommended to use a context when using this function.
+  /// Check docs: https://docs.flutter.dev/release/breaking-changes/window-singleton#migration-guide
   Future<void> clearCache(
       {BuildContext? context, InAppWebViewController? controller}) async {
     if (kIsWeb) return;
@@ -89,6 +91,8 @@ class OAuthWebAuth {
   }
 
   /// Clears WebView cache and cookies
+  /// It's recommended to use a context when using this function.
+  /// Check docs: https://docs.flutter.dev/release/breaking-changes/window-singleton#migration-guide
   Future<void> clearAll(
       {BuildContext? context, InAppWebViewController? controller}) async {
     await clearCache(context: context, controller: controller);

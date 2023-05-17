@@ -9,6 +9,12 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 4.0.1+1
+### Changed
+- Added support for Dart 3.
+- Replaced window singleton with FlutterView.
+- Updated `clearCache` and `clearAll` functions with optional `BuildContext` to support `FlutterView`
+
 ## 4.0.0+14
 ### Added
 - Added support to `clearCache` and `clearCookies` directly from `OAuthWebAuth.instance`.

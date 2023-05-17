@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 extension WidgetUtils on Widget {
+  /// It's recommended to use a context when using this function.
+  /// Check docs: https://docs.flutter.dev/release/breaking-changes/window-singleton#migration-guide
   Future<void> buildWidgetOnBackground({
     BuildContext? context,
     Duration waitToRender = const Duration(milliseconds: 300),
@@ -22,6 +24,8 @@ extension WidgetUtils on Widget {
 
   /// Builds an image from the given widget by first spinning up a element and render tree,
   /// wait [waitToRender] to render the widget
+  /// It's recommended to use a context when using this function.
+  /// Check docs: https://docs.flutter.dev/release/breaking-changes/window-singleton#migration-guide
   Future<void> _buildImageFromWidget(
     BuildContext? context,
     Widget widget,
