@@ -315,7 +315,7 @@ void baseRedirectV2() {
 ## Important notes
 - `goBackBtnVisible`, `goForwardBtnVisible`, `refreshBtnVisible`, `clearCacheBtnVisible`, `closeBtnVisible` allows you to show/hide buttons from toolbar, if you want to completely hide toolbar, set all buttons to false.
 - Use `urlStream` when you need to asynchronously navigate to a specific url, like when user registered using `OAuthWebAuth` and the web view waits for user email verification; in this case when the user opens the email verification link you can navigate to this link by emitting the new url to the stream you previously set in the `urlStream` instead of creating a new `OAuthWebAuth` or `BaseWebView`.
-- You can clear cache, clear cookies or both directly from `OAuthWebAuth.instance`, like `OAuthWebAuth.instance.clearCache()`, `OAuthWebAuth.instance.clearCookies()` or `OAuthWebAuth.instance.clearAll()`.
+- You can clear cache, clear cookies or both directly from `OAuthWebAuth.instance`, like `OAuthWebAuth.instance.clearCache()`, `OAuthWebAuth.instance.clearCookies()` or `OAuthWebAuth.instance.clearAll()`. *Important*, it's recommended you set `BuildContext` when using any of the clearCache functions to look up the proper FlutterView. 
 - For more details on how to use check the sample project of this plugin.
 
 ## Authentication/Authorization services tested
