@@ -11,7 +11,7 @@ Types of changes
 
 ## 4.0.1+3
 ### Changed
-- Changed http package version.
+- Updated http package version to `'>=0.13.0 <2.0.0'` for better compatibility.
 
 ## 4.0.1+2
 ### Changed
