@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 4.0.1+3
+### Changed
+- Changed http package version.
+
 ## 4.0.1+2
 ### Changed
 - Added support for Dart 3.
