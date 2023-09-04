@@ -12,7 +12,7 @@ class OAuthWebView extends BaseWebView {
         super(key: key, configuration: configuration);
 
   @override
-  OAuthWebViewState createState() => OAuthWebViewState();
+  State createState() => OAuthWebViewState();
 }
 
 class OAuthWebViewState extends BaseWebViewState<OAuthWebView>

@@ -9,6 +9,13 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 4.0.2+1
+### Added
+- Adds pub topics to package metadata.
+
+### Changed
+- Minor changes on `BaseWebView` and `OAuthWebView` to allow more flexibility when extending it.
+
 ## 4.0.1+3
 ### Changed
 - Updated http package version to `'>=0.13.0 <2.0.0'` for better compatibility.

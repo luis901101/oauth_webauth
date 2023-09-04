@@ -24,8 +24,7 @@ class BaseWebView extends StatefulWidget {
         super(key: key);
 
   @override
-  BaseWebViewState<BaseWebView> createState() =>
-      BaseWebViewState<BaseWebView>();
+  State createState() => BaseWebViewState<BaseWebView>();
 }
 
 class BaseWebViewState<S extends BaseWebView> extends State<S>
@@ -53,7 +52,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
 
   bool clearCacheSwitch = true;
   bool clearCookiesSwitch = true;
-  ThemeData? theme;
+  ThemeData theme = ThemeData();
 
   BaseConfiguration get configuration => widget._configuration;
 
@@ -213,13 +212,13 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
         iconSize: 30,
         tooltip: tooltip,
         icon: Icon(iconData),
-        color: theme?.colorScheme.secondary,
+        color: theme.colorScheme.secondary,
         onPressed: respectLoading && isLoading ? null : onPressed,
       );
 
   @override
   Widget build(BuildContext context) {
-    theme = Theme.of(context);
+    theme = configuration.themeData ?? Theme.of(context);
     final content = Builder(
       builder: (context) {
         this.context = context;
@@ -246,14 +245,14 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
                 left: 0,
                 right: 0,
                 bottom: 0,
-                height: ready && isLoading ? 5 : 0,
+                height: ready && isLoading ? 4 : 0,
                 duration: const Duration(milliseconds: 200),
                 child: const LinearProgressIndicator(),
               ),
             ],
           ),
           bottomNavigationBar: Theme(
-            data: theme!.copyWith(useMaterial3: false),
+            data: theme.copyWith(useMaterial3: false),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               height: toolbarVisible && showToolbar ? null : 0,
