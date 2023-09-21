@@ -119,6 +119,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
           crossPlatform: InAppWebViewOptions(
             useShouldOverrideUrlLoading: true,
             supportZoom: false,
+            transparentBackground: true,
 
             /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
             userAgent: 'Mozilla/5.0',

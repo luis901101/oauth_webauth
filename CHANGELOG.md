@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 4.0.3+1
+### Changed
+- WebView updated with `transparentBackground: true` so no white background before loading the page.
+
 ## 4.0.2+1
 ### Added
 - Adds pub topics to package metadata.
