@@ -42,8 +42,13 @@ Probably you will not need to do any migration. You only need to do changes:
 ## Migration from ^3.0.0 to ^4.0.0
 - Static constants key for tooltips, message and hero tags were moved from `BaseWebView` to `BaseConfiguration`.
 - `OAuthWebScreen` and `OAuthWebView` now requires a `OAuthConfiguration` object and `BaseWebScreen` and `BaseWebView` now requires a `BaseConfiguration` object instead of properties directly.
-- Make sure your pubspec `enironment` fits the following constraints: `sdk: ">=2.19.0 <3.0.0"` and `flutter: ">=2.0.0"`.
+- Make sure your pubspec `environment` fits the following constraints: `sdk: ">=2.19.0 <3.0.0"` and `flutter: ">=2.0.0"`.
 
+## Migration from ^4.0.0 to ^5.0.0
+- `OAuthWebAuth.clearAll({BuildContext? context, InAppWebViewController? controller})` to `OAuthWebAuth.clearAll()`, no params required.
+- `OAuthWebAuth.clearCache({BuildContext? context, InAppWebViewController? controller})` to `OAuthWebAuth.clearCache()`, no params required.
+- As this version uses `flutter_inappwebview: ^6.0.0` which already supports web, it's required *(only if your project supports web)* to include a script in the `index.html` <head> like: `<script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js" defer></script>`, anyway we recommend you to check the readme of [flutter_inappwebview](https://pub.dev/packages/flutter_inappwebview) for more details.
+- Make sure your pubspec `environment` fits the following constraints: `sdk: ">=3.0.0 <4.0.0"` and `flutter: '>=3.3.0'`.
 
 ## Getting started
 As stated before this plugin uses WebView implementation specifically the plugin [flutter_inappwebview](https://pub.dev/packages/flutter_inappwebview). For any WebView related problem please check the documentation of that plugin at [docs](https://inappwebview.dev/docs/).
@@ -78,7 +83,15 @@ Just add this to your `Info.plist`
 ```
 
 ### Web setup
-No setup required
+To make it work properly on the Web platform, you need to add the `web_support.js` file inside the `<head>` of your `web/index.html` file:
+
+```html
+<head>
+    <!-- ... -->
+    <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js" defer></script>
+    <!-- ... -->
+</head>
+```  
 
 ## Usage
 - This plugin offers a widget `OAuthWebView` which handles all the authorization/authentication and navigation logic; this widget can be used in any widget tree of your current app or as an individual authentication screen. For individual authentication screen it offers the widget `OAuthWebScreen` which can be started as a new route and also handles the Android back button to navigate backward when applies.
@@ -315,7 +328,7 @@ void baseRedirectV2() {
 ## Important notes
 - `goBackBtnVisible`, `goForwardBtnVisible`, `refreshBtnVisible`, `clearCacheBtnVisible`, `closeBtnVisible` allows you to show/hide buttons from toolbar, if you want to completely hide toolbar, set all buttons to false.
 - Use `urlStream` when you need to asynchronously navigate to a specific url, like when user registered using `OAuthWebAuth` and the web view waits for user email verification; in this case when the user opens the email verification link you can navigate to this link by emitting the new url to the stream you previously set in the `urlStream` instead of creating a new `OAuthWebAuth` or `BaseWebView`.
-- You can clear cache, clear cookies or both directly from `OAuthWebAuth.instance`, like `OAuthWebAuth.instance.clearCache()`, `OAuthWebAuth.instance.clearCookies()` or `OAuthWebAuth.instance.clearAll()`. *Important*, it's recommended you set `BuildContext` when using any of the clearCache functions to look up the proper FlutterView. 
+- You can clear cache, clear cookies or both directly from `OAuthWebAuth.instance`, like `OAuthWebAuth.instance.clearCache()`, `OAuthWebAuth.instance.clearCookies()` or `OAuthWebAuth.instance.clearAll()`.
 - For more details on how to use check the sample project of this plugin.
 
 ## Authentication/Authorization services tested

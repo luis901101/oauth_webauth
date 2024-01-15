@@ -1,7 +1,7 @@
 import 'package:example/src/auth_sample_screen.dart';
 import 'package:example/src/base_redirect_sample_screen.dart';
+import 'package:example/src/buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:oauth_webauth/oauth_webauth.dart';
 
 void main() async {
@@ -11,7 +11,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
 
   final String title;
 
@@ -56,7 +56,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -65,20 +64,18 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               if (isLoading) const CircularProgressIndicator(),
               const SizedBox(height: 16),
-              ElevatedButton(
+              PrimaryButton(
                 onPressed: () {
                   goAuthSampleScreen();
                 },
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.green)),
-                child: const Text('OAuth login samples'),
+                text: 'OAuth login samples',
               ),
               const SizedBox(height: 4),
-              ElevatedButton(
+              SecondaryButton(
                 onPressed: () {
                   goBaseRedirectSampleScreen();
                 },
-                child: const Text('Base redirect samples'),
+                text: 'Base redirect samples',
               ),
             ],
           ),

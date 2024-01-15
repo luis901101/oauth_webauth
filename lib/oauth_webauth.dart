@@ -4,25 +4,20 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-import 'package:oauth_webauth/src/utils/widget_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-
-export 'package:oauth_webauth/src/base/mixin/base_flow_mixin.dart';
-export 'package:oauth_webauth/src/base/mixin/base_oauth_flow_mixin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 export 'package:oauth_webauth/src/base/base_flow.dart';
 export 'package:oauth_webauth/src/base/base_oauth_flow.dart';
-
-export 'package:oauth_webauth/src/utils/cross_platform_support.dart';
-
-export 'package:oauth_webauth/src/oauth_web_view.dart';
-export 'package:oauth_webauth/src/base_web_view.dart';
-export 'package:oauth_webauth/src/oauth_web_screen.dart';
-export 'package:oauth_webauth/src/base_web_screen.dart';
+export 'package:oauth_webauth/src/base/mixin/base_flow_mixin.dart';
+export 'package:oauth_webauth/src/base/mixin/base_oauth_flow_mixin.dart';
 export 'package:oauth_webauth/src/base/model/base_configuration.dart';
 export 'package:oauth_webauth/src/base/model/oauth_configuration.dart';
+export 'package:oauth_webauth/src/base_web_screen.dart';
+export 'package:oauth_webauth/src/base_web_view.dart';
+export 'package:oauth_webauth/src/oauth_web_screen.dart';
+export 'package:oauth_webauth/src/oauth_web_view.dart';
+export 'package:oauth_webauth/src/utils/cross_platform_support.dart';
 
 class OAuthWebAuth {
   ///Singleton instance
@@ -57,31 +52,11 @@ class OAuthWebAuth {
   }
 
   /// Clears WebView cache
-  /// It's recommended to use a context when using this function.
-  /// Check docs: https://docs.flutter.dev/release/breaking-changes/window-singleton#migration-guide
-  Future<void> clearCache(
-      {BuildContext? context, InAppWebViewController? controller}) async {
+  Future<void> clearCache() async {
     if (kIsWeb) return;
-    Future<void> clearCache(InAppWebViewController controller) async {
-      await controller.clearCache();
-    }
-
-    if (controller != null) return clearCache(controller);
-    final futureCompleter = Completer<void>();
-    try {
-      InAppWebView(
-        onWebViewCreated: (controller) async {
-          futureCompleter.complete(clearCache(controller));
-        },
-      ).buildWidgetOnBackground(context: context);
-    } catch (e) {
-      print(e);
-    }
-    return futureCompleter.future
-        .timeout(const Duration(seconds: 5), onTimeout: () {});
+    await InAppWebViewController.clearAllCache();
   }
 
-  /// Clears WebView cookies
   Future<void> clearCookies() async {
     try {
       await CookieManager.instance().deleteAllCookies();
@@ -91,11 +66,8 @@ class OAuthWebAuth {
   }
 
   /// Clears WebView cache and cookies
-  /// It's recommended to use a context when using this function.
-  /// Check docs: https://docs.flutter.dev/release/breaking-changes/window-singleton#migration-guide
-  Future<void> clearAll(
-      {BuildContext? context, InAppWebViewController? controller}) async {
-    await clearCache(context: context, controller: controller);
+  Future<void> clearAll() async {
+    await clearCache();
     await clearCookies();
   }
 

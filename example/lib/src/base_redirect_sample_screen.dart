@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:example/src/buttons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +9,7 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:oauth_webauth/oauth_webauth.dart';
 
 class BaseRedirectSampleScreen extends StatefulWidget {
-  const BaseRedirectSampleScreen({Key? key}) : super(key: key);
+  const BaseRedirectSampleScreen({super.key});
 
   @override
   State<BaseRedirectSampleScreen> createState() =>
@@ -80,44 +81,45 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                response,
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: 120,
-                child: DropdownButtonFormField<Locale>(
-                  items: locales
-                      .map((e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e?.toLanguageTag() ?? 'Default OS')))
-                      .toList(),
-                  value: contentLocale,
-                  onChanged: (locale) {
-                    setState(() {
-                      contentLocale = locale;
-                    });
-                  },
-                  decoration:
-                      const InputDecoration(label: Text('Content language')),
+          child: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  response,
                 ),
-              ),
-              ElevatedButton(
-                onPressed: kIsWeb ? null : baseRedirectV1,
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.green)),
-                child: const Text(
-                    'Base redirect variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}'),
-              ),
-              const SizedBox(height: 4),
-              ElevatedButton(
-                onPressed: baseRedirectV2,
-                child: const Text('Base redirect 2'),
-              ),
-            ],
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: 120,
+                  child: DropdownButtonFormField<Locale>(
+                    items: locales
+                        .map((e) => DropdownMenuItem(
+                            value: e,
+                            child: Text(e?.toLanguageTag() ?? 'Default OS')))
+                        .toList(),
+                    value: contentLocale,
+                    onChanged: (locale) {
+                      setState(() {
+                        contentLocale = locale;
+                      });
+                    },
+                    decoration:
+                        const InputDecoration(label: Text('Content language')),
+                  ),
+                ),
+                PrimaryButton(
+                  onPressed: kIsWeb ? null : baseRedirectV1,
+                  text:
+                      'Base redirect variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}',
+                ),
+                const SizedBox(height: 4),
+                SecondaryButton(
+                  onPressed: baseRedirectV2,
+                  text: 'Base redirect 2',
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),

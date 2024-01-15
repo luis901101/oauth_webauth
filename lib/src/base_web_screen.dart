@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:oauth_webauth/oauth_webauth.dart';
+import 'package:oauth_webauth/src/utils/custom_pop_scope.dart';
 
 class BaseWebScreen extends StatelessWidget {
   static Future? start({
@@ -43,11 +44,10 @@ class BaseWebScreen extends StatelessWidget {
   final BaseConfiguration configuration;
 
   BaseWebScreen({
-    Key? key,
+    super.key,
     GlobalKey<BaseWebViewState>? globalKey,
     required this.configuration,
-  })  : globalKey = globalKey ?? GlobalKey<BaseWebViewState>(),
-        super(key: key);
+  }) : globalKey = globalKey ?? GlobalKey<BaseWebViewState>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +59,8 @@ class BaseWebScreen extends StatelessWidget {
             bottom: false,
             left: false,
             right: false,
-            child: WillPopScope(
-              onWillPop: onBackPressed,
+            child: CustomPopScope(
+              canGoBack: onBackPressed,
               child: BaseWebView(
                 key: globalKey,
                 configuration: configuration.copyWith(

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:oauth2/oauth2.dart';
 import 'package:oauth_webauth/oauth_webauth.dart';
+import 'package:oauth_webauth/src/utils/custom_pop_scope.dart';
 
 class OAuthWebScreen extends StatelessWidget {
   static Future? start({
@@ -40,11 +41,10 @@ class OAuthWebScreen extends StatelessWidget {
   final OAuthConfiguration configuration;
 
   OAuthWebScreen({
-    Key? key,
+    super.key,
     GlobalKey<OAuthWebViewState>? globalKey,
     required this.configuration,
-  })  : globalKey = globalKey ?? GlobalKey<OAuthWebViewState>(),
-        super(key: key);
+  }) : globalKey = globalKey ?? GlobalKey<OAuthWebViewState>();
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +56,8 @@ class OAuthWebScreen extends StatelessWidget {
             bottom: false,
             left: false,
             right: false,
-            child: WillPopScope(
-              onWillPop: onBackPressed,
+            child: CustomPopScope(
+              canGoBack: onBackPressed,
               child: OAuthWebView(
                 key: globalKey,
                 configuration: configuration.copyWith(

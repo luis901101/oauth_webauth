@@ -9,6 +9,13 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 5.0.0+1
+### Changed
+- `flutter_inappwebview` plugin updated to new breaking change ^6.0.0
+- iOS sample project minimum deploy target updated to 13
+- Android sample project targetSdkVersion updated to 34
+- Sample project updated
+
 ## 4.0.3+1
 ### Changed
 - WebView updated with `transparentBackground: true` so no white background before loading the page.

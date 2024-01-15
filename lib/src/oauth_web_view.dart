@@ -6,10 +6,9 @@ class OAuthWebView extends BaseWebView {
   final OAuthConfiguration _configuration;
 
   const OAuthWebView({
-    Key? key,
-    required OAuthConfiguration configuration,
-  })  : _configuration = configuration,
-        super(key: key, configuration: configuration);
+    super.key,
+    required OAuthConfiguration super.configuration,
+  }) : _configuration = configuration;
 
   @override
   State createState() => OAuthWebViewState();
