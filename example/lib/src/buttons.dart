@@ -14,9 +14,9 @@ class PrimaryButton extends StatelessWidget {
           ? null
           : ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.all(theme.colorScheme.primary),
+                  WidgetStateProperty.all(theme.colorScheme.primary),
               foregroundColor:
-                  MaterialStateProperty.all(theme.colorScheme.onPrimary),
+                  WidgetStateProperty.all(theme.colorScheme.onPrimary),
             ),
       child: Text(text),
     );

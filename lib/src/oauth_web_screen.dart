@@ -88,8 +88,8 @@ class OAuthWebScreen extends StatelessWidget {
     configuration.onCancel?.call();
   }
 
-  Future<bool> onBackPressed() async {
-    if (!((await globalKey.currentState?.onBackPressed()) ?? false)) {
+  Future<bool> onBackPressed(dynamic result) async {
+    if (!((await globalKey.currentState?.onBackPressed(result)) ?? false)) {
       return false;
     }
     configuration.onCancel?.call();

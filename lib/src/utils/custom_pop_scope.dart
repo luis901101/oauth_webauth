@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 
-typedef CanGoBackCallback = Future<bool> Function();
+typedef CanGoBackCallback<T> = Future<bool> Function(T? result);
 
-class CustomPopScope extends StatelessWidget {
+class CustomPopScope<T> extends StatelessWidget {
   const CustomPopScope({
     required this.child,
-    this.onPopInvoked,
+    this.onPopInvokedWithResult,
     this.canGoBack,
     super.key,
-  }) : assert(onPopInvoked != null || canGoBack != null);
+  }) : assert(onPopInvokedWithResult != null || canGoBack != null);
 
   final Widget child;
-  final PopInvokedCallback? onPopInvoked;
-  final CanGoBackCallback? canGoBack;
+  final PopInvokedWithResultCallback<T>? onPopInvokedWithResult;
+  final CanGoBackCallback<T>? canGoBack;
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: onPopInvoked ??
-          (didPop) {
+      onPopInvokedWithResult: onPopInvokedWithResult ??
+          (bool didPop, T? result) {
             if (didPop) return;
-            canGoBack?.call().then((canPop) {
-              if (canPop) {
-                Navigator.of(context).pop();
+            canGoBack?.call(result).then((canPop) {
+              if (canPop && context.mounted) {
+                Navigator.of(context).pop(result);
               }
             });
           },

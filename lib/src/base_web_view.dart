@@ -438,7 +438,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     }
   }
 
-  Future<bool> onBackPressed() async {
+  Future<bool> onBackPressed(dynamic result) async {
     if (await controllerCanGoBack()) {
       controllerGoBack();
       return false;
