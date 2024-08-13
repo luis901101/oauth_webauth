@@ -10,8 +10,9 @@ Types of changes
 - `Security` in case of vulnerabilities.
 
 ## 5.1.0
-### Changed
-- 
+### Added
+- `userAgent` can now be set in `OAuthConfiguration` and `BaseConfiguration`.  
+- `useHybridComposition` can now be set in `OAuthConfiguration` and `BaseConfiguration`.  
 
 ## 5.0.0+1
 ### Changed

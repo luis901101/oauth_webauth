@@ -91,8 +91,9 @@ class BaseWebScreen extends StatelessWidget {
     configuration.onCancel?.call();
   }
 
-  Future<bool> onBackPressed(dynamic result) async {
-    if (!((await globalKey.currentState?.onBackPressed(result)) ?? false)) {
+  Future<bool> onBackPressed({dynamic result}) async {
+    if (!((await globalKey.currentState?.onBackPressed(result: result)) ??
+        false)) {
       return false;
     }
     configuration.onCancel?.call();

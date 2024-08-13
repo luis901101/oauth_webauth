@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-typedef CanGoBackCallback<T> = Future<bool> Function(T? result);
+typedef CanGoBackCallback<T> = Future<bool> Function({T? result});
 
 class CustomPopScope<T> extends StatelessWidget {
   const CustomPopScope({
@@ -21,7 +21,7 @@ class CustomPopScope<T> extends StatelessWidget {
       onPopInvokedWithResult: onPopInvokedWithResult ??
           (bool didPop, T? result) {
             if (didPop) return;
-            canGoBack?.call(result).then((canPop) {
+            canGoBack?.call(result: result).then((canPop) {
               if (canPop && context.mounted) {
                 Navigator.of(context).pop(result);
               }

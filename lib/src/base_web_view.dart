@@ -118,10 +118,8 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
           useShouldOverrideUrlLoading: true,
           supportZoom: false,
           transparentBackground: true,
-
-          /// This custom userAgent is mandatory due to security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
-          userAgent: 'Mozilla/5.0',
-          useHybridComposition: true,
+          userAgent: configuration.userAgent,
+          useHybridComposition: configuration.useHybridComposition,
         ),
         initialUrlRequest:
             URLRequest(url: WebUri(initialUri.toString()), headers: {
@@ -438,7 +436,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     }
   }
 
-  Future<bool> onBackPressed(dynamic result) async {
+  Future<bool> onBackPressed({dynamic result}) async {
     if (await controllerCanGoBack()) {
       controllerGoBack();
       return false;

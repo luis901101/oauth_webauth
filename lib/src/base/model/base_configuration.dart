@@ -32,8 +32,25 @@ class BaseConfiguration {
   /// Not available for Web
   final CertificateValidator? onCertificateValidate;
 
+  ///A dictionary containing all of the HTTP header fields for a request.
   /// Not available for Web
   final Map<String, String> headers;
+
+  /// Sets the user-agent for the WebView.
+  /// Not available for Web
+  /// Defaults to: 'Mozilla/5.0'
+  /// Notes: Make sure the user-agent is compliant with the security constraints of Google's OAuth2 policies (https://developers.googleblog.com/2021/06/upcoming-security-changes-to-googles-oauth-2.0-authorization-endpoint.html)
+  final String userAgent;
+
+  ///Set to `false` to disable Flutter Hybrid Composition. The default value is `true`.
+  ///Hybrid Composition is supported starting with Flutter v1.20+.
+  ///
+  ///**NOTE for Android native WebView**: It is recommended to use Hybrid Composition only on Android 10+ for a release app,
+  ///as it can cause framerate drops on animations in Android 9 and lower (see [Hybrid-Composition#performance](https://github.com/flutter/flutter/wiki/Hybrid-Composition#performance)).
+  ///
+  ///**Officially Supported Platforms/Implementations**:
+  ///- Android native WebView
+  final bool useHybridComposition;
 
   /// Use this stream when you need to asynchronously navigate to a specific url
   /// Not available for Web
@@ -62,6 +79,8 @@ class BaseConfiguration {
     this.onCancel,
     this.onCertificateValidate,
     Map<String, String>? headers,
+    String? userAgent,
+    bool? useHybridComposition,
     this.urlStream,
     this.themeData,
     this.textLocales,
@@ -72,6 +91,8 @@ class BaseConfiguration {
     bool? clearCacheBtnVisible,
     bool? closeBtnVisible,
   })  : headers = headers ?? const {},
+        userAgent = userAgent ?? 'Mozilla/5.0',
+        useHybridComposition = useHybridComposition ?? true,
         goBackBtnVisible = goBackBtnVisible ?? true,
         goForwardBtnVisible = goForwardBtnVisible ?? true,
         refreshBtnVisible = refreshBtnVisible ?? true,
@@ -95,6 +116,8 @@ class BaseConfiguration {
     VoidCallback? onCancel,
     CertificateValidator? onCertificateValidate,
     Map<String, String>? headers,
+    String? userAgent,
+    bool? useHybridComposition,
     Stream<String>? urlStream,
     ThemeData? themeData,
     Map<String, String>? textLocales,
@@ -114,6 +137,8 @@ class BaseConfiguration {
         onCertificateValidate:
             onCertificateValidate ?? this.onCertificateValidate,
         headers: headers ?? this.headers,
+        userAgent: userAgent ?? this.userAgent,
+        useHybridComposition: useHybridComposition ?? this.useHybridComposition,
         urlStream: urlStream ?? this.urlStream,
         themeData: themeData ?? this.themeData,
         textLocales: textLocales ?? this.textLocales,

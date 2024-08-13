@@ -25,10 +25,11 @@ With this plugin you will get:
 - Users will not be affected by any system browser problem cache and also will be able to clean app browser cache from the authentication screen itself.
 - Authentication page locale can be set from app using the `contentLocale` property to ensure the same locale. By default Operating System locale will be used if no `contentLocale` is specified.
 - Custom headers can be set if necessary.
+- Custom UserAgent can be set if necessary.
 
 **Notes:**
 - `contentLocale` will apply only if the authentication page supports the specified `Locale('...')` and accepts the header: `'Accept-Language': 'es-ES'`.
-- Web implementation deson't allow `contentLocale`, custom headers, nor full control over UI, because web implementation loads the page directly in the browser.
+- Web implementation deson't allow `contentLocale`, custom headers, custom UserAgent, nor full control over UI, because web implementation loads the page directly in the browser.
 
 ## Migration from ^1.0.0 to ^2.0.0
 - Static constants key for tooltips, message and hero tags were moved from `OAuthWebView` to `BaseWebView`
