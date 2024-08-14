@@ -25,6 +25,8 @@ class CustomPopScope<T> extends StatelessWidget {
               if (canPop && context.mounted) {
                 Navigator.of(context).pop(result);
               }
+            }).onError((error, stackTrace) {
+              debugPrint('Error: $error');
             });
           },
       child: child,
