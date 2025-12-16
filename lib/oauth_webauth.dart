@@ -46,7 +46,7 @@ class OAuthWebAuth {
       if (kDebugMode) {
         print('------ OAuthWebAuth appBaseUri: ${this.appBaseUrl} ------');
       }
-      if(clearPath) {
+      if (clearPath) {
         usePathUrlStrategy();
       }
     } catch (e) {
