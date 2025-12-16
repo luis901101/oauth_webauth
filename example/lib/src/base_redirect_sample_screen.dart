@@ -97,7 +97,7 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
                             value: e,
                             child: Text(e?.toLanguageTag() ?? 'Default OS')))
                         .toList(),
-                    value: contentLocale,
+                    initialValue: contentLocale,
                     onChanged: (locale) {
                       setState(() {
                         contentLocale = locale;

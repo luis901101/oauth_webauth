@@ -1,11 +1,10 @@
-library oauth_webauth;
-
 import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:oauth_webauth/src/utils/cross_platform_support.dart';
 
 export 'package:oauth_webauth/src/base/base_flow.dart';
 export 'package:oauth_webauth/src/base/base_oauth_flow.dart';
@@ -28,10 +27,11 @@ class OAuthWebAuth {
   /// Call this from main() function before runaApp() to enable flutter web support.
   /// It's also required to initialize WidgetsFlutterBinding before calling this init().
   ///
+  /// clearPath: by default is false, set it to true if you want to clear the url path
   /// e.g:
   ///   WidgetsFlutterBinding.ensureInitialized();
   ///   await OAuthWebAuth.instance.init();
-  Future<void> init({String? appBaseUrl}) async {
+  Future<void> init({String? appBaseUrl, bool clearPath = false}) async {
     try {
       this.appBaseUrl = appBaseUrl ?? Uri.base.toString().trim();
       final int ignoreStartIndex = this.appBaseUrl.indexOf('#');
@@ -45,6 +45,9 @@ class OAuthWebAuth {
       _sharedPreferences = await SharedPreferences.getInstance();
       if (kDebugMode) {
         print('------ OAuthWebAuth appBaseUri: ${this.appBaseUrl} ------');
+      }
+      if(clearPath) {
+        usePathUrlStrategy();
       }
     } catch (e) {
       if (kDebugMode) print(e);
