@@ -22,6 +22,7 @@ dependencies:
   oauth2: ^2.0.0
   flutter_inappwebview: ^6.0.0
   shared_preferences: ^2.0.0
+  web: ^1.1.1
   http: '>=0.13.0 <2.0.0'
 
 dev_dependencies:
