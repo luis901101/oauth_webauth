@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 6.0.0-beta.1
+### Changed
+- Changed `flutter_inappwebview: ^6.2.0-beta.3` 
+
 ## 5.2.0
 ### Added
 - Added support for `usePathUrlStrategy()` to clear the path after init. 
