@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 typedef CanGoBackCallback<T> = Future<bool> Function({T? result});
 

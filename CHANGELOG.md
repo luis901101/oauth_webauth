@@ -9,6 +9,13 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 7.0.0-beta.1
+### Changed
+- Migrated from `package:flutter/material.dart` to the standalone `material_ui: ^1.5.0` package; the app's `MaterialApp` must come from `material_ui`.
+- Minimum versions raised to Flutter `3.47.0` and Dart `3.13.0`.
+- `themeData` in `BaseConfiguration` and `OAuthConfiguration` now takes a `material_ui` `ThemeData`.
+- Sample project migrated to `material_ui`.
+
 ## 6.0.0-beta.1
 ### Changed
 - Changed `flutter_inappwebview: ^6.2.0-beta.3` 

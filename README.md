@@ -51,6 +51,11 @@ Probably you will not need to do any migration. You only need to do changes:
 - As this version uses `flutter_inappwebview: ^6.0.0` which already supports web, it's required *(only if your project supports web)* to include a script in the `index.html` <head> like: `<script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js" defer></script>`, anyway we recommend you to check the readme of [flutter_inappwebview](https://pub.dev/packages/flutter_inappwebview) for more details.
 - Make sure your pubspec `environment` fits the following constraints: `sdk: ">=3.0.0 <4.0.0"` and `flutter: '>=3.3.0'`.
 
+## Migration from ^6.0.0 to ^7.0.0
+- This version uses the standalone [material_ui](https://pub.dev/packages/material_ui) package instead of `package:flutter/material.dart`, so your app's `MaterialApp` and `Theme` must come from `package:material_ui/material_ui.dart`, check the Flutter [migration guide](https://docs.flutter.dev/release/breaking-changes/material-ui-and-cupertino-ui) for more details.
+- `themeData` in `BaseConfiguration` and `OAuthConfiguration` now takes a `ThemeData` from `package:material_ui/material_ui.dart`.
+- Make sure your pubspec `environment` fits the following constraints: `sdk: ">=3.13.0 <4.0.0"` and `flutter: '>=3.47.0'`.
+
 ## Getting started
 As stated before this plugin uses WebView implementation specifically the plugin [flutter_inappwebview](https://pub.dev/packages/flutter_inappwebview). For any WebView related problem please check the documentation of that plugin at [docs](https://inappwebview.dev/docs/).
 

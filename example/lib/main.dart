@@ -1,7 +1,7 @@
 import 'package:example/src/auth_sample_screen.dart';
 import 'package:example/src/base_redirect_sample_screen.dart';
 import 'package:example/src/buttons.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:oauth_webauth/oauth_webauth.dart';
 
 void main() async {
