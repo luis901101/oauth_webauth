@@ -18,20 +18,29 @@ class AuthSampleScreen extends StatefulWidget {
 class _AuthSampleScreenState extends State<AuthSampleScreen> {
   bool isLoading = OAuthWebAuth.instance.restoreCodeVerifier() != null;
   static const String authorizationEndpointUrl = String.fromEnvironment(
-      'AUTHORIZATION_ENDPOINT_URL',
-      defaultValue: 'https://test-auth-endpoint.com');
+    'AUTHORIZATION_ENDPOINT_URL',
+    defaultValue: 'https://test-auth-endpoint.com',
+  );
   static const String tokenEndpointUrl = String.fromEnvironment(
-      'TOKEN_ENDPOINT_URL',
-      defaultValue: 'https://test-token-endpoint.com');
-  static const String clientSecret =
-      String.fromEnvironment('CLIENT_SECRET', defaultValue: 'XXXXXXXXX');
-  static const String clientId =
-      String.fromEnvironment('CLIENT_ID', defaultValue: 'realmClientID');
-  static const String redirectUrl = String.fromEnvironment('REDIRECT_URL',
-      defaultValue: 'https://test-redirect-to.com');
-  final List<String> scopes = const String.fromEnvironment('SCOPES',
-          defaultValue: 'https://test-redirect-to.com')
-      .split(' ');
+    'TOKEN_ENDPOINT_URL',
+    defaultValue: 'https://test-token-endpoint.com',
+  );
+  static const String clientSecret = String.fromEnvironment(
+    'CLIENT_SECRET',
+    defaultValue: 'XXXXXXXXX',
+  );
+  static const String clientId = String.fromEnvironment(
+    'CLIENT_ID',
+    defaultValue: 'realmClientID',
+  );
+  static const String redirectUrl = String.fromEnvironment(
+    'REDIRECT_URL',
+    defaultValue: 'https://test-redirect-to.com',
+  );
+  final List<String> scopes = const String.fromEnvironment(
+    'SCOPES',
+    defaultValue: 'https://test-redirect-to.com',
+  ).split(' ');
 
   String authResponse = 'Authorization data will be shown here';
   Locale? contentLocale;
@@ -41,14 +50,11 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(
-        const Duration(milliseconds: 300),
-        () {
-          if (OAuthWebAuth.instance.restoreCodeVerifier() != null) {
-            loginV2();
-          }
-        },
-      );
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (OAuthWebAuth.instance.restoreCodeVerifier() != null) {
+          loginV2();
+        }
+      });
     });
   }
 
@@ -65,18 +71,19 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  authResponse,
-                ),
+                Text(authResponse),
                 const SizedBox(height: 16),
                 if (isLoading) const CircularProgressIndicator(),
                 SizedBox(
                   width: 120,
                   child: DropdownButtonFormField<Locale>(
                     items: locales
-                        .map((e) => DropdownMenuItem(
+                        .map(
+                          (e) => DropdownMenuItem(
                             value: e,
-                            child: Text(e?.toLanguageTag() ?? 'Default OS')))
+                            child: Text(e?.toLanguageTag() ?? 'Default OS'),
+                          ),
+                        )
                         .toList(),
                     initialValue: contentLocale,
                     onChanged: (locale) {
@@ -84,8 +91,9 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
                         contentLocale = locale;
                       });
                     },
-                    decoration:
-                        const InputDecoration(label: Text('Content language')),
+                    decoration: const InputDecoration(
+                      label: Text('Content language'),
+                    ),
                   ),
                 ),
                 PrimaryButton(
@@ -94,10 +102,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
                       'Login variant 1${kIsWeb ? '(NOT SUPPORTED ON WEB)' : ''}',
                 ),
                 const SizedBox(height: 4),
-                SecondaryButton(
-                  onPressed: loginV2,
-                  text: 'Login variant 2',
-                ),
+                SecondaryButton(onPressed: loginV2, text: 'Login variant 2'),
                 const SizedBox(height: 16),
               ],
             ),
@@ -109,34 +114,35 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
 
   void loginV1() async {
     final result = await OAuthWebScreen.start(
-        context: context,
-        configuration: OAuthConfiguration(
-          authorizationEndpointUrl: authorizationEndpointUrl,
-          tokenEndpointUrl: tokenEndpointUrl,
-          clientSecret: clientSecret,
-          clientId: clientId,
-          redirectUrl: redirectUrl,
-          scopes: scopes,
-          promptValues: const ['login'],
-          loginHint: 'johndoe@mail.com',
-          onCertificateValidate: (certificate) {
-            ///This is recommended
-            /// Do certificate validations here
-            /// If false is returned then a CertificateException() will be thrown
-            return true;
-          },
-          textLocales: {
-            ///Optionally texts can be localized
-            BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
-            BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
-            BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
-            BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
-            BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
-            BaseConfiguration.clearCacheWarningMessageKey:
-                '¿Está seguro que desea limpiar la caché?',
-          },
-          contentLocale: contentLocale,
-        ));
+      context: context,
+      configuration: OAuthConfiguration(
+        authorizationEndpointUrl: authorizationEndpointUrl,
+        tokenEndpointUrl: tokenEndpointUrl,
+        clientSecret: clientSecret,
+        clientId: clientId,
+        redirectUrl: redirectUrl,
+        scopes: scopes,
+        promptValues: const ['login'],
+        loginHint: 'johndoe@mail.com',
+        onCertificateValidate: (certificate) {
+          ///This is recommended
+          /// Do certificate validations here
+          /// If false is returned then a CertificateException() will be thrown
+          return true;
+        },
+        textLocales: {
+          ///Optionally texts can be localized
+          BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
+          BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
+          BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
+          BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
+          BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
+          BaseConfiguration.clearCacheWarningMessageKey:
+              '¿Está seguro que desea limpiar la caché?',
+        },
+        contentLocale: contentLocale,
+      ),
+    );
     isLoading = false;
     if (result != null) {
       if (result is Credentials) {
@@ -154,49 +160,50 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
     OAuthWebScreen.start(
       context: context,
       configuration: OAuthConfiguration(
-          authorizationEndpointUrl: authorizationEndpointUrl,
-          tokenEndpointUrl: tokenEndpointUrl,
-          clientSecret: clientSecret,
-          clientId: clientId,
-          redirectUrl: redirectUrl,
-          scopes: scopes,
-          promptValues: const ['login'],
-          loginHint: 'johndoe@mail.com',
-          onCertificateValidate: (certificate) {
-            ///This is recommended
-            /// Do certificate validations here
-            /// If false is returned then a CertificateException() will be thrown
-            return true;
-          },
-          textLocales: {
-            ///Optionally text can be localized
-            BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
-            BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
-            BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
-            BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
-            BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
-            BaseConfiguration.clearCacheWarningMessageKey:
-                '¿Está seguro que desea limpiar la caché?',
-          },
-          contentLocale: contentLocale,
-          onSuccessAuth: (credentials) {
-            isLoading = false;
-            setState(() {
-              authResponse = getPrettyCredentialsJson(credentials);
-            });
-          },
-          onError: (error) {
-            isLoading = false;
-            setState(() {
-              authResponse = error.toString();
-            });
-          },
-          onCancel: () {
-            isLoading = false;
-            setState(() {
-              authResponse = 'User cancelled authentication';
-            });
-          }),
+        authorizationEndpointUrl: authorizationEndpointUrl,
+        tokenEndpointUrl: tokenEndpointUrl,
+        clientSecret: clientSecret,
+        clientId: clientId,
+        redirectUrl: redirectUrl,
+        scopes: scopes,
+        promptValues: const ['login'],
+        loginHint: 'johndoe@mail.com',
+        onCertificateValidate: (certificate) {
+          ///This is recommended
+          /// Do certificate validations here
+          /// If false is returned then a CertificateException() will be thrown
+          return true;
+        },
+        textLocales: {
+          ///Optionally text can be localized
+          BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
+          BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
+          BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
+          BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
+          BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
+          BaseConfiguration.clearCacheWarningMessageKey:
+              '¿Está seguro que desea limpiar la caché?',
+        },
+        contentLocale: contentLocale,
+        onSuccessAuth: (credentials) {
+          isLoading = false;
+          setState(() {
+            authResponse = getPrettyCredentialsJson(credentials);
+          });
+        },
+        onError: (error) {
+          isLoading = false;
+          setState(() {
+            authResponse = error.toString();
+          });
+        },
+        onCancel: () {
+          isLoading = false;
+          setState(() {
+            authResponse = 'User cancelled authentication';
+          });
+        },
+      ),
     );
   }
 
@@ -207,7 +214,7 @@ class _AuthSampleScreenState extends State<AuthSampleScreen> {
       'id_token': credentials.idToken,
       'token_endpoint': credentials.tokenEndpoint?.toString(),
       'scopes': credentials.scopes,
-      'expiration': credentials.expiration?.millisecondsSinceEpoch
+      'expiration': credentials.expiration?.millisecondsSinceEpoch,
     };
     JsonEncoder encoder = const JsonEncoder.withIndent('  ');
     return encoder.convert(jsonMap);

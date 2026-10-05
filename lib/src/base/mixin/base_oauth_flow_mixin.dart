@@ -13,11 +13,10 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
   ValueChanged<oauth2.Credentials>? onSuccessAuth;
   String? baseUrl;
 
-  void initOAuth({
-    required OAuthConfiguration configuration,
-  }) {
-    final redirectUrl =
-        originUrl() != null ? originUrl()! : configuration.redirectUrl;
+  void initOAuth({required OAuthConfiguration configuration}) {
+    final redirectUrl = originUrl() != null
+        ? originUrl()!
+        : configuration.redirectUrl;
     baseUrl = configuration.baseUrl;
     onSuccessAuth = configuration.onSuccessAuth;
     super.init(
@@ -27,7 +26,8 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
     );
 
     if (kIsWeb) {
-      codeVerifier = OAuthWebAuth.instance.restoreCodeVerifier() ??
+      codeVerifier =
+          OAuthWebAuth.instance.restoreCodeVerifier() ??
           OAuthWebAuth.instance.generateCodeVerifier();
     }
 
@@ -46,17 +46,20 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
       scopes: configuration.scopes,
     );
     initialUri = initialUri.replace(
-        queryParameters: Map.from(initialUri.queryParameters)
-          ..addAll({
-            'state': const Base64Encoder.urlSafe()
-                .convert(DateTime.now().toIso8601String().codeUnits),
-            'nonce': const Base64Encoder.urlSafe().convert(
-                DateTime.now().millisecondsSinceEpoch.toString().codeUnits),
-            if (configuration.loginHint != null)
-              'login_hint': configuration.loginHint,
-            if (configuration.promptValues?.isNotEmpty ?? false)
-              'prompt': configuration.promptValues!.join(' '),
-          }));
+      queryParameters: Map.from(initialUri.queryParameters)
+        ..addAll({
+          'state': const Base64Encoder.urlSafe().convert(
+            DateTime.now().toIso8601String().codeUnits,
+          ),
+          'nonce': const Base64Encoder.urlSafe().convert(
+            DateTime.now().millisecondsSinceEpoch.toString().codeUnits,
+          ),
+          if (configuration.loginHint != null)
+            'login_hint': configuration.loginHint,
+          if (configuration.promptValues?.isNotEmpty ?? false)
+            'prompt': configuration.promptValues!.join(' '),
+        }),
+    );
   }
 
   @override
@@ -75,8 +78,9 @@ mixin BaseOAuthFlowMixin on BaseFlowMixin {
         return onCancel();
       }
 
-      final client =
-          await authorizationCodeGrant.handleAuthorizationResponse(parameters);
+      final client = await authorizationCodeGrant.handleAuthorizationResponse(
+        parameters,
+      );
       clearState();
       onSuccessAuth?.call(client.credentials);
     } catch (e) {

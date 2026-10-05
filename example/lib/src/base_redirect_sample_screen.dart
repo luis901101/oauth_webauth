@@ -17,27 +17,40 @@ class BaseRedirectSampleScreen extends StatefulWidget {
 }
 
 class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
-  static String initialUrl =
-      const String.fromEnvironment('INITIAL_URL', defaultValue: '');
-  static String baseUrl = const String.fromEnvironment('BASE_URL',
-      defaultValue: 'https://some.base.url.com');
+  static String initialUrl = const String.fromEnvironment(
+    'INITIAL_URL',
+    defaultValue: '',
+  );
+  static String baseUrl = const String.fromEnvironment(
+    'BASE_URL',
+    defaultValue: 'https://some.base.url.com',
+  );
   static const String authorizationEndpointUrl = String.fromEnvironment(
-      'AUTHORIZATION_ENDPOINT_URL',
-      defaultValue: 'https://test-auth-endpoint.com');
+    'AUTHORIZATION_ENDPOINT_URL',
+    defaultValue: 'https://test-auth-endpoint.com',
+  );
   static const String tokenEndpointUrl = String.fromEnvironment(
-      'TOKEN_ENDPOINT_URL',
-      defaultValue: 'https://test-token-endpoint.com');
-  static const String clientSecret =
-      String.fromEnvironment('CLIENT_SECRET', defaultValue: 'XXXXXXXXX');
-  static const String clientId =
-      String.fromEnvironment('CLIENT_ID', defaultValue: 'realmClientID');
+    'TOKEN_ENDPOINT_URL',
+    defaultValue: 'https://test-token-endpoint.com',
+  );
+  static const String clientSecret = String.fromEnvironment(
+    'CLIENT_SECRET',
+    defaultValue: 'XXXXXXXXX',
+  );
+  static const String clientId = String.fromEnvironment(
+    'CLIENT_ID',
+    defaultValue: 'realmClientID',
+  );
   static String redirectUrl = originUrl() != null
       ? originUrl()!
-      : const String.fromEnvironment('REDIRECT_URL',
-          defaultValue: 'https://test-redirect-to.com');
-  final List<String> scopes = const String.fromEnvironment('SCOPES',
-          defaultValue: 'https://test-redirect-to.com')
-      .split(' ');
+      : const String.fromEnvironment(
+          'REDIRECT_URL',
+          defaultValue: 'https://test-redirect-to.com',
+        );
+  final List<String> scopes = const String.fromEnvironment(
+    'SCOPES',
+    defaultValue: 'https://test-redirect-to.com',
+  ).split(' ');
 
   String response = 'Response feedback will be shown here';
   Locale? contentLocale;
@@ -61,13 +74,16 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
       );
 
       initialUri = initialUri.replace(
-          queryParameters: Map.from(initialUri.queryParameters)
-            ..addAll({
-              'state': const Base64Encoder.urlSafe()
-                  .convert(DateTime.now().toIso8601String().codeUnits),
-              'nonce': const Base64Encoder.urlSafe().convert(
-                  DateTime.now().millisecondsSinceEpoch.toString().codeUnits),
-            }));
+        queryParameters: Map.from(initialUri.queryParameters)
+          ..addAll({
+            'state': const Base64Encoder.urlSafe().convert(
+              DateTime.now().toIso8601String().codeUnits,
+            ),
+            'nonce': const Base64Encoder.urlSafe().convert(
+              DateTime.now().millisecondsSinceEpoch.toString().codeUnits,
+            ),
+          }),
+      );
       initialUrl = initialUri.toString();
     }
   }
@@ -85,17 +101,18 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  response,
-                ),
+                Text(response),
                 const SizedBox(height: 16),
                 SizedBox(
                   width: 120,
                   child: DropdownButtonFormField<Locale>(
                     items: locales
-                        .map((e) => DropdownMenuItem(
+                        .map(
+                          (e) => DropdownMenuItem(
                             value: e,
-                            child: Text(e?.toLanguageTag() ?? 'Default OS')))
+                            child: Text(e?.toLanguageTag() ?? 'Default OS'),
+                          ),
+                        )
                         .toList(),
                     initialValue: contentLocale,
                     onChanged: (locale) {
@@ -103,8 +120,9 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
                         contentLocale = locale;
                       });
                     },
-                    decoration:
-                        const InputDecoration(label: Text('Content language')),
+                    decoration: const InputDecoration(
+                      label: Text('Content language'),
+                    ),
                   ),
                 ),
                 PrimaryButton(
@@ -170,40 +188,41 @@ class _BaseRedirectSampleScreenState extends State<BaseRedirectSampleScreen> {
     BaseWebScreen.start(
       context: context,
       configuration: BaseConfiguration(
-          initialUrl: initialUrl,
-          redirectUrls: [redirectUrl, baseUrl],
-          onCertificateValidate: (certificate) {
-            ///This is recommended
-            /// Do certificate validations here
-            /// If false is returned then a CertificateException() will be thrown
-            return true;
-          },
-          textLocales: {
-            ///Optionally text can be localized
-            BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
-            BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
-            BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
-            BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
-            BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
-            BaseConfiguration.clearCacheWarningMessageKey:
-                '¿Está seguro que desea limpiar la caché?',
-          },
-          contentLocale: contentLocale,
-          onSuccessRedirect: (responseRedirect) {
-            setState(() {
-              response = 'User redirected to: $responseRedirect';
-            });
-          },
-          onError: (error) {
-            setState(() {
-              response = error.toString();
-            });
-          },
-          onCancel: () {
-            setState(() {
-              response = 'User cancelled';
-            });
-          }),
+        initialUrl: initialUrl,
+        redirectUrls: [redirectUrl, baseUrl],
+        onCertificateValidate: (certificate) {
+          ///This is recommended
+          /// Do certificate validations here
+          /// If false is returned then a CertificateException() will be thrown
+          return true;
+        },
+        textLocales: {
+          ///Optionally text can be localized
+          BaseConfiguration.backButtonTooltipKey: 'Ir atrás',
+          BaseConfiguration.forwardButtonTooltipKey: 'Ir adelante',
+          BaseConfiguration.reloadButtonTooltipKey: 'Recargar',
+          BaseConfiguration.clearCacheButtonTooltipKey: 'Limpiar caché',
+          BaseConfiguration.closeButtonTooltipKey: 'Cerrar',
+          BaseConfiguration.clearCacheWarningMessageKey:
+              '¿Está seguro que desea limpiar la caché?',
+        },
+        contentLocale: contentLocale,
+        onSuccessRedirect: (responseRedirect) {
+          setState(() {
+            response = 'User redirected to: $responseRedirect';
+          });
+        },
+        onError: (error) {
+          setState(() {
+            response = error.toString();
+          });
+        },
+        onCancel: () {
+          setState(() {
+            response = 'User cancelled';
+          });
+        },
+      ),
     );
   }
 }

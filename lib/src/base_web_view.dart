@@ -18,10 +18,8 @@ T? _ambiguate<T>(T? value) => value;
 class BaseWebView extends StatefulWidget {
   final BaseConfiguration _configuration;
 
-  const BaseWebView({
-    super.key,
-    required BaseConfiguration configuration,
-  }) : _configuration = configuration;
+  const BaseWebView({super.key, required BaseConfiguration configuration})
+    : _configuration = configuration;
 
   @override
   State createState() => BaseWebViewState<BaseWebView>();
@@ -95,9 +93,11 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     reloadButtonTooltip = configuration.reloadButtonTooltip ?? 'Reload';
     clearCacheButtonTooltip =
         configuration.clearCacheButtonTooltip ?? 'Clear cache';
-    closeButtonTooltip = configuration.closeButtonTooltip ??
+    closeButtonTooltip =
+        configuration.closeButtonTooltip ??
         MaterialLocalizations.of(context).closeButtonTooltip;
-    clearCacheWarningMessage = configuration.clearCacheWarningMessage ??
+    clearCacheWarningMessage =
+        configuration.clearCacheWarningMessage ??
         'Are you sure you want to clear cache?';
     tooltipsAlreadyInitialized = true;
   }
@@ -121,15 +121,18 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
           userAgent: configuration.userAgent,
           useHybridComposition: configuration.useHybridComposition,
         ),
-        initialUrlRequest:
-            URLRequest(url: WebUri(initialUri.toString()), headers: {
-          ...configuration.headers,
-          if (configuration.contentLocale != null)
-            'Accept-Language': configuration.contentLocale!.toLanguageTag()
-        }),
+        initialUrlRequest: URLRequest(
+          url: WebUri(initialUri.toString()),
+          headers: {
+            ...configuration.headers,
+            if (configuration.contentLocale != null)
+              'Accept-Language': configuration.contentLocale!.toLanguageTag(),
+          },
+        ),
         onReceivedServerTrustAuthRequest: (controller, challenge) async {
           return ServerTrustAuthResponse(
-              action: ServerTrustAuthResponseAction.PROCEED);
+            action: ServerTrustAuthResponseAction.PROCEED,
+          );
         },
         onWebViewCreated: (controller) {
           inAppWebViewController = controller;
@@ -202,14 +205,13 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
     String? tooltip,
     VoidCallback? onPressed,
     bool respectLoading = true,
-  }) =>
-      IconButton(
-        iconSize: 30,
-        tooltip: tooltip,
-        icon: Icon(iconData),
-        color: theme.colorScheme.secondary,
-        onPressed: respectLoading && isLoading ? null : onPressed,
-      );
+  }) => IconButton(
+    iconSize: 30,
+    tooltip: tooltip,
+    icon: Icon(iconData),
+    color: theme.colorScheme.secondary,
+    onPressed: respectLoading && isLoading ? null : onPressed,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -221,10 +223,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
         return Scaffold(
           body: Stack(
             children: [
-              CustomPopScope(
-                canGoBack: onBackPressed,
-                child: webView,
-              ),
+              CustomPopScope(canGoBack: onBackPressed, child: webView),
               Positioned.fill(
                 child: Hero(
                   tag: BaseConfiguration.firstLoadHeroTag,
@@ -265,8 +264,9 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
                     iconButton(
                       iconData: Icons.arrow_forward_ios_rounded,
                       tooltip: forwardButtonTooltip,
-                      onPressed:
-                          !allowGoForward ? null : () => controllerGoForward(),
+                      onPressed: !allowGoForward
+                          ? null
+                          : () => controllerGoForward(),
                     ),
                   if (configuration.refreshBtnVisible)
                     iconButton(
@@ -281,60 +281,64 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
                       onPressed: () {
                         clearCacheSwitch = clearCookiesSwitch = true;
                         showDialog(
-                            context: context,
-                            builder: (context) => StatefulBuilder(
-                                builder: (stateContext, setState) =>
-                                    AlertDialog(
-                                      title: Text(clearCacheButtonTooltip),
-                                      content: SingleChildScrollView(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(clearCacheWarningMessage),
-                                            SwitchListTile(
-                                                value: clearCacheSwitch,
-                                                title: const Text('Cache'),
-                                                onChanged: (value) => setState(
-                                                    () => clearCacheSwitch =
-                                                        value)),
-                                            SwitchListTile(
-                                                value: clearCookiesSwitch,
-                                                title: const Text('Cookies'),
-                                                onChanged: (value) => setState(
-                                                    () => clearCookiesSwitch =
-                                                        value)),
-                                          ],
-                                        ),
+                          context: context,
+                          builder: (context) => StatefulBuilder(
+                            builder: (stateContext, setState) => AlertDialog(
+                              title: Text(clearCacheButtonTooltip),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(clearCacheWarningMessage),
+                                    SwitchListTile(
+                                      value: clearCacheSwitch,
+                                      title: const Text('Cache'),
+                                      onChanged: (value) => setState(
+                                        () => clearCacheSwitch = value,
                                       ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text(
-                                              MaterialLocalizations.of(context)
-                                                  .cancelButtonLabel),
-                                        ),
-                                        TextButton(
-                                          onPressed: !clearCacheSwitch &&
-                                                  !clearCookiesSwitch
-                                              ? null
-                                              : () {
-                                                  Navigator.pop(context);
-                                                  if (clearCacheSwitch &&
-                                                      clearCookiesSwitch) {
-                                                    controllerClearAll();
-                                                  } else if (clearCacheSwitch) {
-                                                    controllerClearCache();
-                                                  } else {
-                                                    controllerClearCookies();
-                                                  }
-                                                },
-                                          child: Text(
-                                              MaterialLocalizations.of(context)
-                                                  .okButtonLabel),
-                                        ),
-                                      ],
-                                    )));
+                                    ),
+                                    SwitchListTile(
+                                      value: clearCookiesSwitch,
+                                      title: const Text('Cookies'),
+                                      onChanged: (value) => setState(
+                                        () => clearCookiesSwitch = value,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text(
+                                    MaterialLocalizations.of(context)
+                                        .cancelButtonLabel,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed:
+                                      !clearCacheSwitch && !clearCookiesSwitch
+                                      ? null
+                                      : () {
+                                          Navigator.pop(context);
+                                          if (clearCacheSwitch &&
+                                              clearCookiesSwitch) {
+                                            controllerClearAll();
+                                          } else if (clearCacheSwitch) {
+                                            controllerClearCache();
+                                          } else {
+                                            controllerClearCookies();
+                                          }
+                                        },
+                                  child: Text(
+                                    MaterialLocalizations.of(context)
+                                        .okButtonLabel,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       },
                     ),
                   if (configuration.closeBtnVisible)
@@ -352,21 +356,22 @@ class BaseWebViewState<S extends BaseWebView> extends State<S>
       },
     );
     return configuration.themeData != null
-        ? Theme(
-            data: configuration.themeData!,
-            child: content,
-          )
+        ? Theme(data: configuration.themeData!, child: content)
         : content;
   }
 
   Future<void> controllerGo(String url) async {
     showLoading();
     inAppWebViewController?.loadUrl(
-        urlRequest: URLRequest(url: WebUri(url), headers: {
-      ...configuration.headers,
-      if (configuration.contentLocale != null)
-        'Accept-Language': configuration.contentLocale!.toLanguageTag()
-    }));
+      urlRequest: URLRequest(
+        url: WebUri(url),
+        headers: {
+          ...configuration.headers,
+          if (configuration.contentLocale != null)
+            'Accept-Language': configuration.contentLocale!.toLanguageTag(),
+        },
+      ),
+    );
   }
 
   Future<void> controllerGoBack() async {

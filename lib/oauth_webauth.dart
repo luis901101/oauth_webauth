@@ -39,8 +39,10 @@ class OAuthWebAuth {
         this.appBaseUrl = this.appBaseUrl.substring(0, ignoreStartIndex);
       }
       while (this.appBaseUrl.endsWith('/')) {
-        this.appBaseUrl =
-            this.appBaseUrl.substring(0, this.appBaseUrl.length - 1);
+        this.appBaseUrl = this.appBaseUrl.substring(
+          0,
+          this.appBaseUrl.length - 1,
+        );
       }
       _sharedPreferences = await SharedPreferences.getInstance();
       if (kDebugMode) {
@@ -111,6 +113,8 @@ class OAuthWebAuth {
   /// [RFC 7636]: https://tools.ietf.org/html/rfc7636#section-4.1
   String generateCodeVerifier() {
     return List.generate(
-        128, (i) => _charset[Random.secure().nextInt(_charset.length)]).join();
+      128,
+      (i) => _charset[Random.secure().nextInt(_charset.length)],
+    ).join();
   }
 }

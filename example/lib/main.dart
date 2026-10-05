@@ -17,9 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const MyHomePage(title: 'OAuth WebAuth samples'),
     );
   }
@@ -40,23 +38,18 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(
-        const Duration(milliseconds: 300),
-        () {
-          if (OAuthWebAuth.instance.restoreCodeVerifier() != null) {
-            goAuthSampleScreen();
-          }
-        },
-      );
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (OAuthWebAuth.instance.restoreCodeVerifier() != null) {
+          goAuthSampleScreen();
+        }
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -85,14 +78,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void goAuthSampleScreen() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const AuthSampleScreen()));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AuthSampleScreen()),
+    );
   }
 
   void goBaseRedirectSampleScreen() {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const BaseRedirectSampleScreen()));
+      context,
+      MaterialPageRoute(builder: (context) => const BaseRedirectSampleScreen()),
+    );
   }
 }

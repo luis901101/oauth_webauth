@@ -11,12 +11,13 @@ class BaseWebScreen extends StatelessWidget {
     required BaseConfiguration configuration,
   }) {
     assert(
-        !kIsWeb ||
-            (kIsWeb &&
-                configuration.onSuccessRedirect != null &&
-                configuration.onError != null &&
-                configuration.onCancel != null),
-        'You must set onSuccessRedirect, onError and onCancel function when running on Web otherwise you will not get any result.');
+      !kIsWeb ||
+          (kIsWeb &&
+              configuration.onSuccessRedirect != null &&
+              configuration.onError != null &&
+              configuration.onCancel != null),
+      'You must set onSuccessRedirect, onError and onCancel function when running on Web otherwise you will not get any result.',
+    );
     if (kIsWeb) {
       final baseFlow = BaseFlow()
         ..init(
@@ -30,13 +31,15 @@ class BaseWebScreen extends StatelessWidget {
       return null;
     }
     return Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => BaseWebScreen(
-                  key: key,
-                  globalKey: globalKey,
-                  configuration: configuration,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => BaseWebScreen(
+          key: key,
+          globalKey: globalKey,
+          configuration: configuration,
+        ),
+      ),
+    );
   }
 
   late final BuildContext context;

@@ -22,9 +22,7 @@ class OAuthWebViewState extends BaseWebViewState<OAuthWebView>
   @override
   void initBase() {
     super.initBase();
-    initOAuth(
-      configuration: configuration,
-    );
+    initOAuth(configuration: configuration);
   }
 
   @override

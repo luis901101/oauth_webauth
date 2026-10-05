@@ -18,16 +18,20 @@ class CustomPopScope<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: onPopInvokedWithResult ??
+      onPopInvokedWithResult:
+          onPopInvokedWithResult ??
           (bool didPop, T? result) {
             if (didPop) return;
-            canGoBack?.call(result: result).then((canPop) {
-              if (canPop && context.mounted) {
-                Navigator.of(context).pop(result);
-              }
-            }).onError((error, stackTrace) {
-              debugPrint('Error: $error');
-            });
+            canGoBack
+                ?.call(result: result)
+                .then((canPop) {
+                  if (canPop && context.mounted) {
+                    Navigator.of(context).pop(result);
+                  }
+                })
+                .onError((error, stackTrace) {
+                  debugPrint('Error: $error');
+                });
           },
       child: child,
     );

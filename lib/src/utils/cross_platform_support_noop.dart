@@ -1,3 +1,7 @@
-void loadPage(String url) {/*Do nothing*/}
+void loadPage(String url) {
+  /*Do nothing*/
+}
 String? originUrl() => null;
-void usePathUrlStrategy() {/*Do nothing*/}
+void usePathUrlStrategy() {
+  /*Do nothing*/
+}

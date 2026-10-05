@@ -38,8 +38,9 @@ mixin BaseFlowMixin {
 
   Future<void> hideLoading() async {}
 
-  bool startsWithAnyRedirectUrl(String url) => redirectUrls
-      .any((redirectUrl) => url != redirectUrl && url.startsWith(redirectUrl));
+  bool startsWithAnyRedirectUrl(String url) => redirectUrls.any(
+    (redirectUrl) => url != redirectUrl && url.startsWith(redirectUrl),
+  );
 
   bool onNavigateTo(String url) {
     if (url != 'about:blank') showLoading();

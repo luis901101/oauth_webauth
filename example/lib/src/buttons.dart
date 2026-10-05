@@ -13,10 +13,12 @@ class PrimaryButton extends StatelessWidget {
       style: onPressed == null
           ? null
           : ButtonStyle(
-              backgroundColor:
-                  WidgetStateProperty.all(theme.colorScheme.primary),
-              foregroundColor:
-                  WidgetStateProperty.all(theme.colorScheme.onPrimary),
+              backgroundColor: WidgetStateProperty.all(
+                theme.colorScheme.primary,
+              ),
+              foregroundColor: WidgetStateProperty.all(
+                theme.colorScheme.onPrimary,
+              ),
             ),
       child: Text(text),
     );
@@ -28,9 +30,6 @@ class SecondaryButton extends PrimaryButton {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: Text(text),
-    );
+    return ElevatedButton(onPressed: onPressed, child: Text(text));
   }
 }

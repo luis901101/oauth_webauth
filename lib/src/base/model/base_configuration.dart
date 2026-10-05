@@ -90,14 +90,14 @@ class BaseConfiguration {
     bool? refreshBtnVisible,
     bool? clearCacheBtnVisible,
     bool? closeBtnVisible,
-  })  : headers = headers ?? const {},
-        userAgent = userAgent ?? 'Mozilla/5.0',
-        useHybridComposition = useHybridComposition ?? true,
-        goBackBtnVisible = goBackBtnVisible ?? true,
-        goForwardBtnVisible = goForwardBtnVisible ?? true,
-        refreshBtnVisible = refreshBtnVisible ?? true,
-        clearCacheBtnVisible = clearCacheBtnVisible ?? true,
-        closeBtnVisible = closeBtnVisible ?? true;
+  }) : headers = headers ?? const {},
+       userAgent = userAgent ?? 'Mozilla/5.0',
+       useHybridComposition = useHybridComposition ?? true,
+       goBackBtnVisible = goBackBtnVisible ?? true,
+       goForwardBtnVisible = goForwardBtnVisible ?? true,
+       refreshBtnVisible = refreshBtnVisible ?? true,
+       clearCacheBtnVisible = clearCacheBtnVisible ?? true,
+       closeBtnVisible = closeBtnVisible ?? true;
 
   String? get backButtonTooltip => textLocales?[backButtonTooltipKey];
   String? get forwardButtonTooltip => textLocales?[forwardButtonTooltipKey];
@@ -127,26 +127,24 @@ class BaseConfiguration {
     bool? refreshBtnVisible,
     bool? clearCacheBtnVisible,
     bool? closeBtnVisible,
-  }) =>
-      BaseConfiguration(
-        initialUrl: initialUrl ?? this.initialUrl,
-        redirectUrls: redirectUrls ?? this.redirectUrls,
-        onSuccessRedirect: onSuccessRedirect ?? this.onSuccessRedirect,
-        onError: onError ?? this.onError,
-        onCancel: onCancel ?? this.onCancel,
-        onCertificateValidate:
-            onCertificateValidate ?? this.onCertificateValidate,
-        headers: headers ?? this.headers,
-        userAgent: userAgent ?? this.userAgent,
-        useHybridComposition: useHybridComposition ?? this.useHybridComposition,
-        urlStream: urlStream ?? this.urlStream,
-        themeData: themeData ?? this.themeData,
-        textLocales: textLocales ?? this.textLocales,
-        contentLocale: contentLocale ?? this.contentLocale,
-        goBackBtnVisible: goBackBtnVisible ?? this.goBackBtnVisible,
-        goForwardBtnVisible: goForwardBtnVisible ?? this.goForwardBtnVisible,
-        refreshBtnVisible: refreshBtnVisible ?? this.refreshBtnVisible,
-        clearCacheBtnVisible: clearCacheBtnVisible ?? this.clearCacheBtnVisible,
-        closeBtnVisible: closeBtnVisible ?? this.closeBtnVisible,
-      );
+  }) => BaseConfiguration(
+    initialUrl: initialUrl ?? this.initialUrl,
+    redirectUrls: redirectUrls ?? this.redirectUrls,
+    onSuccessRedirect: onSuccessRedirect ?? this.onSuccessRedirect,
+    onError: onError ?? this.onError,
+    onCancel: onCancel ?? this.onCancel,
+    onCertificateValidate: onCertificateValidate ?? this.onCertificateValidate,
+    headers: headers ?? this.headers,
+    userAgent: userAgent ?? this.userAgent,
+    useHybridComposition: useHybridComposition ?? this.useHybridComposition,
+    urlStream: urlStream ?? this.urlStream,
+    themeData: themeData ?? this.themeData,
+    textLocales: textLocales ?? this.textLocales,
+    contentLocale: contentLocale ?? this.contentLocale,
+    goBackBtnVisible: goBackBtnVisible ?? this.goBackBtnVisible,
+    goForwardBtnVisible: goForwardBtnVisible ?? this.goForwardBtnVisible,
+    refreshBtnVisible: refreshBtnVisible ?? this.refreshBtnVisible,
+    clearCacheBtnVisible: clearCacheBtnVisible ?? this.clearCacheBtnVisible,
+    closeBtnVisible: closeBtnVisible ?? this.closeBtnVisible,
+  );
 }
